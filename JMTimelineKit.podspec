@@ -4,11 +4,11 @@ Pod::Spec.new do |spec|
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
-    spec.summary      = 'JMTimelineKit makes it easy to deal with chat feed.'
+    spec.summary      = 'JMTimelineKit provides you customizable chat feed'
 
     spec.ios.deployment_target  = '10.0'
 
-    spec.source       = { :git => '' }
+    spec.source       = { :git => 'https://github.com/JivoChat/JMTimelineKit.git', :tag => spec.version }
     spec.source_files = 'JMTimelineKit/**/*.*'
     spec.resource = 'Assets.xcassets'
 
