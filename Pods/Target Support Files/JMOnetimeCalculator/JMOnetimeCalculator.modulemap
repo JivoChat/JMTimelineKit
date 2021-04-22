@@ -1,0 +1,6 @@
+framework module JMOnetimeCalculator {
+  umbrella header "JMOnetimeCalculator-umbrella.h"
+
+  export *
+  module * { export * }
+}

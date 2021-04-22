@@ -1,0 +1,6 @@
+framework module Fontello_Swift {
+  umbrella header "Fontello-Swift-umbrella.h"
+
+  export *
+  module * { export * }
+}

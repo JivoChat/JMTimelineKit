@@ -1,0 +1,6 @@
+framework module SwiftyNSException {
+  umbrella header "SwiftyNSException-umbrella.h"
+
+  export *
+  module * { export * }
+}

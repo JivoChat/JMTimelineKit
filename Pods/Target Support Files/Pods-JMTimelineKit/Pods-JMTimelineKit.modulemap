@@ -1,0 +1,6 @@
+framework module Pods_JMTimelineKit {
+  umbrella header "Pods-JMTimelineKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

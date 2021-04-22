@@ -1,0 +1,111 @@
+PODS:
+  - Alamofire (5.2.2)
+  - AlamofireImage (4.1.0):
+    - Alamofire (~> 5.1)
+  - CDMarkdownKit (2.1.0)
+  - DTCollectionViewManager (7.1.0):
+    - DTModelStorage (~> 8.0.0)
+  - DTModelStorage (8.0.0):
+    - DTModelStorage/Core (= 8.0.0)
+  - DTModelStorage/Core (8.0.0)
+  - Fontello-Swift/Entypo (1.2):
+    - Fontello-Swift/Fontello
+  - Fontello-Swift/Fontello (1.2)
+  - JMDesignKit (1.0.0)
+  - JMMarkdownKit (1.0.0):
+    - CDMarkdownKit
+    - JMDesignKit
+    - TypedTextAttributes
+  - JMOnetimeCalculator (1.0.0)
+  - JMRepicKit (1.0.0):
+    - AlamofireImage
+  - JMScalableView (1.0.0):
+    - JMDesignKit
+  - libwebp (1.1.0):
+    - libwebp/demux (= 1.1.0)
+    - libwebp/mux (= 1.1.0)
+    - libwebp/webp (= 1.1.0)
+  - libwebp/demux (1.1.0):
+    - libwebp/webp
+  - libwebp/mux (1.1.0):
+    - libwebp/demux
+  - libwebp/webp (1.1.0)
+  - lottie-ios (3.1.8)
+  - SDWebImage (4.4.8):
+    - SDWebImage/Core (= 4.4.8)
+  - SDWebImage/Core (4.4.8)
+  - SDWebImage/WebP (4.4.8):
+    - libwebp (< 2.0, >= 0.5)
+    - SDWebImage/Core
+  - SwiftyNSException (2.0.0)
+  - TypedTextAttributes (1.1.0)
+
+DEPENDENCIES:
+  - AlamofireImage
+  - DTCollectionViewManager (~> 7.1.0)
+  - DTModelStorage (~> 8.0.0)
+  - "Fontello-Swift/Entypo (from `git@github.com:bronenos/Fontello-Swift.git`)"
+  - JMDesignKit (from `../JMDesignKit`)
+  - JMMarkdownKit (from `../JMMarkdownKit`)
+  - JMOnetimeCalculator (from `../JMOnetimeCalculator`)
+  - JMRepicKit (from `../JMRepicKit`)
+  - JMScalableView (from `../JMScalableView`)
+  - lottie-ios
+  - SDWebImage
+  - SDWebImage/WebP
+  - SwiftyNSException
+  - TypedTextAttributes
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AlamofireImage
+    - CDMarkdownKit
+    - DTCollectionViewManager
+    - DTModelStorage
+    - libwebp
+    - lottie-ios
+    - SDWebImage
+    - SwiftyNSException
+    - TypedTextAttributes
+
+EXTERNAL SOURCES:
+  Fontello-Swift:
+    :git: "git@github.com:bronenos/Fontello-Swift.git"
+  JMDesignKit:
+    :path: "../JMDesignKit"
+  JMMarkdownKit:
+    :path: "../JMMarkdownKit"
+  JMOnetimeCalculator:
+    :path: "../JMOnetimeCalculator"
+  JMRepicKit:
+    :path: "../JMRepicKit"
+  JMScalableView:
+    :path: "../JMScalableView"
+
+CHECKOUT OPTIONS:
+  Fontello-Swift:
+    :commit: 9537ee87ca5e9b93d29936d6f332630e7b7f07a6
+    :git: "git@github.com:bronenos/Fontello-Swift.git"
+
+SPEC CHECKSUMS:
+  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  AlamofireImage: c4a2ba349885fb3064feb74d2e547bd42ce9be10
+  CDMarkdownKit: d5f3abd812d0bb2471e9cbbe32224b95ac41e92f
+  DTCollectionViewManager: c01e7782a3640c2cd010d02060d685354ce31ad6
+  DTModelStorage: 3b86a1e37496532bbd74cadc5b9310238d5ba780
+  Fontello-Swift: e36df108f387b8cea11ee833c4485363332119a0
+  JMDesignKit: 743a25b23343a0330392cd7c9f7d47efde6a53ff
+  JMMarkdownKit: 7ade4d768626d378ee7f22a31c7d3866b8f55369
+  JMOnetimeCalculator: a2458fa9cb1ec27629f73a3ae9c07a4a0566e7e8
+  JMRepicKit: 93e90948af5a641370ff64024cb591af906798a1
+  JMScalableView: 9e8c31d7f56f9ac081030789471085f20bd0a42e
+  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
+  SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
+  SwiftyNSException: 14b2593b12fec2a29e8666a3f8db682161b3aa0a
+  TypedTextAttributes: fc3a5a8c4a7a28304446f8c5e8af146d11c2163a
+
+PODFILE CHECKSUM: 7e1cb0cbc4a9c0bdee5f43593eef93db0bcb0831
+
+COCOAPODS: 1.10.0

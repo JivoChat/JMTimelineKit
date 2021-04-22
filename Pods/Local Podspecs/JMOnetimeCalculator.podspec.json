@@ -1,0 +1,21 @@
+{
+  "name": "JMOnetimeCalculator",
+  "version": "1.0.0",
+  "license": {
+    "type": "MIT"
+  },
+  "homepage": "https://github.com/bronenos",
+  "authors": {
+    "Stan Potemkin": "potemkin@jivosite.com"
+  },
+  "summary": "JMOnetimeCalculator",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "source": {
+    "git": ""
+  },
+  "source_files": "**/*.{h,m,swift}",
+  "frameworks": "SystemConfiguration",
+  "exclude_files": "Info.plist"
+}

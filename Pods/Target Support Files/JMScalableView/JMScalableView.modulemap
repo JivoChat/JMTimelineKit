@@ -1,0 +1,6 @@
+framework module JMScalableView {
+  umbrella header "JMScalableView-umbrella.h"
+
+  export *
+  module * { export * }
+}
