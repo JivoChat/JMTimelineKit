@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Fontello_Swift
 
 protocol ChatCompositeCellBlock {
     var extraBottomInset: CGFloat { get }

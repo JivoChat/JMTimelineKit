@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '1.0.1'
+    spec.version      = '1.0.2'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -11,6 +11,7 @@ Pod::Spec.new do |spec|
     spec.source       = { :git => 'https://github.com/JivoChat/JMTimelineKit.git', :tag => spec.version }
     spec.source_files = 'JMTimelineKit/**/*.*'
     spec.resource = 'Assets.xcassets'
+    spec.swift_version = '5.0'
 
     spec.framework    = 'SystemConfiguration'
 
@@ -23,7 +24,6 @@ Pod::Spec.new do |spec|
     spec.dependency     'SDWebImage'
     spec.dependency     'SDWebImage/WebP'
     spec.dependency     'lottie-ios'
-    spec.dependency     'Fontello-Swift/Entypo'
     spec.dependency     'JMRepicKit'
     spec.dependency     'JMMarkdownKit'
     spec.dependency     'JMOnetimeCalculator'
