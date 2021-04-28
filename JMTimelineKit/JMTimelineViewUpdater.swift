@@ -8,7 +8,7 @@
 
 import Foundation
 import DTModelStorage
-import DTCollectionViewManager
+import JFCollectionViewManager
 import SwiftyNSException
 
 final class JMTimelineViewUpdater: CollectionViewUpdater {

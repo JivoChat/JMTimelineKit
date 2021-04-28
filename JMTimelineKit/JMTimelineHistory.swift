@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import DTCollectionViewManager
+import JFCollectionViewManager
 import DTModelStorage
 
 fileprivate class JMTimelineHistoryContext {

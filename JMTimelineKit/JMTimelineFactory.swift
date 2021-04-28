@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DTCollectionViewManager
+import JFCollectionViewManager
 
 open class JMTimelineFactory {
     public init() {

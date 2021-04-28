@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DTCollectionViewManager
+import JFCollectionViewManager
 
 public final class JMTimelineController: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
     public var optionalCollectionView: UICollectionView?

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import SwiftyNSException
-import DTCollectionViewManager
+import JFCollectionViewManager
 import DTModelStorage
 
 final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
