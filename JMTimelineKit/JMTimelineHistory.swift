@@ -305,28 +305,16 @@ public final class JMTimelineHistory {
     }
     
     private func prependAndAdjust(context: JMTimelineHistoryContext, item: JMTimelineItem, into groupIndex: Int) {
-        if let newerItem = recentItemsMap[groupIndex] {
-            adjustAfterPrepend(context: context, olderItem: item, newerItem: newerItem)
+        if let newerItem = recentItemsMap[groupIndex] as? JMTimelineItem {
+            if item.date < newerItem.date {
+                adjustAfterPrepend(context: context, olderItem: item, newerItem: newerItem)
+            }
+            else {
+                adjustAfterPrepend(context: context, olderItem: newerItem, newerItem: item)
+            }
         }
         else {
             item.removeRenderOptions([.groupBottomMargin])
-            
-//            if let newerItem = context.recentItemsMap[groupIndex - 1] as? JMTimelineItem {
-//                if belongToSameGroup(item, newerItem) {
-//                    newerItem.removeRenderOptions([.groupTopMargin])
-//                    cache.resetSize(for: newerItem.UUID)
-//                    manager.memoryStorage.reloadItem(newerItem)
-//                }
-//            }
-            
-//            if groupIndex < manager.memoryStorage.sections.count {
-//                let section = manager.memoryStorage.sections[groupIndex]
-//                if section.numberOfItems > 0, let newerItem = section.item(at: section.numberOfItems - 1) as? JMTimelineItem, belongToSameGroup(item, newerItem) {
-//                    newerItem.removeRenderOptions([.groupTopMargin])
-//                    cache.resetSize(for: newerItem.UUID)
-//                    manager.memoryStorage.reloadItem(newerItem)
-//                }
-//            }
         }
         
         manager.memoryStorage.addItem(item, toSection: groupIndex)
@@ -335,19 +323,18 @@ public final class JMTimelineHistory {
         registeredItemIDs.insert(item.UUID)
     }
     
-    private func adjustAfterPrepend(context: JMTimelineHistoryContext, olderItem: Any, newerItem: Any) {
-        guard let olderItem = olderItem as? JMTimelineItem else { return }
-        guard let newerItem = newerItem as? JMTimelineItem else { return }
+    private func adjustAfterPrepend(context: JMTimelineHistoryContext, olderItem: JMTimelineItem, newerItem: JMTimelineItem) {
+        guard belongToSameGroup(olderItem, newerItem) else {
+            return
+        }
         
-        if belongToSameGroup(olderItem, newerItem) {
-            newerItem.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-            olderItem.removeRenderOptions([.groupLastElement, .groupBottomMargin])
-            
-            if context.shouldResetCache {
-                cache.resetSize(for: newerItem.UUID)
-                cache.resetSize(for: olderItem.UUID)
-                context.shouldResetCache = false
-            }
+        newerItem.removeRenderOptions([.groupTopMargin, .groupFirstElement])
+        olderItem.removeRenderOptions([.groupLastElement, .groupBottomMargin])
+        
+        if context.shouldResetCache {
+            cache.resetSize(for: newerItem.UUID)
+            cache.resetSize(for: olderItem.UUID)
+            context.shouldResetCache = false
         }
     }
     
