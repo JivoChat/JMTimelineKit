@@ -211,6 +211,38 @@ public final class JMTimelineHistory {
         }
     }
     
+    public func insert(items: [JMTimelineItem], after itemBeforeInsertion: JMTimelineItem) {
+        manager.memoryStorage.performUpdates {
+            items.forEach { item in
+                if let itemBeforeInsertionIndexPath = manager.memoryStorage.indexPath(forItem: itemBeforeInsertion) {
+                    let indexPathToInsert = IndexPath(
+                        item: itemBeforeInsertionIndexPath.item,
+                        section: itemBeforeInsertionIndexPath.section
+                    )
+                    let itemAfterInsertionIndexPath = indexPathToInsert.item > 0
+                        ? IndexPath(
+                            item: indexPathToInsert.item - 1,
+                            section: indexPathToInsert.section
+                        )
+                        : nil
+                    let itemAfterInsertion = itemAfterInsertionIndexPath.flatMap {
+                        manager.memoryStorage.item(at: $0) as? JMTimelineItem
+                    }
+                    
+                    configureMarginsFor(item, placedAfter: itemBeforeInsertion, andBefore: itemAfterInsertion)
+                    
+                    try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
+                } else {
+                    insertAndAdjust(item: item)
+                }
+                
+                registeredItemIDs.insert(item.UUID)
+            }
+        }
+        
+//        manager.collectionViewUpdater?.storageNeedsReloading()
+    }
+    
     public func append(items: [JMTimelineItem]) {
         manager.memoryStorage.defersDatasourceUpdates = false
         defer { manager.memoryStorage.defersDatasourceUpdates = true }
@@ -372,5 +404,54 @@ public final class JMTimelineHistory {
             newerItem.removeRenderOptions([.groupFirstElement, .groupTopMargin])
             cache.resetSize(for: newerItem.UUID)
         }
+    }
+    
+    @discardableResult
+    private func configureMarginsFor(_ itemToConfigure: JMTimelineItem, placedAfter itemBefore: JMTimelineItem?, andBefore itemAfter: JMTimelineItem?) -> JMTimelineItem {
+        if let itemBefore = itemBefore {
+            if itemToConfigure.groupingID == itemBefore.groupingID {
+                itemToConfigure.removeRenderOptions([.groupTopMargin, .groupFirstElement])
+                cache.resetSize(for: itemToConfigure.UUID)
+                
+                itemBefore.removeRenderOptions([.groupBottomMargin, .groupLastElement])
+                cache.resetSize(for: itemBefore.UUID)
+                manager.memoryStorage.reloadItem(itemBefore)
+            } else {
+                itemToConfigure.addRenderOptions(.groupTopMargin)
+                cache.resetSize(for: itemToConfigure.UUID)
+                
+                itemBefore.addRenderOptions(.groupBottomMargin)
+                cache.resetSize(for: itemBefore.UUID)
+                manager.memoryStorage.reloadItem(itemBefore)
+            }
+        } else {
+            itemToConfigure.removeRenderOptions(.groupTopMargin)
+            itemToConfigure.addRenderOptions(.groupFirstElement)
+            cache.resetSize(for: itemToConfigure.UUID)
+        }
+        
+        if let itemAfter = itemAfter {
+            if itemToConfigure.groupingID == itemAfter.groupingID {
+                itemToConfigure.removeRenderOptions([.groupBottomMargin, .groupLastElement])
+                cache.resetSize(for: itemToConfigure.UUID)
+                
+                itemAfter.removeRenderOptions([.groupTopMargin, .groupFirstElement])
+                cache.resetSize(for: itemAfter.UUID)
+                manager.memoryStorage.reloadItem(itemAfter)
+            } else {
+                itemToConfigure.addRenderOptions(.groupBottomMargin)
+                cache.resetSize(for: itemToConfigure.UUID)
+                
+                itemAfter.addRenderOptions(.groupTopMargin)
+                cache.resetSize(for: itemAfter.UUID)
+                manager.memoryStorage.reloadItem(itemAfter)
+            }
+        } else {
+            itemToConfigure.removeRenderOptions(.groupBottomMargin)
+            itemToConfigure.addRenderOptions(.groupLastElement)
+            cache.resetSize(for: itemToConfigure.UUID)
+        }
+        
+        return itemToConfigure
     }
 }
