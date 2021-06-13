@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '1.1.0'
+    spec.version      = '1.1.1'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
