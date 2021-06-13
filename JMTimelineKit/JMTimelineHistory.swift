@@ -11,6 +11,46 @@ import UIKit
 import JFCollectionViewManager
 import DTModelStorage
 
+protocol Queuing {
+    init(queue: DispatchQueue, delay: TimeInterval)
+
+    func enqueue(_ block: @escaping () -> Void)
+}
+
+class TimeIntervalQueueTool: Queuing {
+    let delay: TimeInterval
+    let queue: DispatchQueue
+    
+    private var lastWorkItemStartDispatchTime: DispatchTime?
+    private var workItems: [DispatchWorkItem] = []
+
+    required init(queue: DispatchQueue, delay: TimeInterval) {
+        self.queue = queue
+        self.delay = delay
+    }
+
+    func enqueue(_ block: @escaping () -> Void) {
+        let workItem = DispatchWorkItem(block: block)
+        workItems.append(workItem)
+        
+        if let lastWorkItemStartDispatchTime = self.lastWorkItemStartDispatchTime {
+            let delayedLastWorkItemStartDispatchTime = lastWorkItemStartDispatchTime + delay
+            self.lastWorkItemStartDispatchTime = delayedLastWorkItemStartDispatchTime
+            
+            let dispatchTime: DispatchTime = max(.now(), delayedLastWorkItemStartDispatchTime)
+            queue.asyncAfter(deadline: dispatchTime, execute: workItem)
+            
+            if DispatchTime.now() > delayedLastWorkItemStartDispatchTime {
+                self.lastWorkItemStartDispatchTime = nil
+            }
+        } else {
+            lastWorkItemStartDispatchTime = .now()
+            
+            queue.async(execute: workItem)
+        }
+    }
+}
+
 fileprivate class JMTimelineHistoryContext {
     var shouldResetCache: Bool
     
@@ -25,8 +65,10 @@ public final class JMTimelineHistory {
     
     var manager: DTCollectionViewManager!
     
+    private let queueTool = TimeIntervalQueueTool(queue: .main, delay: 0.1)
+    
     private var grouping = JMTimelineGrouping()
-    private var recentItemsMap = [Int: Any]()
+    private var recentItemsMap = [Int: JMTimelineItem]()
     private var registeredHeaderModels = [Int: Date]()
     private var registeredFooterModels = [IndexPath: JMTimelineItem]()
     private var registeredItemIDs = Set<String>()
@@ -211,36 +253,37 @@ public final class JMTimelineHistory {
         }
     }
     
-    public func insert(items: [JMTimelineItem], after itemBeforeInsertion: JMTimelineItem) {
+    public func insert(items: [JMTimelineItem], after itemBeforeInsertion: JMTimelineItem?) {
         manager.memoryStorage.performUpdates {
+            configureMarginsFor(items, placedAfter: itemBeforeInsertion)
+            
             items.forEach { item in
-                if let itemBeforeInsertionIndexPath = manager.memoryStorage.indexPath(forItem: itemBeforeInsertion) {
-                    let indexPathToInsert = IndexPath(
-                        item: itemBeforeInsertionIndexPath.item,
-                        section: itemBeforeInsertionIndexPath.section
-                    )
-                    let itemAfterInsertionIndexPath = indexPathToInsert.item > 0
-                        ? IndexPath(
-                            item: indexPathToInsert.item - 1,
-                            section: indexPathToInsert.section
-                        )
-                        : nil
-                    let itemAfterInsertion = itemAfterInsertionIndexPath.flatMap {
-                        manager.memoryStorage.item(at: $0) as? JMTimelineItem
-                    }
-                    
-                    configureMarginsFor(item, placedAfter: itemBeforeInsertion, andBefore: itemAfterInsertion)
-                    
-                    try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
+                let itemDate = item.date.withoutTime()
+                
+                if let existingGroupIndex = grouping.group(for: itemDate) {
+//                    let indexPathToInsertItem = recentItemsMap[existingGroupIndex].flatMap { $0.count + 1 } ?? 0
+//                    let indexPathToInsert = IndexPath(item: indexPathToInsertItem, section: existingGroupIndex)
+//                    try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
                 } else {
-                    insertAndAdjust(item: item)
+                    guard let newGroupIndex = grouping.grow(date: itemDate) else { return }
+                    
+                    let footerIndexPath = IndexPath(item: 0, section: newGroupIndex)
+                    registeredHeaderModels[newGroupIndex] = itemDate
+                    registeredFooterModels[footerIndexPath] = factory.generateDateItem(date: itemDate)
+                    
+                    let model = SectionModel()
+                    model.setItems([item])
+//                    recentItemsMap[newGroupIndex]?.append(item)
+                    manager.memoryStorage.insertSection(model, atIndex: grouping.historyFrontIndex)
                 }
+                
+                let indexPathToInsert = manager.memoryStorage.indexPath(forItem: itemBeforeInsertion) ?? IndexPath(item: 0, section: grouping.historyFrontIndex)
+                
+                try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
                 
                 registeredItemIDs.insert(item.UUID)
             }
         }
-        
-//        manager.collectionViewUpdater?.storageNeedsReloading()
     }
     
     public func append(items: [JMTimelineItem]) {
@@ -249,22 +292,26 @@ public final class JMTimelineHistory {
 
         manager.memoryStorage.performUpdates {
             items.forEach { item in
-                let messageClearDate = item.date.withoutTime()
-        
-                if let groupIndex = grouping.grow(date: messageClearDate) {
-                    let footerIndexPath = IndexPath(item: 0, section: groupIndex)
-                    registeredHeaderModels[groupIndex] = messageClearDate
-                    registeredFooterModels[footerIndexPath] = factory.generateDateItem(date: messageClearDate)
+                queueTool.enqueue { [weak self] in
+                    guard let `self` = self else { return }
                     
-                    let model = SectionModel()
-                    model.setItems([item])
-                    manager.memoryStorage.insertSection(model, atIndex: grouping.historyFrontIndex)
+                    let messageClearDate = item.date.withoutTime()
+            
+                    if let groupIndex = self.grouping.grow(date: messageClearDate) {
+                        let footerIndexPath = IndexPath(item: 0, section: groupIndex)
+                        self.registeredHeaderModels[groupIndex] = messageClearDate
+                        self.registeredFooterModels[footerIndexPath] = self.factory.generateDateItem(date: messageClearDate)
+                        
+                        let model = SectionModel()
+                        model.setItems([item])
+                        self.manager.memoryStorage.insertSection(model, atIndex: self.grouping.historyFrontIndex)
+                    }
+                    else {
+                        self.insertAndAdjust(item: item)
+                    }
+            
+                    self.registeredItemIDs.insert(item.UUID)
                 }
-                else {
-                    insertAndAdjust(item: item)
-                }
-        
-                registeredItemIDs.insert(item.UUID)
             }
         }
         manager.collectionViewUpdater?.storageNeedsReloading()
@@ -337,13 +384,13 @@ public final class JMTimelineHistory {
     }
     
     private func prependAndAdjust(context: JMTimelineHistoryContext, item: JMTimelineItem, into groupIndex: Int) {
-        if let newerItem = recentItemsMap[groupIndex] as? JMTimelineItem {
-            if item.date < newerItem.date {
+        if let newerItem = recentItemsMap[groupIndex] {
+//            if item.date < newerItem.date {
                 adjustAfterPrepend(context: context, olderItem: item, newerItem: newerItem)
-            }
-            else {
-                adjustAfterPrepend(context: context, olderItem: newerItem, newerItem: item)
-            }
+//            }
+//            else {
+//                adjustAfterPrepend(context: context, olderItem: newerItem, newerItem: item)
+//            }
         }
         else {
             item.removeRenderOptions([.groupBottomMargin])
@@ -406,52 +453,53 @@ public final class JMTimelineHistory {
         }
     }
     
-    @discardableResult
-    private func configureMarginsFor(_ itemToConfigure: JMTimelineItem, placedAfter itemBefore: JMTimelineItem?, andBefore itemAfter: JMTimelineItem?) -> JMTimelineItem {
+    private func configureMarginsFor(_ items: [JMTimelineItem], placedAfter itemBeforeCollection: JMTimelineItem? = nil) {
+        let itemAfterCollection = itemBeforeCollection.flatMap { itemInSectionDistant(from: $0, at: -1) }
+        let itemsWithNeighbours = ([itemBeforeCollection] + items + [itemAfterCollection]).compactMap { $0 }
+        
+        _ = itemsWithNeighbours.reduce(items.first, { previousItem, item in
+            configureMarginsFor(item, placedAfter: previousItem)
+            return item
+        })
+    }
+    
+    private func configureMarginsFor(_ item: JMTimelineItem, placedAfter itemBefore: JMTimelineItem?) {
         if let itemBefore = itemBefore {
-            if itemToConfigure.groupingID == itemBefore.groupingID {
-                itemToConfigure.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-                cache.resetSize(for: itemToConfigure.UUID)
-                
+            if item.groupingID == itemBefore.groupingID {
+                item.removeRenderOptions([.groupTopMargin, .groupFirstElement])
                 itemBefore.removeRenderOptions([.groupBottomMargin, .groupLastElement])
-                cache.resetSize(for: itemBefore.UUID)
-                manager.memoryStorage.reloadItem(itemBefore)
             } else {
-                itemToConfigure.addRenderOptions(.groupTopMargin)
-                cache.resetSize(for: itemToConfigure.UUID)
-                
+                item.addRenderOptions(.groupTopMargin)
                 itemBefore.addRenderOptions(.groupBottomMargin)
-                cache.resetSize(for: itemBefore.UUID)
-                manager.memoryStorage.reloadItem(itemBefore)
             }
         } else {
-            itemToConfigure.removeRenderOptions(.groupTopMargin)
-            itemToConfigure.addRenderOptions(.groupFirstElement)
-            cache.resetSize(for: itemToConfigure.UUID)
+            item.removeRenderOptions(.groupTopMargin)
+            item.addRenderOptions(.groupFirstElement)
+            cache.resetSize(for: item.UUID)
         }
         
-        if let itemAfter = itemAfter {
-            if itemToConfigure.groupingID == itemAfter.groupingID {
-                itemToConfigure.removeRenderOptions([.groupBottomMargin, .groupLastElement])
-                cache.resetSize(for: itemToConfigure.UUID)
-                
-                itemAfter.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-                cache.resetSize(for: itemAfter.UUID)
-                manager.memoryStorage.reloadItem(itemAfter)
-            } else {
-                itemToConfigure.addRenderOptions(.groupBottomMargin)
-                cache.resetSize(for: itemToConfigure.UUID)
-                
-                itemAfter.addRenderOptions(.groupTopMargin)
-                cache.resetSize(for: itemAfter.UUID)
-                manager.memoryStorage.reloadItem(itemAfter)
+        cache.resetSize(for: item.UUID)
+        cache.resetSize(for: itemBefore?.UUID ?? String())
+        manager.memoryStorage.reloadItem(itemBefore)
+    }
+    
+    /// Returns an item distant from the given item at specified indexPath rows.
+    /// - Parameters:
+    ///   - item: The item from which desired item is distant.
+    ///   - distance: Difference between indexPath rows of items. Positive value is for distant item before the item in parameter and vice versa. If it zero, then passed item will be return.
+    /// - Returns: JMTimelineItem if distant item was found and nil if distant item doesn't exist.
+    
+    private func itemInSectionDistant(from item: JMTimelineItem, at distance: Int) -> JMTimelineItem? {
+        let distantItem = manager.memoryStorage.indexPath(forItem: item)
+            .flatMap { itemIndexPath in
+                let distantItemIndexPathRow = itemIndexPath.item + distance
+                guard distantItemIndexPathRow >= 0 else { return nil }
+                return IndexPath(item: distantItemIndexPathRow, section: itemIndexPath.section)
             }
-        } else {
-            itemToConfigure.removeRenderOptions(.groupBottomMargin)
-            itemToConfigure.addRenderOptions(.groupLastElement)
-            cache.resetSize(for: itemToConfigure.UUID)
-        }
+            .flatMap { distantItemIndexPath in
+                manager.memoryStorage.item(at: distantItemIndexPath) as? JMTimelineItem
+            }
         
-        return itemToConfigure
+        return distantItem
     }
 }

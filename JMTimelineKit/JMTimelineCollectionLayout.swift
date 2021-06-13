@@ -35,7 +35,8 @@ final class JMTimelineCollectionLayout: UICollectionViewFlowLayout {
     }
     
     private func adjustAttributes(_ attributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        attributes.transform = .invertedVertically
-        return attributes
+        let copiedAttributes = attributes.copy() as? UICollectionViewLayoutAttributes
+        copiedAttributes?.transform = .invertedVertically
+        return copiedAttributes ?? attributes
     }
 }
