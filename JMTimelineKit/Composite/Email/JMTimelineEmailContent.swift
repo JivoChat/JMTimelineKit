@@ -46,8 +46,8 @@ public final class JMTimelineEmailContent: JMTimelineCompositeContent {
                 strikeFont: nil,
                 lineHeight: 22,
                 alignment: .natural,
-                underlineStyle: nil,
-                parseMarkdown: false)
+                underlineStyle: .single,
+                parseMarkdown: true)
         )
     }
     
