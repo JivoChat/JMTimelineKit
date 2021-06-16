@@ -11,46 +11,6 @@ import UIKit
 import JFCollectionViewManager
 import DTModelStorage
 
-protocol Queuing {
-    init(queue: DispatchQueue, delay: TimeInterval)
-
-    func enqueue(_ block: @escaping () -> Void)
-}
-
-class TimeIntervalQueueTool: Queuing {
-    let delay: TimeInterval
-    let queue: DispatchQueue
-    
-    private var lastWorkItemStartDispatchTime: DispatchTime?
-    private var workItems: [DispatchWorkItem] = []
-
-    required init(queue: DispatchQueue, delay: TimeInterval) {
-        self.queue = queue
-        self.delay = delay
-    }
-
-    func enqueue(_ block: @escaping () -> Void) {
-        let workItem = DispatchWorkItem(block: block)
-        workItems.append(workItem)
-        
-        if let lastWorkItemStartDispatchTime = self.lastWorkItemStartDispatchTime {
-            let delayedLastWorkItemStartDispatchTime = lastWorkItemStartDispatchTime + delay
-            self.lastWorkItemStartDispatchTime = delayedLastWorkItemStartDispatchTime
-            
-            let dispatchTime: DispatchTime = max(.now(), delayedLastWorkItemStartDispatchTime)
-            queue.asyncAfter(deadline: dispatchTime, execute: workItem)
-            
-            if DispatchTime.now() > delayedLastWorkItemStartDispatchTime {
-                self.lastWorkItemStartDispatchTime = nil
-            }
-        } else {
-            lastWorkItemStartDispatchTime = .now()
-            
-            queue.async(execute: workItem)
-        }
-    }
-}
-
 fileprivate class JMTimelineHistoryContext {
     var shouldResetCache: Bool
     
@@ -64,8 +24,6 @@ public final class JMTimelineHistory {
     public let cache: JMTimelineCache
     
     var manager: DTCollectionViewManager!
-    
-    private let queueTool = TimeIntervalQueueTool(queue: .main, delay: 0.1)
     
     private var grouping = JMTimelineGrouping()
     private var recentItemsMap = [Int: JMTimelineItem]()
@@ -290,30 +248,25 @@ public final class JMTimelineHistory {
         manager.memoryStorage.defersDatasourceUpdates = false
         defer { manager.memoryStorage.defersDatasourceUpdates = true }
 
-        manager.memoryStorage.performUpdates {
-            items.forEach { item in
-                queueTool.enqueue { [weak self] in
-                    guard let `self` = self else { return }
-                    
-                    let messageClearDate = item.date.withoutTime()
-            
-                    if let groupIndex = self.grouping.grow(date: messageClearDate) {
-                        let footerIndexPath = IndexPath(item: 0, section: groupIndex)
-                        self.registeredHeaderModels[groupIndex] = messageClearDate
-                        self.registeredFooterModels[footerIndexPath] = self.factory.generateDateItem(date: messageClearDate)
-                        
-                        let model = SectionModel()
-                        model.setItems([item])
-                        self.manager.memoryStorage.insertSection(model, atIndex: self.grouping.historyFrontIndex)
-                    }
-                    else {
-                        self.insertAndAdjust(item: item)
-                    }
-            
-                    self.registeredItemIDs.insert(item.UUID)
-                }
+        items.forEach { item in
+            let messageClearDate = item.date.withoutTime()
+    
+            if let groupIndex = self.grouping.grow(date: messageClearDate) {
+                let footerIndexPath = IndexPath(item: 0, section: groupIndex)
+                self.registeredHeaderModels[groupIndex] = messageClearDate
+                self.registeredFooterModels[footerIndexPath] = self.factory.generateDateItem(date: messageClearDate)
+                
+                let model = SectionModel()
+                model.setItems([item])
+                self.manager.memoryStorage.insertSection(model, atIndex: self.grouping.historyFrontIndex)
             }
+            else {
+                self.insertAndAdjust(item: item)
+            }
+    
+            self.registeredItemIDs.insert(item.UUID)
         }
+        
         manager.collectionViewUpdater?.storageNeedsReloading()
     }
     
