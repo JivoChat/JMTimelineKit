@@ -14,7 +14,7 @@ public final class JMTimelinePlayableCallContent: JMTimelineCompositeContent {
     private let playableBlock = JMTimelineCompositeCallPlayableBlock()
     
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [stateBlock, playableBlock]
     }
     

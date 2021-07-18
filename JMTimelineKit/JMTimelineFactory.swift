@@ -29,6 +29,7 @@ open class JMTimelineFactory {
         manager.registerNibless(JMTimelinePlayableCallCell.self)
         manager.registerNibless(JMTimelineRecordlessCallCell.self)
         manager.registerNibless(JMTimelineRichCell.self)
+        manager.registerNibless(JMTimelineTaskCell.self)
     }
     
     open func generateDateItem(date: Date) -> JMTimelineItem {

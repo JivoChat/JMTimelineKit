@@ -13,7 +13,7 @@ public final class JMTimelineMediaContent: JMTimelineCompositeContent {
     private let mediaBlock = JMTimelineCompositeMediaBlock()
     
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [mediaBlock]
         
         mediaBlock.addGestureRecognizer(

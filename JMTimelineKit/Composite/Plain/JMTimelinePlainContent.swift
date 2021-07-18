@@ -13,7 +13,7 @@ public final class JMTimelinePlainContent: JMTimelineCompositeContent {
     private let plainBlock = JMTimelineCompositePlainBlock()
     
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [plainBlock]
     }
     

@@ -15,7 +15,7 @@ public final class JMTimelineRichContent: JMTimelineCompositeContent {
     private let richBlock = JMTimelineCompositeRichBlock()
     
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [richBlock]
     }
     

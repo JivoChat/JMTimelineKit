@@ -159,7 +159,8 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         manager.sizeForCell(withItem: JMTimelinePlayableCallItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineRecordlessCallItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineRichItem.self, _cellSizeProvider)
-    
+        manager.sizeForCell(withItem: JMTimelineTaskItem.self, _cellSizeProvider)
+
         manager.willDisplay(JMTimelineLoaderCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineSystemCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineTimepointCell.self, _willDisplayCallback)
@@ -174,7 +175,8 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         manager.willDisplay(JMTimelinePlayableCallCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineRecordlessCallCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineRichCell.self, _willDisplayCallback)
-    
+        manager.willDisplay(JMTimelineTaskCell.self, _willDisplayCallback)
+
         manager.didSelect(JMTimelineSystemCell.self, _didSelectCallback)
     }
 }

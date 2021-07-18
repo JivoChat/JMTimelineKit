@@ -14,7 +14,7 @@ public final class JMTimelineEmailContent: JMTimelineCompositeContent {
     private let messageBlock = JMTimelineCompositePlainBlock()
     
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [headersBlock, messageBlock]
     }
     

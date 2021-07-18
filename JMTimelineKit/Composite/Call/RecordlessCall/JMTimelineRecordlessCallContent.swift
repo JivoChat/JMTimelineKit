@@ -14,7 +14,7 @@ public final class JMTimelineRecordlessCallContent: JMTimelineCompositeContent {
     private let recordlessBlock = JMTimelineCompositeCallRecordlessBlock()
     
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [stateBlock, recordlessBlock]
     }
     

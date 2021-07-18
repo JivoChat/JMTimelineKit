@@ -14,7 +14,7 @@ public final class JMTimelineBotContent: JMTimelineCompositeContent {
     private let buttonsBlock = JMTimelineCompositeButtonsBlock(behavior: .horizontal)
 
     public init() {
-        super.init(renderMode: .bubbleWithTime)
+        super.init(renderMode: .bubbleWithTimeNoGap)
         children = [plainBlock, buttonsBlock]
         childrenGap = 20
     }
