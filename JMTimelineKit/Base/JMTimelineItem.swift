@@ -98,22 +98,36 @@ public struct JMTimelineReactionStyle: JMTimelineStyle {
     }
 }
 
-struct JMTimelineRenderOptions: OptionSet {
-    let rawValue: Int
-    init(rawValue: Int) { self.rawValue = rawValue }
+public struct JMTimelineRenderOptions: OptionSet {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
     
-    static let groupTopMargin = JMTimelineRenderOptions(rawValue: 1 << 0)
-    static let groupFirstElement = JMTimelineRenderOptions(rawValue: 1 << 1)
-    static let groupLastElement = JMTimelineRenderOptions(rawValue: 1 << 2)
-    static let groupBottomMargin = JMTimelineRenderOptions(rawValue: 1 << 3)
-    static let allOptions = JMTimelineRenderOptions(rawValue: ~0)
+    public static let groupTopMargin = JMTimelineRenderOptions(rawValue: 1 << 0)
+    public static let groupFirstElement = JMTimelineRenderOptions(rawValue: 1 << 1)
+    public static let groupLastElement = JMTimelineRenderOptions(rawValue: 1 << 2)
+    public static let groupBottomMargin = JMTimelineRenderOptions(rawValue: 1 << 3)
+    public static let allOptions = JMTimelineRenderOptions(rawValue: ~0)
 }
+
+public class JMTimelineItemPayload {
+    public let object: JMTimelineObject
+    public let style: JMTimelineStyle
+    
+    public init(object: JMTimelineObject,
+                style: JMTimelineStyle) {
+        self.object = object
+        self.style = style
+    }
+}
+
+public typealias JMTimelineItemZoneProvider = (JMTimelineItem) -> UIView
 
 public class JMTimelineItem: Equatable, Hashable {
     public let UUID: String
     public let date: Date
     public let object: JMTimelineObject
     public let style: JMTimelineStyle
+    public let zones: [JMTimelineItemZoneProvider]
     public let extra: JMTimelineExtraOptions
     public let countable: Bool
     public let cachable: Bool
@@ -125,6 +139,7 @@ public class JMTimelineItem: Equatable, Hashable {
                 date: Date,
                 object: JMTimelineObject,
                 style: JMTimelineStyle,
+                zones: [JMTimelineItemZoneProvider] = Array(),
                 extra: JMTimelineExtraOptions,
                 countable: Bool,
                 cachable: Bool,
@@ -134,6 +149,7 @@ public class JMTimelineItem: Equatable, Hashable {
         self.date = date
         self.object = object
         self.style = style
+        self.zones = zones
         self.extra = extra
         self.countable = countable
         self.cachable = cachable
@@ -162,7 +178,7 @@ public class JMTimelineItem: Equatable, Hashable {
         renderOptions.formUnion(options)
     }
     
-    final func hasRenderOptions(_ options: JMTimelineRenderOptions) -> Bool {
+    public final func hasRenderOptions(_ options: JMTimelineRenderOptions) -> Bool {
         return renderOptions.contains(options)
     }
     

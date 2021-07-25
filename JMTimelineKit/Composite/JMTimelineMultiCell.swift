@@ -1,5 +1,5 @@
 //
-//  JMTimelineCompositeCell.swift
+//  JMTimelineMultiCell.swift
 //  JivoMobile
 //
 //  Created by Stan Potemkin on 20/10/2017.
@@ -9,5 +9,5 @@
 import Foundation
 import UIKit
 
-class JMTimelineCompositeCell: JMTimelineEventCell {
+class JMTimelineMultiCell: JMTimelineEventCell {
 }

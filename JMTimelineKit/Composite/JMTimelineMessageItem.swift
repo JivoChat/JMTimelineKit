@@ -21,9 +21,9 @@ public enum JMTimelineItemPosition {
 }
 
 public struct JMTimelineItemSender {
-    let ID: String
-    let icon: JMRepicItem?
-    let name: String?
+    public let ID: String
+    public let icon: JMRepicItem?
+    public let name: String?
     
     public init(ID: String,
                 icon: JMRepicItem?,
@@ -34,17 +34,25 @@ public struct JMTimelineItemSender {
     }
 }
 
+public struct JMTimelineItemFlags: OptionSet {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+    public static let isExclusive = JMTimelineItemFlags(rawValue: 1 << 0)
+    public static let needsMeta = JMTimelineItemFlags(rawValue: 1 << 1)
+    public static let isQuote = JMTimelineItemFlags(rawValue: 1 << 2)
+}
+
 public class JMTimelineMessageItem: JMTimelineItem {
     let status: String?
     let delivery: JMTimelineItemDelivery
     let position: JMTimelineItemPosition
     let sender: JMTimelineItemSender
-    let isExclusive: Bool
-    let needsMeta: Bool
+    public let flags: JMTimelineItemFlags
     
     public init(UUID: String,
                 date: Date,
                 object: JMTimelineObject,
+                zones: [JMTimelineItemZoneProvider] = Array(),
                 status: String?,
                 delivery: JMTimelineItemDelivery,
                 position: JMTimelineItemPosition,
@@ -53,22 +61,21 @@ public class JMTimelineMessageItem: JMTimelineItem {
                 extra: JMTimelineExtraOptions,
                 countable: Bool,
                 cachable: Bool,
-                isExclusive: Bool,
-                needsMeta: Bool,
+                flags: JMTimelineItemFlags,
                 provider: JMTimelineProvider,
                 interactor: JMTimelineInteractor) {
         self.status = status
         self.delivery = delivery
         self.position = position
         self.sender = sender
-        self.isExclusive = isExclusive
-        self.needsMeta = needsMeta
+        self.flags = flags
         
         super.init(
             UUID: UUID,
             date: date,
             object: object,
             style: style,
+            zones: zones,
             extra: extra,
             countable: countable,
             cachable: cachable,

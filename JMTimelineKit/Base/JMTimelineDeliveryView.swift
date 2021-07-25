@@ -15,8 +15,8 @@ extension Bundle {
     }
 }
 
-final class JMTimelineDeliveryView: UIImageView {
-    func configure(delivery: JMTimelineItemDelivery) {
+public final class JMTimelineDeliveryView: UIImageView {
+    public func configure(delivery: JMTimelineItemDelivery) {
         switch delivery {
         case .hidden: image = nil
         case .sent: image = UIImage(named: "message_sent", in: Bundle.framework, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
@@ -26,7 +26,7 @@ final class JMTimelineDeliveryView: UIImageView {
         }
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let layout = getLayout(size: size)
         return layout.totalSize
     }

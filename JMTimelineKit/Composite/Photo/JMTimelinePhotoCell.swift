@@ -8,7 +8,7 @@
 
 import DTModelStorage
 
-final class JMTimelinePhotoCell: JMTimelineCompositeCell, ModelTransfer {
+final class JMTimelinePhotoCell: JMTimelineMultiCell, ModelTransfer {
     private let internalContent = JMTimelinePhotoContent()
     
     override func obtainContent() -> JMTimelinePhotoContent {

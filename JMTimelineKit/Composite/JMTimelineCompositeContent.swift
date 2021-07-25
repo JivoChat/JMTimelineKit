@@ -70,7 +70,7 @@ public struct JMTimelineCompositeStyle: JMTimelineStyle {
     }
 }
 
-enum JMTimelineCompositeRenderMode {
+public enum JMTimelineCompositeRenderMode {
     case bubbleWithTime
     case bubbleWithTimeNoGap
     case contentAndTime
@@ -78,17 +78,17 @@ enum JMTimelineCompositeRenderMode {
 }
 
 public class JMTimelineCompositeContent: JMTimelineContent {
-    let senderIcon = JMRepicView.standard()
-    let senderLabel = JMTimelineCompositeSenderLabel()
-    let backgroundView = UIImageView()
-    let statusLabel = UILabel()
-    let timeLabel = UILabel()
-    let deliveryView = JMTimelineDeliveryView()
+    public let senderIcon = JMRepicView.standard()
+    public let senderLabel = JMTimelineCompositeSenderLabel()
+    public let backgroundView = UIImageView()
+    public let statusLabel = UILabel()
+    public let timeLabel = UILabel()
+    public let deliveryView = JMTimelineDeliveryView()
     let footer = JMTimelineContainerFooter()
 
     private let renderMode: JMTimelineCompositeRenderMode
     
-    init(renderMode: JMTimelineCompositeRenderMode) {
+    public init(renderMode: JMTimelineCompositeRenderMode, builder: (JMTimelineCompositeContent) -> Void = { _ in }) {
         self.renderMode = renderMode
         
         super.init(frame: .zero)
@@ -114,10 +114,18 @@ public class JMTimelineCompositeContent: JMTimelineContent {
         senderIcon.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(handleSenderIconTap))
         )
+        
+        builder(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func setBlocks(_ blocks: [UIView & JMTimelineBlock]) {
+        children.forEach { $0.removeFromSuperview() }
+        children = blocks
+        children.forEach { backgroundView.addSubview($0) }
     }
     
     var children = [UIView & JMTimelineBlock]() {
@@ -266,7 +274,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
             senderLabel.text = nil
         }
         
-        if item.needsMeta {
+        if item.flags.contains(.needsMeta) {
             statusLabel.text = item.status
             timeLabel.text = item.provider.formattedDateForMessageEvent(item.date)
             deliveryView.configure(delivery: item.delivery)
@@ -384,11 +392,15 @@ fileprivate struct Layout {
         let leftX = horizontalBounds.origin
         
         if senderLabelFrame == .zero {
-            return CGRect(x: leftX, y: 0, width: size.width, height: size.height)
+            let value = CGRect(x: leftX, y: 0, width: size.width, height: size.height)
+            print("{debug} ::backframe[zero] value[\(value)]")
+            return value
         }
         else {
             let topY = senderLabelFrame.maxY + gap
-            return CGRect(x: leftX, y: topY, width: size.width, height: size.height)
+            let value = CGRect(x: leftX, y: topY, width: size.width, height: size.height)
+            print("{debug} ::backframe[nonzero] value[\(value)]")
+            return value
         }
     }
     
@@ -488,7 +500,7 @@ fileprivate struct Layout {
         }
         
         let baseHeight = senderHeight + childrenSize.height
-        let contentInsetsHeight = ((renderMode == .bubbleWithTimeNoGap) ? contentInsets.vertical : 0)
+        let contentInsetsHeight = ((renderMode == .bubbleWithTime || renderMode == .bubbleWithTimeNoGap) ? contentInsets.vertical : 0)
         let coveringMetaHeight = (renderMode != .contentBehindTime ? max(statusSize.height, timeHeight) : 0)
         
         let footerHeight: CGFloat
@@ -541,7 +553,7 @@ fileprivate struct Layout {
         }
         
         let minimalWidth: CGFloat?
-        if s.item?.isExclusive == true {
+        if s.item?.flags.contains(.isExclusive) == true {
             minimalWidth = s.minimalContainerWidth
         }
         else {
@@ -576,7 +588,7 @@ fileprivate struct Layout {
     
     private let _containerSize = JMLazyEvaluator<Layout, CGSize> { s in
         let timeHeight: CGFloat
-        if s.item?.isExclusive == true {
+        if s.item?.flags.contains(.isExclusive) == true {
             timeHeight = 0
         }
         else if let _ = s.timeLabel.text {

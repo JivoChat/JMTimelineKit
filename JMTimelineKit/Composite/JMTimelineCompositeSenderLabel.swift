@@ -9,15 +9,15 @@
 import Foundation
 import UIKit
 
-final class JMTimelineCompositeSenderLabel: UILabel {
+public final class JMTimelineCompositeSenderLabel: UILabel {
     var padding = UIEdgeInsets.zero
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let original = super.sizeThatFits(size)
         return original.extendedBy(insets: padding)
     }
     
-    override func drawText(in rect: CGRect) {
+    public override func drawText(in rect: CGRect) {
         super.drawText(in: rect.reduceBy(insets: padding))
     }
 }

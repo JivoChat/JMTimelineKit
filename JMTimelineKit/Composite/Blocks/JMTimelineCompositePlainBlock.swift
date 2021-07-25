@@ -49,10 +49,10 @@ public struct JMTimelineCompositePlainStyle: JMTimelineStyle {
     }
 }
 
-final class JMTimelineCompositePlainBlock: JMMarkdownLabel, JMTimelineBlock {
+public final class JMTimelineCompositePlainBlock: JMMarkdownLabel, JMTimelineBlock {
     private var mentionProvider: JMMarkdownMentionProvider?
     
-    init() {
+    public init() {
         super.init(provider: nil)
         
         backgroundColor = UIColor.clear
@@ -65,7 +65,7 @@ final class JMTimelineCompositePlainBlock: JMMarkdownLabel, JMTimelineBlock {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func link(provider: JMTimelineProvider, interactor: JMTimelineInteractor) {
+    public func link(provider: JMTimelineProvider, interactor: JMTimelineInteractor) {
         mentionProvider = provider.mentionProvider
         
         urlHandler = { url, interaction in
@@ -73,11 +73,11 @@ final class JMTimelineCompositePlainBlock: JMMarkdownLabel, JMTimelineBlock {
         }
     }
     
-    func configure(content: String) {
+    public func configure(content: String) {
         setContents(.caption(content))
     }
     
-    func apply(style: JMTimelineStyle) {
+    public func apply(style: JMTimelineStyle) {
         let style = style.convert(to: JMTimelineCompositePlainStyle.self)
         let mentionProvider = self.mentionProvider
         
@@ -137,7 +137,7 @@ final class JMTimelineCompositePlainBlock: JMMarkdownLabel, JMTimelineBlock {
         render()
     }
     
-    func handleLongPressGesture(recognizer: UILongPressGestureRecognizer) -> Bool {
+    public func handleLongPressGesture(recognizer: UILongPressGestureRecognizer) -> Bool {
         guard let _ = retrieveURL(gesture: recognizer) else { return false }
         handleLongPress(recognizer)
         return true

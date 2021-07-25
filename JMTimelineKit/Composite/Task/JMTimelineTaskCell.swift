@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelineTaskCell: JMTimelineCompositeCell, ModelTransfer {
+final class JMTimelineTaskCell: JMTimelineMultiCell, ModelTransfer {
     private let internalContent = JMTimelineTaskContent()
     
     override func obtainContent() -> JMTimelineContent {
