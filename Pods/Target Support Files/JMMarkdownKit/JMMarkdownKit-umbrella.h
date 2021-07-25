@@ -11,6 +11,7 @@
 #endif
 
 #import "JMMarkdown.h"
+#import "JMMarkdownKit.h"
 
 FOUNDATION_EXPORT double JMMarkdownKitVersionNumber;
 FOUNDATION_EXPORT const unsigned char JMMarkdownKitVersionString[];

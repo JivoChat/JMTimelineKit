@@ -79,7 +79,6 @@
 		FA620B7526284C0A003CD741 /* JMTimelineLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620AFF26284C0A003CD741 /* JMTimelineLocationCell.swift */; };
 		FA620B7626284C0A003CD741 /* JMTimelineLocationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B0026284C0A003CD741 /* JMTimelineLocationItem.swift */; };
 		FA620B7726284C0A003CD741 /* JMTimelineLocationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B0126284C0A003CD741 /* JMTimelineLocationContent.swift */; };
-		FA620B7826284C0A003CD741 /* JMTimelinePlayableCallEventContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B0326284C0A003CD741 /* JMTimelinePlayableCallEventContent.swift */; };
 		FA620B7926284C0A003CD741 /* JMTimelineCompositeSenderLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B0426284C0A003CD741 /* JMTimelineCompositeSenderLabel.swift */; };
 		FA620B7A26284C0A003CD741 /* JMTimelineEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B0626284C0A003CD741 /* JMTimelineEmojiCell.swift */; };
 		FA620B7B26284C0A003CD741 /* JMTimelineEmojiItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B0726284C0A003CD741 /* JMTimelineEmojiItem.swift */; };
@@ -99,7 +98,6 @@
 		FA620B8926284C0B003CD741 /* JMTimelineBotContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1B26284C0A003CD741 /* JMTimelineBotContent.swift */; };
 		FA620B8A26284C0B003CD741 /* JMTimelineBotItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1C26284C0A003CD741 /* JMTimelineBotItem.swift */; };
 		FA620B8B26284C0B003CD741 /* JMTimelineBotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1D26284C0A003CD741 /* JMTimelineBotCell.swift */; };
-		FA620B8C26284C0B003CD741 /* ChatCompositeCellContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1E26284C0A003CD741 /* ChatCompositeCellContentView.swift */; };
 		FA620B8D26284C0B003CD741 /* JMTimelineCompositeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1F26284C0A003CD741 /* JMTimelineCompositeCell.swift */; };
 		FA620B8E26284C0B003CD741 /* JMTimelinePhotoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2126284C0A003CD741 /* JMTimelinePhotoItem.swift */; };
 		FA620B8F26284C0B003CD741 /* JMTimelinePhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2226284C0A003CD741 /* JMTimelinePhotoCell.swift */; };
@@ -108,12 +106,15 @@
 		FA620B9226284C0B003CD741 /* JMTimelineEmailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2626284C0A003CD741 /* JMTimelineEmailItem.swift */; };
 		FA620B9326284C0B003CD741 /* JMTimelineEmailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2726284C0A003CD741 /* JMTimelineEmailCell.swift */; };
 		FA620B9426284C0B003CD741 /* JMTimelineMessageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2826284C0A003CD741 /* JMTimelineMessageItem.swift */; };
-		FA620B9526284C0B003CD741 /* JMTimelineRecordlessCallEventContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2A26284C0A003CD741 /* JMTimelineRecordlessCallEventContent.swift */; };
 		FA620B9626284C0B003CD741 /* JMTimelineMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2C26284C0A003CD741 /* JMTimelineMediaItem.swift */; };
 		FA620B9726284C0B003CD741 /* JMTimelineMediaContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2D26284C0A003CD741 /* JMTimelineMediaContent.swift */; };
 		FA620B9826284C0B003CD741 /* JMTimelineMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2E26284C0A003CD741 /* JMTimelineMediaCell.swift */; };
 		FA620B9926284C0B003CD741 /* JMTimelineGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2F26284C0A003CD741 /* JMTimelineGrouping.swift */; };
 		FA620BE126285137003CD741 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA620BE026285137003CD741 /* Assets.xcassets */; };
+		FABFCE5726ADD9D1002A3196 /* JMTimelineCompositeTaskBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFCE5626ADD9D1002A3196 /* JMTimelineCompositeTaskBlock.swift */; };
+		FABFCE5C26ADDAAD002A3196 /* JMTimelineTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFCE5926ADDAAD002A3196 /* JMTimelineTaskCell.swift */; };
+		FABFCE5D26ADDAAD002A3196 /* JMTimelineTaskContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFCE5A26ADDAAD002A3196 /* JMTimelineTaskContent.swift */; };
+		FABFCE5E26ADDAAD002A3196 /* JMTimelineTaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFCE5B26ADDAAD002A3196 /* JMTimelineTaskItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -227,6 +228,10 @@
 		FA620B2E26284C0A003CD741 /* JMTimelineMediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineMediaCell.swift; sourceTree = "<group>"; };
 		FA620B2F26284C0A003CD741 /* JMTimelineGrouping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineGrouping.swift; sourceTree = "<group>"; };
 		FA620BE026285137003CD741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FABFCE5626ADD9D1002A3196 /* JMTimelineCompositeTaskBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineCompositeTaskBlock.swift; sourceTree = "<group>"; };
+		FABFCE5926ADDAAD002A3196 /* JMTimelineTaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineTaskCell.swift; sourceTree = "<group>"; };
+		FABFCE5A26ADDAAD002A3196 /* JMTimelineTaskContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineTaskContent.swift; sourceTree = "<group>"; };
+		FABFCE5B26ADDAAD002A3196 /* JMTimelineTaskItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineTaskItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,6 +390,7 @@
 		FA620AE626284C0A003CD741 /* Composite */ = {
 			isa = PBXGroup;
 			children = (
+				FABFCE5826ADDAAD002A3196 /* Task */,
 				FA620AE726284C0A003CD741 /* Blocks */,
 				FA620AF426284C0A003CD741 /* Order */,
 				FA620AF826284C0A003CD741 /* JMTimelineCompositeContent.swift */,
@@ -413,6 +419,7 @@
 		FA620AE726284C0A003CD741 /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
+				FABFCE5626ADD9D1002A3196 /* JMTimelineCompositeTaskBlock.swift */,
 				FA620AE826284C0A003CD741 /* JMTimelineCompositePhotoBlock.swift */,
 				FA620AE926284C0A003CD741 /* JMTimelineCompositeButtonsBlock.swift */,
 				FA620AEA26284C0A003CD741 /* JMTimelineCompositePairsBlock.swift */,
@@ -573,6 +580,16 @@
 			path = Media;
 			sourceTree = "<group>";
 		};
+		FABFCE5826ADDAAD002A3196 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				FABFCE5926ADDAAD002A3196 /* JMTimelineTaskCell.swift */,
+				FABFCE5A26ADDAAD002A3196 /* JMTimelineTaskContent.swift */,
+				FABFCE5B26ADDAAD002A3196 /* JMTimelineTaskItem.swift */,
+			);
+			path = Task;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -680,7 +697,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA620B3926284C0A003CD741 /* JMTimelineController.swift in Sources */,
-				FA620B8C26284C0B003CD741 /* ChatCompositeCellContentView.swift in Sources */,
 				FA620B8F26284C0B003CD741 /* JMTimelinePhotoCell.swift in Sources */,
 				FA620B6526284C0A003CD741 /* JMTimelineCompositeVideoBlock.swift in Sources */,
 				FA620B6F26284C0A003CD741 /* JMTimelineOrderContent.swift in Sources */,
@@ -700,6 +716,7 @@
 				FA620B3326284C0A003CD741 /* JMTimelineSystemCell.swift in Sources */,
 				FA620B8126284C0B003CD741 /* JMTimelinePlayableCallCell.swift in Sources */,
 				FA620B3626284C0A003CD741 /* JMTimelineTimepointLabel.swift in Sources */,
+				FABFCE5C26ADDAAD002A3196 /* JMTimelineTaskCell.swift in Sources */,
 				FA620B5226284C0A003CD741 /* JMTimelineHeaderView.swift in Sources */,
 				FA620B4C26284C0A003CD741 /* JMTimelineDateItem.swift in Sources */,
 				FA620B6A26284C0A003CD741 /* JMTimelineCompositeLocationBlock.swift in Sources */,
@@ -726,6 +743,7 @@
 				FA620B9926284C0B003CD741 /* JMTimelineGrouping.swift in Sources */,
 				FA620B9126284C0B003CD741 /* JMTimelineEmailContent.swift in Sources */,
 				FA620B8826284C0B003CD741 /* JMTimelineRichItem.swift in Sources */,
+				FABFCE5726ADD9D1002A3196 /* JMTimelineCompositeTaskBlock.swift in Sources */,
 				FA620B8226284C0B003CD741 /* JMTimelinePlayableCallContent.swift in Sources */,
 				FA620B5C26284C0A003CD741 /* JMTimelineProvider.swift in Sources */,
 				FA620B4F26284C0A003CD741 /* JMTimelineLoaderContent.swift in Sources */,
@@ -739,6 +757,7 @@
 				FA620B9726284C0B003CD741 /* JMTimelineMediaContent.swift in Sources */,
 				FA620B5426284C0A003CD741 /* JMTimelineContent.swift in Sources */,
 				FA620B7126284C0A003CD741 /* JMTimelineMediaPlayerItem.swift in Sources */,
+				FABFCE5D26ADDAAD002A3196 /* JMTimelineTaskContent.swift in Sources */,
 				FA620B6B26284C0A003CD741 /* JMTimelineCompositePlainBlock.swift in Sources */,
 				FA620B9026284C0B003CD741 /* JMTimelinePhotoContent.swift in Sources */,
 				FA620B7026284C0A003CD741 /* JMTimelineCompositeContent.swift in Sources */,
@@ -769,9 +788,8 @@
 				FA620B8426284C0B003CD741 /* JMTimelineRecordlessCallCell.swift in Sources */,
 				FA620B4D26284C0A003CD741 /* JMTimelineLoaderCell.swift in Sources */,
 				FA620B7526284C0A003CD741 /* JMTimelineLocationCell.swift in Sources */,
-				FA620B9526284C0B003CD741 /* JMTimelineRecordlessCallEventContent.swift in Sources */,
 				FA620B4026284C0A003CD741 /* UITraitCollectionExtensions.swift in Sources */,
-				FA620B7826284C0A003CD741 /* JMTimelinePlayableCallEventContent.swift in Sources */,
+				FABFCE5E26ADDAAD002A3196 /* JMTimelineTaskItem.swift in Sources */,
 				FA620B3E26284C0A003CD741 /* JMComplexAvatarViewExtensions.swift in Sources */,
 				FA620B6626284C0A003CD741 /* JMTimelineCompositeCallPlayableBlock.swift in Sources */,
 				FA620B7D26284C0A003CD741 /* JMTimelineBlock.swift in Sources */,
