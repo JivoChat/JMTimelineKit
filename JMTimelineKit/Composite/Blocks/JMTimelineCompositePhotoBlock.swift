@@ -211,7 +211,7 @@ fileprivate final class UniversalRenderer: UIImageView, Renderer {
         sd_setImage(
             with: url,
             placeholderImage: nil,
-            options: [.cacheMemoryOnly],
+            options: [.fromCacheOnly],
             progress: nil,
             completed: { _, _, _, imageURL in completion(imageURL) })
     }

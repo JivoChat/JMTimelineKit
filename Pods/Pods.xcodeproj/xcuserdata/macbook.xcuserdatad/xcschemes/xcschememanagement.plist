@@ -88,19 +88,26 @@
 			<key>orderHint</key>
 			<integer>13</integer>
 		</dict>
-		<key>SwiftyNSException.xcscheme</key>
+		<key>SDWebImageWebPCoder.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>14</integer>
 		</dict>
-		<key>TypedTextAttributes.xcscheme</key>
+		<key>SwiftyNSException.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>15</integer>
+		</dict>
+		<key>TypedTextAttributes.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>16</integer>
 		</dict>
 		<key>libwebp.xcscheme</key>
 		<dict>

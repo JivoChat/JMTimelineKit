@@ -18,22 +18,22 @@ PODS:
     - AlamofireImage
   - JMScalableView (1.0.0):
     - JMDesignKit
-  - libwebp (1.1.0):
-    - libwebp/demux (= 1.1.0)
-    - libwebp/mux (= 1.1.0)
-    - libwebp/webp (= 1.1.0)
-  - libwebp/demux (1.1.0):
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
     - libwebp/webp
-  - libwebp/mux (1.1.0):
+  - libwebp/mux (1.2.0):
     - libwebp/demux
-  - libwebp/webp (1.1.0)
+  - libwebp/webp (1.2.0)
   - lottie-ios (3.1.8)
-  - SDWebImage (4.4.8):
-    - SDWebImage/Core (= 4.4.8)
-  - SDWebImage/Core (4.4.8)
-  - SDWebImage/WebP (4.4.8):
-    - libwebp (< 2.0, >= 0.5)
-    - SDWebImage/Core
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.4):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
   - SwiftyNSException (2.0.0)
   - TypedTextAttributes (1.1.0)
 
@@ -47,11 +47,15 @@ DEPENDENCIES:
   - JMScalableView
   - lottie-ios
   - SDWebImage
-  - SDWebImage/WebP
+  - SDWebImageWebPCoder
   - SwiftyNSException
   - TypedTextAttributes
 
 SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - libwebp
+    - SDWebImage
+    - SDWebImageWebPCoder
   https://github.com/JivoChat/JMSpecsRepo.git:
     - JFCollectionViewManager
     - JFMarkdownKit
@@ -64,9 +68,7 @@ SPEC REPOS:
     - Alamofire
     - AlamofireImage
     - DTModelStorage
-    - libwebp
     - lottie-ios
-    - SDWebImage
     - SwiftyNSException
     - TypedTextAttributes
 
@@ -81,12 +83,13 @@ SPEC CHECKSUMS:
   JMOnetimeCalculator: 715be6053625fd4ecbeeccce97b68b376ce4acb3
   JMRepicKit: 2e90b3e9f1cc67c1bec7260beab251e0d3791c0a
   JMScalableView: 5e46b19b98bdd4b132fd75fc3ffe14b5b18ca393
-  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   SwiftyNSException: 14b2593b12fec2a29e8666a3f8db682161b3aa0a
   TypedTextAttributes: fc3a5a8c4a7a28304446f8c5e8af146d11c2163a
 
-PODFILE CHECKSUM: 53e20070f24e261d7ca0c601eb8aa43ace50808b
+PODFILE CHECKSUM: 1ce0a26cad0a5be60bde4120a81f63b642f4dbfd
 
 COCOAPODS: 1.10.1
