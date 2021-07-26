@@ -84,7 +84,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
     public let statusLabel = UILabel()
     public let timeLabel = UILabel()
     public let deliveryView = JMTimelineDeliveryView()
-    let footer = JMTimelineContainerFooter()
+    public let footer = JMTimelineContainerFooter()
 
     private let renderMode: JMTimelineCompositeRenderMode
     
@@ -392,15 +392,11 @@ fileprivate struct Layout {
         let leftX = horizontalBounds.origin
         
         if senderLabelFrame == .zero {
-            let value = CGRect(x: leftX, y: 0, width: size.width, height: size.height)
-            print("{debug} ::backframe[zero] value[\(value)]")
-            return value
+            return CGRect(x: leftX, y: 0, width: size.width, height: size.height)
         }
         else {
             let topY = senderLabelFrame.maxY + gap
-            let value = CGRect(x: leftX, y: topY, width: size.width, height: size.height)
-            print("{debug} ::backframe[nonzero] value[\(value)]")
-            return value
+            return CGRect(x: leftX, y: topY, width: size.width, height: size.height)
         }
     }
     

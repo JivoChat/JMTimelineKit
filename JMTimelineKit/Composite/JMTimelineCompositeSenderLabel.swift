@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public final class JMTimelineCompositeSenderLabel: UILabel {
-    var padding = UIEdgeInsets.zero
+    public var padding = UIEdgeInsets.zero
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let original = super.sizeThatFits(size)
