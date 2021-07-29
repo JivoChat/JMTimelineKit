@@ -77,7 +77,26 @@ public enum JMTimelineCompositeRenderMode {
     case contentBehindTime
 }
 
+public struct JMTimelineCompositeOptions {
+    public let position: JMTimelineItemPosition
+    public let isQuote: Bool
+    
+    public init() {
+        self.position = .left
+        self.isQuote = false
+    }
+    
+    public init(
+        position: JMTimelineItemPosition,
+        isQuote: Bool
+    ) {
+        self.position = position
+        self.isQuote = isQuote
+    }
+}
+
 public class JMTimelineCompositeContent: JMTimelineContent {
+    public let quoteControl = UIView()
     public let senderIcon = JMRepicView.standard()
     public let senderLabel = JMTimelineCompositeSenderLabel()
     public let backgroundView = UIImageView()
@@ -87,11 +106,15 @@ public class JMTimelineCompositeContent: JMTimelineContent {
     public let footer = JMTimelineContainerFooter()
 
     private let renderMode: JMTimelineCompositeRenderMode
+    private let options: JMTimelineCompositeOptions
     
-    public init(renderMode: JMTimelineCompositeRenderMode, builder: (JMTimelineCompositeContent) -> Void = { _ in }) {
+    public init(renderMode: JMTimelineCompositeRenderMode, options: JMTimelineCompositeOptions = .init(), builder: (JMTimelineCompositeContent) -> Void = { _ in }) {
         self.renderMode = renderMode
+        self.options = options
         
         super.init(frame: .zero)
+        
+        addSubview(quoteControl)
         
         addSubview(senderIcon)
         
@@ -227,6 +250,8 @@ public class JMTimelineCompositeContent: JMTimelineContent {
         super.layoutSubviews()
         
         let layout = getLayout(size: bounds.size)
+        quoteControl.frame = layout.quoteControlFrame
+        quoteControl.layer.cornerRadius = layout.quoteControlRadius
         senderIcon.frame = layout.senderIconFrame
         senderLabel.frame = layout.senderLabelFrame
         senderLabel.textAlignment = layout.senderLabelAlignment
@@ -252,6 +277,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
         return Layout(
             bounds: CGRect(origin: .zero, size: size),
             item: item?.convert(to: JMTimelineMessageItem.self),
+            isQuoteEnabled: options.isQuote,
             senderLabel: senderLabel,
             statusLabel: statusLabel,
             timeLabel: timeLabel,
@@ -260,7 +286,8 @@ public class JMTimelineCompositeContent: JMTimelineContent {
             childrenGap: childrenGap,
             footer: footer,
             renderMode: renderMode,
-            renderOptions: item?.renderOptions ?? []
+            renderOptions: item?.renderOptions ?? [],
+            options: options
         )
     }
     
@@ -319,6 +346,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
 fileprivate struct Layout {
     let bounds: CGRect
     let item: JMTimelineMessageItem?
+    let isQuoteEnabled: Bool
     let senderLabel: UILabel
     let statusLabel: UILabel
     let timeLabel: UILabel
@@ -328,6 +356,7 @@ fileprivate struct Layout {
     let footer: JMTimelineContainerFooter
     let renderMode: JMTimelineCompositeRenderMode
     let renderOptions: JMTimelineRenderOptions
+    let options: JMTimelineCompositeOptions
     
     private let sameGroupingGapCoef = CGFloat(0.2)
     private let iconSize = CGSize(width: 30, height: 30)
@@ -335,6 +364,25 @@ fileprivate struct Layout {
     private let maximumWidthPercentage = CGFloat(0.93)
     private let gap = CGFloat(5)
     private let timeOuterGap = CGFloat(6)
+    
+    var quoteControlFrame: CGRect {
+        if isQuoteEnabled {
+            return CGRect(x: iconSize.width + iconGap, y: 0, width: 4, height: bounds.height)
+        }
+        else {
+            return .zero
+        }
+    }
+    
+    var quoteControlRadius: CGFloat {
+        if isQuoteEnabled {
+            let frame = quoteControlFrame
+            return min(frame.width, frame.height) * 0.5
+        }
+        else {
+            return .zero
+        }
+    }
     
     var senderIconFrame: CGRect {
         if !renderOptions.contains(.groupLastElement) {
@@ -363,15 +411,13 @@ fileprivate struct Layout {
             return .zero
         }
         
-        switch s.item?.position {
-        case .left?:
+        switch s.item?.position ?? s.options.position {
+        case .left:
             let leftX = containerBounds.origin
             return CGRect(x: leftX, y: 0, width: size.width, height: size.height)
-        case .right?:
+        case .right:
             let leftX = containerBounds.origin + containerBounds.width - size.width
             return CGRect(x: leftX, y: 0, width: size.width, height: size.height)
-        case .none:
-            return .zero
         }
     }
     
@@ -380,7 +426,7 @@ fileprivate struct Layout {
     }
     
     var senderLabelAlignment: NSTextAlignment {
-        switch item?.position ?? .left {
+        switch item?.position ?? options.position {
         case .left: return .left
         case .right: return .right
         }
@@ -424,10 +470,9 @@ fileprivate struct Layout {
         
         let leftX: CGFloat
         if renderMode == .contentAndTime {
-            switch item?.position {
+            switch item?.position ?? options.position {
             case .left: leftX = horizontalBounds.origin + timeInsets.left
             case .right: leftX = horizontalBounds.origin + horizontalBounds.width - timeInsets.right - size.width
-            case .none: leftX = 0
             }
         }
         else {
@@ -471,10 +516,9 @@ fileprivate struct Layout {
         let width = size.width
         let height = size.height
         
-        switch item?.position {
-        case .left?: return CGRect(x: commonGap, y: topY, width: width, height: height)
-        case .right?: return CGRect(x: bounds.width - width, y: topY, width: width, height: height)
-        case .none: return CGRect(x: commonGap, y: topY, width: width, height: height)
+        switch item?.position ?? options.position {
+        case .left: return CGRect(x: commonGap, y: topY, width: width, height: height)
+        case .right: return CGRect(x: bounds.width - width, y: topY, width: width, height: height)
         }
     }
     
@@ -649,10 +693,13 @@ fileprivate struct Layout {
     
     private func calculateHorizontalBounds() -> (origin: CGFloat, width: CGFloat) {
         let leftX: CGFloat
-        switch item?.position {
-        case .left?: leftX = iconSize.width + iconGap
-        case .right?: leftX = bounds.width - containerSize.width
-        case .none: leftX = 0
+        switch item?.position ?? options.position {
+        case .left:
+            let iconOffset = iconSize.width + iconGap
+            let quoteOffset = isQuoteEnabled ? quoteControlFrame.width + 12 : 0
+            leftX = iconOffset + quoteOffset
+        case .right:
+            leftX = bounds.width - containerSize.width
         }
         
         return (origin: leftX, width: containerSize.width)

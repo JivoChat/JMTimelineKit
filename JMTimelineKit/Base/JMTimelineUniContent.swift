@@ -63,9 +63,12 @@ fileprivate struct Layout {
     let bounds: CGRect
     let zones: [UIView]
     
+    private let gap = CGFloat(8)
+    
     var zonesFrames: [CGRect] {
         var frame = CGRect(x: 0, y: 0, width: bounds.width, height: 0)
         return zones.map { zone in
+            defer { frame.origin.y += gap }
             frame.origin.y += frame.size.height
             frame.size = zone.size(for: frame.width)
             return frame
