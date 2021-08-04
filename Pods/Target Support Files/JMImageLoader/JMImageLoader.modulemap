@@ -1,0 +1,6 @@
+framework module JMImageLoader {
+  umbrella header "JMImageLoader-umbrella.h"
+
+  export *
+  module * { export * }
+}
