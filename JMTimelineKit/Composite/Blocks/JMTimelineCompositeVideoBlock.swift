@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import JMImageLoader
 
 struct JMTimelineCompositeVideoStyle {
     let backgroundColor: UIColor
@@ -59,11 +60,12 @@ final class JMTimelineCompositeVideoBlock: UIImageView, JMTimelineBlock {
     func configure(url: URL) {
         self.url = url
         
-        af_setImage(
-            withURLRequest: URLRequest(url: url),
-            placeholderImage: nil,
-            imageTransition: .crossDissolve(0.25)
-        )
+        jmLoadImage(with: url)
+//        af_setImage(
+//            withURLRequest: URLRequest(url: url),
+//            placeholderImage: nil,
+//            imageTransition: .crossDissolve(0.25)
+//        )
     }
     
     func apply(style: JMTimelineStyle) {
