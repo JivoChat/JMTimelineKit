@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import AlamofireImage
+import JMImageLoader
 
 final class JMRepicItemView: UIView {
     private let item: JMRepicItem
@@ -149,9 +149,10 @@ final class JMRepicItemView: UIView {
                 view.tintColor = nil
                 view.contentMode = .scaleAspectFill
                 
-                view.af_setImage(withURL: URL) { response in
-                    if let _ = response.error {
-                        _loadDefault()
+                view.jmLoadImage(with: URL) { result in
+                    switch result {
+                    case .failure: _loadDefault()
+                    default: break
                     }
                 }
             }
@@ -225,7 +226,7 @@ final class JMRepicItemView: UIView {
         guard let view = view else { return }
         
         view.image = nil
-        view.af_setImage(withURL: URL)
+        view.jmLoadImage(with: URL)
         
         gradientOverlay.isHidden = true
     }

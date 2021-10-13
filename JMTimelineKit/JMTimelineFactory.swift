@@ -30,6 +30,8 @@ open class JMTimelineFactory {
         manager.registerNibless(JMTimelineRecordlessCallCell.self)
         manager.registerNibless(JMTimelineRichCell.self)
         manager.registerNibless(JMTimelineTaskCell.self)
+        manager.registerNibless(JMTimelineJoinableConferenceCell.self)
+        manager.registerNibless(JMTimelineFinishedConferenceCell.self)
     }
     
     open func generateDateItem(date: Date) -> JMTimelineItem {

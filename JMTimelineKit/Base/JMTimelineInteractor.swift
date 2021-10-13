@@ -46,6 +46,7 @@ public protocol JMTimelineInteractor: class {
     func toggleMessageReaction(uuid: String, emoji: String)
     func presentMessageReactions(uuid: String)
     func performMessageSubaction(uuid: String, actionID: String)
+    func joinConference(url: URL)
 
     func requestMedia(url: URL, mime: String?)
     func requestLocation(coordinate: CLLocationCoordinate2D)

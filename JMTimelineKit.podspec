@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '1.3.0'
+    spec.version      = '1.3.3'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -15,17 +15,15 @@ Pod::Spec.new do |spec|
 
     spec.framework    = 'SystemConfiguration'
 
-    spec.dependency     'AlamofireImage'
+    spec.dependency     'JMImageLoader', '~> 0.0.1-beta.3'
     spec.dependency     'SwiftyNSException'
     spec.dependency     'DTModelStorage', "~> 8.0.0"
     spec.dependency     'JFCollectionViewManager', "7.5.2"
     spec.dependency     'TypedTextAttributes'
-    spec.dependency     'AlamofireImage'
     spec.dependency     'SDWebImage'
-    # spec.dependency     'SDWebImage/WebP'
     spec.dependency     'SDWebImageWebPCoder'
     spec.dependency     'lottie-ios'
-    spec.dependency     'JMRepicKit'
+    spec.dependency     'JMRepicKit', '~> 1.0.2-beta.0'
     spec.dependency     'JMMarkdownKit'
     spec.dependency     'JMOnetimeCalculator'
     spec.dependency     'JMScalableView'

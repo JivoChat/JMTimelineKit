@@ -1,7 +1,4 @@
 PODS:
-  - Alamofire (5.2.2)
-  - AlamofireImage (4.1.0):
-    - Alamofire (~> 5.1)
   - DTModelStorage (8.0.0):
     - DTModelStorage/Core (= 8.0.0)
   - DTModelStorage/Core (8.0.0)
@@ -9,13 +6,14 @@ PODS:
     - DTModelStorage (= 8.0.0)
   - JFMarkdownKit (1.2.2)
   - JMDesignKit (1.0.0)
+  - JMImageLoader (0.0.1-beta.0)
   - JMMarkdownKit (1.1.3):
     - JFMarkdownKit
     - JMDesignKit
     - TypedTextAttributes
   - JMOnetimeCalculator (1.0.0)
-  - JMRepicKit (1.0.1):
-    - AlamofireImage
+  - JMRepicKit (1.0.2-beta.0):
+    - JMImageLoader (~> 0.0.1-beta.0)
   - JMScalableView (1.0.0):
     - JMDesignKit
   - libwebp (1.2.0):
@@ -38,12 +36,11 @@ PODS:
   - TypedTextAttributes (1.1.0)
 
 DEPENDENCIES:
-  - AlamofireImage
   - DTModelStorage (~> 8.0.0)
   - JFCollectionViewManager (= 7.5.2)
   - JMMarkdownKit
   - JMOnetimeCalculator
-  - JMRepicKit
+  - JMRepicKit (~> 1.0.2-beta.0)
   - JMScalableView
   - lottie-ios
   - SDWebImage
@@ -62,26 +59,25 @@ SPEC REPOS:
     - JMDesignKit
     - JMMarkdownKit
     - JMOnetimeCalculator
-    - JMRepicKit
     - JMScalableView
+  https://github.com/JivoChat/JMSpecsRepoDevelop.git:
+    - JMImageLoader
+    - JMRepicKit
   trunk:
-    - Alamofire
-    - AlamofireImage
     - DTModelStorage
     - lottie-ios
     - SwiftyNSException
     - TypedTextAttributes
 
 SPEC CHECKSUMS:
-  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
-  AlamofireImage: c4a2ba349885fb3064feb74d2e547bd42ce9be10
   DTModelStorage: 3b86a1e37496532bbd74cadc5b9310238d5ba780
   JFCollectionViewManager: b0fe7e93acfe335d72fae4dad88e9e036ba1c8ed
   JFMarkdownKit: 9fbf4d7e07ddb4213f7044547497159a55ca3c73
   JMDesignKit: a2504dd6c940691b4a479b871bc2a73a707c8a93
+  JMImageLoader: 08ffa82584a4dd0114e0c5c5422859780326d6e4
   JMMarkdownKit: b47ad1429d0fa299d803560415dd264ceafcf43d
   JMOnetimeCalculator: 715be6053625fd4ecbeeccce97b68b376ce4acb3
-  JMRepicKit: 2e90b3e9f1cc67c1bec7260beab251e0d3791c0a
+  JMRepicKit: 270e62e942f039da37d70c347d252fc23dc5aae9
   JMScalableView: 5e46b19b98bdd4b132fd75fc3ffe14b5b18ca393
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
@@ -90,6 +86,6 @@ SPEC CHECKSUMS:
   SwiftyNSException: 14b2593b12fec2a29e8666a3f8db682161b3aa0a
   TypedTextAttributes: fc3a5a8c4a7a28304446f8c5e8af146d11c2163a
 
-PODFILE CHECKSUM: 1ce0a26cad0a5be60bde4120a81f63b642f4dbfd
+PODFILE CHECKSUM: a59394c4bd12fd455761d2d5565b68024f1aedca
 
 COCOAPODS: 1.10.1
