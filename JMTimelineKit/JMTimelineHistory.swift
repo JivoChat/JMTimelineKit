@@ -212,39 +212,6 @@ public final class JMTimelineHistory {
         }
     }
 
-    public func insert(items: [JMTimelineItem], after itemBeforeInsertion: JMTimelineItem?) {
-        manager.memoryStorage.performUpdates {
-            configureMarginsFor(items, placedAfter: itemBeforeInsertion)
-
-            items.forEach { item in
-                let itemDate = item.date.withoutTime()
-
-                if let existingGroupIndex = grouping.group(for: itemDate) {
-//                    let indexPathToInsertItem = recentItemsMap[existingGroupIndex].flatMap { $0.count + 1 } ?? 0
-//                    let indexPathToInsert = IndexPath(item: indexPathToInsertItem, section: existingGroupIndex)
-//                    try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
-                } else {
-                    guard let newGroupIndex = grouping.grow(date: itemDate) else { return }
-
-                    let footerIndexPath = IndexPath(item: 0, section: newGroupIndex)
-                    registeredHeaderModels[newGroupIndex] = itemDate
-                    registeredFooterModels[footerIndexPath] = factory.generateDateItem(date: itemDate)
-
-                    let model = SectionModel()
-                    model.setItems([item])
-//                    recentItemsMap[newGroupIndex]?.append(item)
-                    manager.memoryStorage.insertSection(model, atIndex: grouping.historyFrontIndex)
-                }
-
-                let indexPathToInsert = manager.memoryStorage.indexPath(forItem: itemBeforeInsertion) ?? IndexPath(item: 0, section: grouping.historyFrontIndex)
-
-                try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
-
-                registeredItemIDs.insert(item.UUID)
-            }
-        }
-    }
-
     public func append(items: [JMTimelineItem]) {
         manager.memoryStorage.defersDatasourceUpdates = false
         defer { manager.memoryStorage.defersDatasourceUpdates = true }
@@ -337,6 +304,16 @@ public final class JMTimelineHistory {
             }
         }
     }
+    
+    public func reloadItems(_ items: [JMTimelineItem]) {
+        configureMarginsFor(items)
+        manager.memoryStorage.performUpdates {
+            items.forEach { replacingItem in
+                let itemToReplace = item(byUUID: replacingItem.UUID)
+                try? manager.memoryStorage.replaceItem(itemToReplace, with: replacingItem)
+            }
+        }
+    }
 
     private func prependAndAdjust(context: JMTimelineHistoryContext, item: JMTimelineItem, into groupIndex: Int) {
         if let newerItem = earliestItemsMap[groupIndex] {
@@ -407,54 +384,51 @@ public final class JMTimelineHistory {
             cache.resetSize(for: newerItem.UUID)
         }
     }
-
-    private func configureMarginsFor(_ items: [JMTimelineItem], placedAfter itemBeforeCollection: JMTimelineItem? = nil) {
-        let itemAfterCollection = itemBeforeCollection.flatMap { itemInSectionDistant(from: $0, at: -1) }
-        let itemsWithNeighbours = ([itemBeforeCollection] + items + [itemAfterCollection]).compactMap { $0 }
-
-        _ = itemsWithNeighbours.reduce(items.first, { previousItem, item in
-            configureMarginsFor(item, placedAfter: previousItem)
-            return item
-        })
-    }
-
-    private func configureMarginsFor(_ item: JMTimelineItem, placedAfter itemBefore: JMTimelineItem?) {
-        if let itemBefore = itemBefore {
-            if item.groupingID == itemBefore.groupingID {
-                item.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-                itemBefore.removeRenderOptions([.groupBottomMargin, .groupLastElement])
-            } else {
-                item.addRenderOptions(.groupTopMargin)
-                itemBefore.addRenderOptions(.groupBottomMargin)
-            }
-        } else {
-            item.removeRenderOptions(.groupTopMargin)
-            item.addRenderOptions(.groupFirstElement)
-            cache.resetSize(for: item.UUID)
+    
+    // 'items' first elements is the earliest messages, last elements is the latest messages
+    private func configureMarginsFor(_ items: [JMTimelineItem]) {
+        let sectionIndexAndNumberOfItemsPairs = manager.memoryStorage.sections.enumerated().map { (index, section) -> (sectionIndex: Int, numberOfItems: Int) in
+            return (sectionIndex: grouping.historyFrontIndex + index, numberOfItems: section.numberOfItems)
         }
-
-        cache.resetSize(for: item.UUID)
-        cache.resetSize(for: itemBefore?.UUID ?? String())
-        manager.memoryStorage.reloadItem(itemBefore)
-    }
-
-    /// Returns an item distant from the given item at specified indexPath rows.
-    /// - Parameters:
-    ///   - item: The item from which desired item is distant.
-    ///   - distance: Difference between indexPath rows of items. Positive value is for distant item before the item in parameter and vice versa. If it zero, then passed item will be return.
-    /// - Returns: JMTimelineItem if distant item was found and nil if distant item doesn't exist.
-
-    private func itemInSectionDistant(from item: JMTimelineItem, at distance: Int) -> JMTimelineItem? {
-        let distantItem = manager.memoryStorage.indexPath(forItem: item)
-            .flatMap { itemIndexPath in
-                let distantItemIndexPathRow = itemIndexPath.item + distance
-                guard distantItemIndexPathRow >= 0 else { return nil }
-                return IndexPath(item: distantItemIndexPathRow, section: itemIndexPath.section)
+        let lastItemInSectionIndexPaths = sectionIndexAndNumberOfItemsPairs.map { pair in
+            return IndexPath(item: 0, section: pair.sectionIndex)
+        }
+        let earliestItemInSectionIndexPaths = sectionIndexAndNumberOfItemsPairs.map { pair in
+            return IndexPath(item: pair.numberOfItems - 1, section: pair.sectionIndex)
+        }
+        
+        stride(from: 0, to: items.count, by: 2).forEach { index in
+            let earlierItem = items[index]
+            let laterItemIndex = index + 1
+            let laterItem = laterItemIndex < items.count ? items[laterItemIndex] : nil
+            
+            if earlierItem.groupingID == laterItem?.groupingID {
+                earlierItem.removeRenderOptions([.groupBottomMargin, .groupLastElement])
+                laterItem?.removeRenderOptions([.groupTopMargin, .groupFirstElement])
+            } else {
+                earlierItem.addRenderOptions(.groupBottomMargin)
+                laterItem?.addRenderOptions(.groupTopMargin)
             }
-            .flatMap { distantItemIndexPath in
-                manager.memoryStorage.item(at: distantItemIndexPath) as? JMTimelineItem
+            
+            if let earlierItemIndexPath = manager.memoryStorage.indexPath(forItem: earlierItem) {
+                if earliestItemInSectionIndexPaths.contains(earlierItemIndexPath) {
+                    earlierItem.addRenderOptions(.groupFirstElement)
+                    earlierItem.removeRenderOptions(.groupTopMargin)
+                }
+                if lastItemInSectionIndexPaths.contains(earlierItemIndexPath) {
+                    earlierItem.addRenderOptions(.groupLastElement)
+                    earlierItem.removeRenderOptions(.groupBottomMargin)
+                }
             }
-
-        return distantItem
+            if let laterItemIndexPath = manager.memoryStorage.indexPath(forItem: laterItem) {
+                if lastItemInSectionIndexPaths.contains(laterItemIndexPath) {
+                    laterItem?.addRenderOptions(.groupLastElement)
+                    laterItem?.removeRenderOptions(.groupBottomMargin)
+                }
+            }
+            
+            cache.resetSize(for: earlierItem.UUID)
+            laterItem.flatMap { cache.resetSize(for: $0.UUID) }
+        }
     }
 }
