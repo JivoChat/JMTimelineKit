@@ -49,6 +49,7 @@ public protocol JMTimelineInteractor: class {
     func joinConference(url: URL)
 
     func requestMedia(url: URL, mime: String?)
+    func requestAudio(url: URL, mime: String?)
     func requestLocation(coordinate: CLLocationCoordinate2D)
     
     func constructMenuForMessage()

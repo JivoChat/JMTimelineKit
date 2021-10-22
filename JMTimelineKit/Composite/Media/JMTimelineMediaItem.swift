@@ -13,20 +13,6 @@ public extension Notification.Name {
     static let JMMediaPlayerState = Notification.Name("JMMediaPlayerState")
 }
 
-public struct JMTimelineAudioObject: JMTimelineObject {
-    let URL: URL
-    let title: String?
-    let duration: TimeInterval?
-    
-    public init(URL: URL,
-                title: String?,
-                duration: TimeInterval?) {
-        self.URL = URL
-        self.title = title
-        self.duration = duration
-    }
-}
-
 public struct JMTimelineVideoObject: JMTimelineObject {
     let URL: URL
     let title: String?
