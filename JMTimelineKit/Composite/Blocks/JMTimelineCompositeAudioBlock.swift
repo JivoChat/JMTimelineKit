@@ -242,7 +242,7 @@ final class JMTimelineCompositeAudioBlock: UIView, JMTimelineBlock {
         case .none:
             playButton.isHidden = false
             pauseButton.isHidden = true
-            sliderControl.value = 0.1
+            sliderControl.value = 0
             durationLabel.text = duration.flatMap { generateProgressCaption(current: 0, duration: $0) }
 
         case .loading:
