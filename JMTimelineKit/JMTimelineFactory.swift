@@ -24,6 +24,7 @@ open class JMTimelineFactory {
         manager.registerNibless(JMTimelineEmojiCell.self)
         manager.registerNibless(JMTimelinePhotoCell.self)
         manager.registerNibless(JMTimelineMediaCell.self)
+        manager.registerNibless(JMTimelineAudioCell.self)
         manager.registerNibless(JMTimelineEmailCell.self)
         manager.registerNibless(JMTimelineLocationCell.self)
         manager.registerNibless(JMTimelinePlayableCallCell.self)

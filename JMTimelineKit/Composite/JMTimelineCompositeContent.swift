@@ -73,6 +73,7 @@ public struct JMTimelineCompositeStyle: JMTimelineStyle {
 enum JMTimelineCompositeRenderMode {
     case bubbleWithTime
     case bubbleWithTimeNoGap
+    case bubbleWithTimeClosely
     case contentAndTime
     case contentBehindTime
 }
@@ -396,6 +397,7 @@ fileprivate struct Layout {
         switch renderMode {
         case .bubbleWithTime: return 8
         case .bubbleWithTimeNoGap: return 8
+        case .bubbleWithTimeClosely: return 8
         case .contentAndTime: return 0
         case .contentBehindTime: return 8
         }
@@ -488,7 +490,7 @@ fileprivate struct Layout {
         }
         
         let baseHeight = senderHeight + childrenSize.height
-        let contentInsetsHeight = ((renderMode == .bubbleWithTimeNoGap) ? contentInsets.vertical : 0)
+        let contentInsetsHeight = ((renderMode == .bubbleWithTimeNoGap || renderMode == .bubbleWithTimeClosely) ? contentInsets.vertical : 0)
         let coveringMetaHeight = (renderMode != .contentBehindTime ? max(statusSize.height, timeHeight) : 0)
         
         let footerHeight: CGFloat
@@ -509,7 +511,7 @@ fileprivate struct Layout {
     }
     
     private var maximumBlockWidth: CGFloat {
-        if renderMode == .bubbleWithTime || renderMode == .bubbleWithTimeNoGap {
+        if renderMode == .bubbleWithTime || renderMode == .bubbleWithTimeNoGap || renderMode == .bubbleWithTimeClosely {
             return maximumContainerWidth - contentInsets.horizontal
         }
         else {
@@ -521,6 +523,7 @@ fileprivate struct Layout {
         switch renderMode {
         case .bubbleWithTime: return UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)
         case .bubbleWithTimeNoGap: return UIEdgeInsets(top: 14, left: 14, bottom: 0, right: 14)
+        case .bubbleWithTimeClosely: return UIEdgeInsets(top: 14, left: 14, bottom: 0, right: 14)
         case .contentAndTime: return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         case .contentBehindTime: return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
@@ -530,6 +533,7 @@ fileprivate struct Layout {
         switch renderMode {
         case .bubbleWithTime: return UIEdgeInsets(top: 6, left: 6, bottom: 8, right: 8)
         case .bubbleWithTimeNoGap: return UIEdgeInsets(top: 6, left: 6, bottom: 8, right: 8)
+        case .bubbleWithTimeClosely: return UIEdgeInsets(top: 0, left: 6, bottom: 8, right: 8)
         case .contentAndTime: return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         case .contentBehindTime: return UIEdgeInsets(top: 0, left: 2, bottom: 2, right: 2)
         }
@@ -590,7 +594,7 @@ fileprivate struct Layout {
         let contentWidth = max(s.childrenSize.width, metaWidth) + s.contentInsets.horizontal
         
         let baseHeight = s.childrenSize.height
-        let contentInsetsHeight = ((s.renderMode == .bubbleWithTime || s.renderMode == .bubbleWithTimeNoGap) ? s.contentInsets.vertical : 0)
+        let contentInsetsHeight = ((s.renderMode == .bubbleWithTime || s.renderMode == .bubbleWithTimeNoGap || s.renderMode == .bubbleWithTimeClosely) ? s.contentInsets.vertical : 0)
         let coveringTimeHeight = (s.renderMode != .contentBehindTime ? max(s.statusSize.height, timeHeight) : 0)
         let height = baseHeight + contentInsetsHeight + coveringTimeHeight
         

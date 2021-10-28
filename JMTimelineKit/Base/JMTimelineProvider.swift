@@ -22,5 +22,5 @@ public protocol JMTimelineProvider: class {
     func formattedTimeForPlayback(_ timestamp: TimeInterval) -> String
     func formattedPhoneNumber(_ phone: String) -> String
     func mentionProvider(origin: JMMarkdownMentionOrigin) -> JMMarkdownMentionMeta?
-    func retrieveResource(from url: URL, completion: @escaping (JMTimelineResource?) -> Void)
+    func retrieveResource(from url: URL, canvasWidth: CGFloat, completion: @escaping (JMTimelineResource?) -> Void)
 }

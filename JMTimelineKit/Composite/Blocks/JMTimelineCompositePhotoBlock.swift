@@ -77,7 +77,10 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
         self.cropped = cropped
         self.allowFullscreen = allowFullscreen
         
-        provider.retrieveResource(from: url) { [weak self] resource in
+        waitingIndicator.startAnimating()
+        
+        let canvasWidth = originalSize.width * UIScreen.main.scale
+        provider.retrieveResource(from: url, canvasWidth: canvasWidth) { [weak self] resource in
             guard let `self` = self, url == self.url else {
                 return
             }
@@ -90,19 +93,15 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
             switch resource {
             case .raw(let data) where NSData.sd_imageFormat(forImageData: data) == .undefined:
                 self.ensureRenderer(NativeRenderer.self).configure(data: data)
-                self.waitingIndicator.stopAnimating()
-            case .raw:
-                self.ensureRenderer(UniversalRenderer.self).configure(url: url) { [weak self] imageURL in
-                    guard imageURL == url else { return }
-                    self?.waitingIndicator.stopAnimating()
-                }
+            case .raw(let data):
+                self.ensureRenderer(UniversalRenderer.self).configure(data: data)
             case .lottie(let animation):
                 self.ensureRenderer(LottieRenderer.self).configure(animation: animation)
-                self.waitingIndicator.stopAnimating()
             case .nothing:
                 self.ensureRenderer(NothingRenderer.self).configure()
-                self.waitingIndicator.stopAnimating()
             }
+            
+            self.waitingIndicator.stopAnimating()
         }
     }
     
@@ -213,6 +212,10 @@ fileprivate final class UniversalRenderer: UIImageView, Renderer {
             options: [],
             progress: nil,
             completed: { _, _, _, imageURL in completion(imageURL) })
+    }
+    
+    func configure(data: Data) {
+        image = UIImage(data: data)
     }
     
     func pause() {

@@ -41,17 +41,6 @@ public final class JMTimelineMediaContent: JMTimelineCompositeContent {
         let subtitle: String?
         
         switch (item as! JMTimelineMediaItem).object {
-        case let object as JMTimelineAudioObject:
-            let formatter = DateComponentsFormatter()
-            formatter.unitsStyle = .positional
-            formatter.allowedUnits = [.hour, .minute, .second]
-            formatter.zeroFormattingBehavior = .pad
-            
-            icon = UIImage(named: "media_audio", in: Bundle.framework, compatibleWith: nil)
-            url = object.URL
-            title = object.title
-            subtitle = object.duration.flatMap(formatter.string)
-
         case let object as JMTimelineVideoObject:
             let formatter = DateComponentsFormatter()
             formatter.unitsStyle = .positional

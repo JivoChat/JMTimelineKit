@@ -14,6 +14,9 @@
 		C835E5CC2717639F002F99C3 /* JMTimelineFinishedConferenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835E5C52717639F002F99C3 /* JMTimelineFinishedConferenceItem.swift */; };
 		C835E5CD2717639F002F99C3 /* JMTimelineFinishedConferenceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835E5C62717639F002F99C3 /* JMTimelineFinishedConferenceCell.swift */; };
 		C835E5CE2717639F002F99C3 /* JMTimelineConferenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835E5C72717639F002F99C3 /* JMTimelineConferenceItem.swift */; };
+		C8752D0E272AA7AD00AAE7CE /* JMTimelineAudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8752D0B272AA7AD00AAE7CE /* JMTimelineAudioCell.swift */; };
+		C8752D0F272AA7AD00AAE7CE /* JMTimelineAudioContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8752D0C272AA7AD00AAE7CE /* JMTimelineAudioContent.swift */; };
+		C8752D10272AA7AD00AAE7CE /* JMTimelineAudioItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8752D0D272AA7AD00AAE7CE /* JMTimelineAudioItem.swift */; };
 		EC4B680AB7DB3B28298AED77 /* Pods_JMTimelineKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50652DE5F7C59A16B2845018 /* Pods_JMTimelineKit.framework */; };
 		FA620B3026284C0A003CD741 /* JMTimelineSystemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620AB026284C09003CD741 /* JMTimelineSystemButton.swift */; };
 		FA620B3126284C0A003CD741 /* JMTimelineSystemItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620AB126284C09003CD741 /* JMTimelineSystemItem.swift */; };
@@ -135,6 +138,9 @@
 		C835E5C52717639F002F99C3 /* JMTimelineFinishedConferenceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineFinishedConferenceItem.swift; sourceTree = "<group>"; };
 		C835E5C62717639F002F99C3 /* JMTimelineFinishedConferenceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineFinishedConferenceCell.swift; sourceTree = "<group>"; };
 		C835E5C72717639F002F99C3 /* JMTimelineConferenceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineConferenceItem.swift; sourceTree = "<group>"; };
+		C8752D0B272AA7AD00AAE7CE /* JMTimelineAudioCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineAudioCell.swift; sourceTree = "<group>"; };
+		C8752D0C272AA7AD00AAE7CE /* JMTimelineAudioContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineAudioContent.swift; sourceTree = "<group>"; };
+		C8752D0D272AA7AD00AAE7CE /* JMTimelineAudioItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineAudioItem.swift; sourceTree = "<group>"; };
 		FA620AA226284B67003CD741 /* JMTimelineKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JMTimelineKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA620AB026284C09003CD741 /* JMTimelineSystemButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineSystemButton.swift; sourceTree = "<group>"; };
 		FA620AB126284C09003CD741 /* JMTimelineSystemItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineSystemItem.swift; sourceTree = "<group>"; };
@@ -307,6 +313,16 @@
 			path = FinishedConference;
 			sourceTree = "<group>";
 		};
+		C8752D0A272AA7AD00AAE7CE /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				C8752D0B272AA7AD00AAE7CE /* JMTimelineAudioCell.swift */,
+				C8752D0C272AA7AD00AAE7CE /* JMTimelineAudioContent.swift */,
+				C8752D0D272AA7AD00AAE7CE /* JMTimelineAudioItem.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		FA620A9826284B67003CD741 = {
 			isa = PBXGroup;
 			children = (
@@ -434,6 +450,7 @@
 		FA620AE626284C0A003CD741 /* Composite */ = {
 			isa = PBXGroup;
 			children = (
+				C8752D0A272AA7AD00AAE7CE /* Audio */,
 				C835E5BE2717639F002F99C3 /* Conference */,
 				FABFCE5826ADDAAD002A3196 /* Task */,
 				FA620AE726284C0A003CD741 /* Blocks */,
@@ -805,6 +822,7 @@
 				FA620B5926284C0A003CD741 /* JMTimelineItem.swift in Sources */,
 				FA620B3726284C0A003CD741 /* JMTimelineTimepointItem.swift in Sources */,
 				FA620B9726284C0B003CD741 /* JMTimelineMediaContent.swift in Sources */,
+				C8752D0E272AA7AD00AAE7CE /* JMTimelineAudioCell.swift in Sources */,
 				FA620B5426284C0A003CD741 /* JMTimelineContent.swift in Sources */,
 				FA620B7126284C0A003CD741 /* JMTimelineMediaPlayerItem.swift in Sources */,
 				FABFCE5D26ADDAAD002A3196 /* JMTimelineTaskContent.swift in Sources */,
@@ -815,6 +833,7 @@
 				FA620B8A26284C0B003CD741 /* JMTimelineBotItem.swift in Sources */,
 				FA620B4926284C0A003CD741 /* JMTimelineViewUpdater.swift in Sources */,
 				FA620B4426284C0A003CD741 /* UILabelExtensions.swift in Sources */,
+				C8752D10272AA7AD00AAE7CE /* JMTimelineAudioItem.swift in Sources */,
 				FA620B4A26284C0A003CD741 /* JMTimelineDateHeaderContent.swift in Sources */,
 				FA620B3C26284C0A003CD741 /* CGSizeExtensions.swift in Sources */,
 				FA620B8726284C0B003CD741 /* JMTimelineRichCell.swift in Sources */,
@@ -822,6 +841,7 @@
 				FA620B5126284C0A003CD741 /* JMTimelineObject.swift in Sources */,
 				FA620B7426284C0A003CD741 /* JMTimelinePlainContent.swift in Sources */,
 				FA620B7926284C0A003CD741 /* JMTimelineCompositeSenderLabel.swift in Sources */,
+				C8752D0F272AA7AD00AAE7CE /* JMTimelineAudioContent.swift in Sources */,
 				FA620B5B26284C0A003CD741 /* JMTimelineEventCell.swift in Sources */,
 				FA620B7226284C0A003CD741 /* JMTimelinePlainItem.swift in Sources */,
 				FA620B6D26284C0A003CD741 /* JMTimelineOrderCell.swift in Sources */,
