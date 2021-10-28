@@ -97,13 +97,15 @@ public final class JMTimelineMediaContent: JMTimelineCompositeContent {
     @objc private func handleTap() {
         switch (item as! JMTimelineMediaItem).object {
         case let object as JMTimelineAudioObject:
-            item?.interactor.requestMedia(url: object.URL, mime: nil)
+            item?.interactor.requestMedia(url: object.URL, mime: nil) { _ in }
             
         case let object as JMTimelineVideoObject:
-            item?.interactor.requestMedia(url: object.URL, mime: nil)
+            item?.interactor.requestMedia(url: object.URL, mime: nil) { _ in }
             
         case let object as JMTimelineDocumentObject:
-            item?.interactor.requestMedia(url: object.URL, mime: nil)
+            item?.interactor.requestMedia(url: object.URL, mime: nil) { [weak self] status in
+                self?.mediaBlock.configure(withMediaStatus: status)
+            }
 
         case let object as JMTimelineContactObject:
             item?.interactor.addPerson(name: object.name, phone: object.phone)

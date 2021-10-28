@@ -17,7 +17,13 @@ public enum ChatTimelineTap {
     case long
 }
 
-public protocol JMTimelineInteractor: class {
+public enum JMTimelineMediaStatus {
+    case available
+    case accessDenied
+    case unknownError
+}
+
+public protocol JMTimelineInteractor: AnyObject {
     var timelineView: UIView? { get set }
     
     var requestMediaHandler: ((URL, String?) -> Void)? { get set }
@@ -48,7 +54,7 @@ public protocol JMTimelineInteractor: class {
     func performMessageSubaction(uuid: String, actionID: String)
     func joinConference(url: URL)
 
-    func requestMedia(url: URL, mime: String?)
+    func requestMedia(url: URL, mime: String?, completion: @escaping (JMTimelineMediaStatus) -> Void)
     func requestAudio(url: URL, mime: String?)
     func requestLocation(coordinate: CLLocationCoordinate2D)
     
