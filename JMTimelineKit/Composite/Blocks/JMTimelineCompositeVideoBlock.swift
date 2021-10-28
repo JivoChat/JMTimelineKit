@@ -104,7 +104,7 @@ final class JMTimelineCompositeVideoBlock: UIImageView, JMTimelineBlock {
     
     @objc private func handleTap() {
         guard let url = url else { return }
-        interactor.requestMedia(url: url, mime: nil)
+        interactor.requestMedia(url: url, mime: nil, completion: { _ in })
     }
 }
 

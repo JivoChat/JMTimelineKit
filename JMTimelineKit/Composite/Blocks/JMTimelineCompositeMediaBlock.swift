@@ -72,6 +72,10 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
         
         subtitleLabel.numberOfLines = 0
         addSubview(subtitleLabel)
+        
+        addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -85,10 +89,12 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
     
     func configure(icon: UIImage?, url: URL?, title: String?, subtitle: String?) {
         if let url = url {
+            loaderView.isHidden = false
+            iconView.isHidden = true
+            
             provider.retrieveMeta(forFileWithURL: url) { [weak self] result in
                 guard let `self` = self else { return }
                 
-                self.loaderView.stopAnimating()
                 self.loaderView.isHidden = true
                 self.iconView.isHidden = false
                 
@@ -154,6 +160,7 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
         super.layoutSubviews()
         
         let layout = getLayout(size: bounds.size)
+        loaderView.frame = layout.loaderViewFrame
         iconUnderlay.frame = layout.iconUnderlayFrame
         iconUnderlay.layer.cornerRadius = layout.iconUnderlayCornerRadius
         iconView.frame = layout.iconViewFrame
@@ -174,6 +181,11 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
             subtitleLabel: subtitleLabel,
             style: style
         )
+    }
+    
+    @objc private func handleTap() {
+        guard let url = url else { return }
+        interactor.requestMedia(url: url, mime: nil, completion: { _ in })
     }
 }
 

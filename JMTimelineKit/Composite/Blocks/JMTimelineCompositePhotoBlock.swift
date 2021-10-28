@@ -187,9 +187,9 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
         guard let url = url, allowFullscreen else { return }
         
         switch url.pathExtension {
-        case "jpg", "jpeg", String(): interactor.requestMedia(url: url, mime: "image/jpeg")
-        case "png": interactor.requestMedia(url: url, mime: "image/png")
-        default: interactor.requestMedia(url: url, mime: nil)
+        case "jpg", "jpeg", String(): interactor.requestMedia(url: url, mime: "image/jpeg", completion: { _ in })
+        case "png": interactor.requestMedia(url: url, mime: "image/png", completion: { _ in })
+        default: interactor.requestMedia(url: url, mime: nil, completion: { _ in })
         }
     }
 }

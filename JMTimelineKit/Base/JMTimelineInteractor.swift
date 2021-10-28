@@ -63,9 +63,3 @@ public protocol JMTimelineInteractor: AnyObject {
     func prepareForItem(uuid: String)
     func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool
 }
-
-public extension JMTimelineInteractor {
-    func requestMedia(url: URL, mime: String?, completion: @escaping (JMTimelineMediaStatus) -> Void = { _ in }) {
-        self.requestMedia(url: url, mime: mime, completion: completion)
-    }
-}
