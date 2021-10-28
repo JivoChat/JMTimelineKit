@@ -44,11 +44,13 @@ public struct JMTimelineCompositeMediaStyle: JMTimelineStyle {
 
 final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
     private let iconUnderlay = UIView()
+    private let loaderView = UIActivityIndicatorView()
     private let iconView = JMScalableView()
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
     
     private var interactor: JMTimelineInteractor!
+    private var provider: JMTimelineProvider!
     private var url: URL?
     private var style: JMTimelineCompositeMediaStyle!
     
@@ -57,8 +59,12 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
         
         addSubview(iconUnderlay)
         
+        loaderView.startAnimating()
+        addSubview(loaderView)
+        
         iconView.category = UIFont.TextStyle.title1
         iconView.clipsToBounds = true
+        iconView.isHidden = true
         addSubview(iconView)
         
         titleLabel.lineBreakMode = .byTruncatingMiddle
@@ -74,13 +80,51 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
     
     func link(provider: JMTimelineProvider, interactor: JMTimelineInteractor) {
         self.interactor = interactor
+        self.provider = provider
     }
     
     func configure(icon: UIImage?, url: URL?, title: String?, subtitle: String?) {
+        if let url = url {
+            provider.retrieveMeta(forFileWithURL: url) { [weak self] result in
+                guard let `self` = self else { return }
+                
+                self.loaderView.stopAnimating()
+                self.loaderView.isHidden = true
+                self.iconView.isHidden = false
+                
+                switch result {
+                case let .meta(fileName):
+                    self.titleLabel.text = fileName ?? self.titleLabel.text ?? "Unknown file"
+                    
+                case let .accessDenied(description):
+                    self.titleLabel.text = description
+                    
+                case .metaIsNotNeeded:
+                    break
+                    
+                case let .unknownError(description):
+                    self.titleLabel.text = description
+                }
+            }
+        }
+        
         self.url = url
-        iconView.image = icon?.withRenderingMode(.alwaysTemplate)
+        self.iconView.image = icon?.withRenderingMode(.alwaysTemplate)
         titleLabel.text = title ?? url?.lastPathComponent
         subtitleLabel.text = subtitle
+    }
+    
+    func configure(withMediaStatus mediaStatus: JMTimelineMediaStatus) {
+        switch mediaStatus {
+        case .available:
+            break
+            
+        case .accessDenied:
+            break
+            
+        case .unknownError:
+            break
+        }
     }
     
     func apply(style: JMTimelineStyle) {
@@ -147,6 +191,10 @@ fileprivate struct Layout {
     
     var iconUnderlayCornerRadius: CGFloat {
         return iconUnderlayFrame.width * 0.5
+    }
+    
+    var loaderViewFrame: CGRect {
+        return CGRect(origin: .zero, size: iconUnderlayFrame.size)
     }
     
     var iconViewFrame: CGRect {

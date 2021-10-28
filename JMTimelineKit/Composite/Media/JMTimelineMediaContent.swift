@@ -103,7 +103,9 @@ public final class JMTimelineMediaContent: JMTimelineCompositeContent {
             item?.interactor.requestMedia(url: object.URL, mime: nil)
             
         case let object as JMTimelineDocumentObject:
-            item?.interactor.requestMedia(url: object.URL, mime: nil)
+            item?.interactor.requestMedia(url: object.URL, mime: nil) { [weak self] status in
+                self?.mediaBlock.configure(withMediaStatus: status)
+            }
 
         case let object as JMTimelineContactObject:
             item?.interactor.addPerson(name: object.name, phone: object.phone)
