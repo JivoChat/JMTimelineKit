@@ -19,8 +19,8 @@ public enum ChatTimelineTap {
 
 public enum JMTimelineMediaStatus {
     case available
-    case accessDenied
-    case unknownError
+    case accessDenied(String?)
+    case unknownError(String?)
 }
 
 public protocol JMTimelineInteractor: AnyObject {
@@ -28,6 +28,7 @@ public protocol JMTimelineInteractor: AnyObject {
     
     var requestMediaHandler: ((URL, String?) -> Void)? { get set }
     var tapHandler: ((JMTimelineItem, ChatTimelineTap) -> Void)? { get set }
+    var mediaBecameUnavailableHandler: ((URL, String?) -> Void)? { get set }
     
     func registerTouchingView(view: UIView)
     func unregisterTouchingView(view: UIView)
