@@ -21,6 +21,8 @@ public struct JMTimelineCompositeAudioStyle: JMTimelineStyle {
     let sliderMaxColor: UIColor
     let durationTextColor: UIColor
     let durationFont: UIFont
+    let loadingText: String
+    let failureText: String
     
     public init(
         controlBorderColor: UIColor,
@@ -32,7 +34,9 @@ public struct JMTimelineCompositeAudioStyle: JMTimelineStyle {
         sliderMinColor: UIColor,
         sliderMaxColor: UIColor,
         durationTextColor: UIColor,
-        durationFont: UIFont
+        durationFont: UIFont,
+        loadingText: String,
+        failureText: String
     ) {
         self.controlBorderColor = controlBorderColor
         self.controlTintColor = controlTintColor
@@ -44,6 +48,8 @@ public struct JMTimelineCompositeAudioStyle: JMTimelineStyle {
         self.sliderMaxColor = sliderMaxColor
         self.durationTextColor = durationTextColor
         self.durationFont = durationFont
+        self.loadingText = loadingText
+        self.failureText = failureText
     }
 }
 
@@ -249,20 +255,20 @@ final class JMTimelineCompositeAudioBlock: UIView, JMTimelineBlock {
             playButton.isHidden = true
             pauseButton.isHidden = false
             sliderControl.value = 0
-            durationLabel.text = nil
-            
+            durationLabel.text = style?.loadingText
+
         case .failed:
             playButton.isHidden = false
             pauseButton.isHidden = true
             sliderControl.value = 0
-            durationLabel.text = nil
-            
+            durationLabel.text = style?.failureText
+
         case .playing(let current, let duration):
             playButton.isHidden = true
             pauseButton.isHidden = false
             sliderControl.value = Float(current / duration)
             durationLabel.text = generateProgressCaption(current: current, duration: duration)
-            
+
         case .paused(let current, let duration):
             playButton.isHidden = false
             pauseButton.isHidden = true

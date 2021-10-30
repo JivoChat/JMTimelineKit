@@ -20,6 +20,7 @@ public struct JMTimelineCompositeMediaStyle: JMTimelineStyle {
     let titleLinesLimit: Int
     let subtitleColor: UIColor
     let subtitleFont: UIFont
+    let unknownText: String
     
     public init(iconBackground: UIColor,
                 iconTintColor: UIColor,
@@ -29,7 +30,8 @@ public struct JMTimelineCompositeMediaStyle: JMTimelineStyle {
                 titleFont: UIFont,
                 titleLinesLimit: Int,
                 subtitleColor: UIColor,
-                subtitleFont: UIFont) {
+                subtitleFont: UIFont,
+                unknownText: String) {
         self.iconBackground = iconBackground
         self.iconTintColor = iconTintColor
         self.iconSide = iconSide
@@ -39,6 +41,7 @@ public struct JMTimelineCompositeMediaStyle: JMTimelineStyle {
         self.titleLinesLimit = titleLinesLimit
         self.subtitleColor = subtitleColor
         self.subtitleFont = subtitleFont
+        self.unknownText = unknownText
     }
 }
 
@@ -94,7 +97,7 @@ final class JMTimelineCompositeMediaBlock: UIView, JMTimelineBlock {
                 
                 switch result {
                 case let .meta(fileName):
-                    self.titleLabel.text = fileName ?? self.titleLabel.text ?? "Unknown file"
+                    self.titleLabel.text = fileName ?? self.titleLabel.text ?? self.style?.unknownText
                     
                 case let .accessDenied(description):
                     self.configure(withMediaStatus: .accessDenied(description))
