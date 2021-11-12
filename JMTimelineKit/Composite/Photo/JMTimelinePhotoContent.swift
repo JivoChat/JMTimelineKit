@@ -32,7 +32,9 @@ public final class JMTimelinePhotoContent: JMTimelineCompositeContent {
         imageBlock.apply(
             style: JMTimelineCompositePhotoStyle(
                 ratio: contentStyle.ratio,
-                contentMode: contentStyle.contentMode
+                contentMode: contentStyle.contentMode,
+                errorStubBackgroundColor: contentStyle.errorStubStyle.backgroundColor,
+                errorStubDescriptionColor: contentStyle.errorStubStyle.errorDescriptionColor
             )
         )
     }

@@ -27,15 +27,31 @@ public struct JMTimelinePhotoObject: JMTimelineObject {
 
 public struct JMTimelinePhotoStyle: JMTimelineStyle {
     let waitingIndicatorStyle: UIActivityIndicatorView.Style
+    let errorStubStyle: ErrorStubStyle
     let ratio: CGFloat
     let contentMode: UIView.ContentMode
     
     public init(waitingIndicatorStyle: UIActivityIndicatorView.Style,
+                errorStubStyle: ErrorStubStyle,
                 ratio: CGFloat,
                 contentMode: UIView.ContentMode) {
         self.waitingIndicatorStyle = waitingIndicatorStyle
+        self.errorStubStyle = errorStubStyle
         self.ratio = ratio
         self.contentMode = contentMode
+    }
+}
+
+public extension JMTimelinePhotoStyle {
+    struct ErrorStubStyle {
+        let backgroundColor: UIColor
+        let errorDescriptionColor: UIColor
+        
+        public init(backgroundColor: UIColor,
+                    errorDescriptionColor: UIColor) {
+            self.backgroundColor = backgroundColor
+            self.errorDescriptionColor = errorDescriptionColor
+        }
     }
 }
 

@@ -18,6 +18,8 @@ extension Notification.Name {
 struct JMTimelineCompositePhotoStyle: JMTimelineStyle {
     let ratio: CGFloat
     let contentMode: UIView.ContentMode
+    let errorStubBackgroundColor: UIColor
+    let errorStubDescriptionColor: UIColor
 }
 
 fileprivate protocol Renderer: class {
@@ -31,11 +33,12 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
     private let waitingIndicator = UIActivityIndicatorView()
     private var ratio = CGFloat(1.0)
     
-    private var renderer: (UIView & Renderer) = NothingRenderer()
+    private var renderer: (UIView & Renderer)?
     private var url: URL?
     private var originalSize: CGSize?
     private var cropped = false
     private var allowFullscreen = true
+    private var style: JMTimelineCompositePhotoStyle!
     
     private weak var provider: JMTimelineProvider!
     private weak var interactor: JMTimelineInteractor!
@@ -87,7 +90,7 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
             
             guard let resource = resource else {
                 self.waitingIndicator.startAnimating()
-                return self.renderer.reset()
+                self.renderer?.reset(); return
             }
             
             switch resource {
@@ -97,8 +100,9 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
                 self.ensureRenderer(UniversalRenderer.self).configure(data: data)
             case .lottie(let animation):
                 self.ensureRenderer(LottieRenderer.self).configure(animation: animation)
-            case .nothing:
-                self.ensureRenderer(NothingRenderer.self).configure()
+            case let .failure(errorDescription):
+                let style = ErrorRenderer.Style(backgroundColor: self.style.errorStubBackgroundColor, errorDescriptionColor: self.style.errorStubDescriptionColor)
+                self.ensureRenderer(ErrorRenderer.self).configure(image: UIImage(named: "unavailable_image_stub")!, errorDescription: errorDescription, style: style)
             }
             
             self.waitingIndicator.stopAnimating()
@@ -108,12 +112,13 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
     func reset() {
         url = nil
         originalSize = nil
-        renderer.reset()
+        renderer?.reset()
         waitingIndicator.stopAnimating()
     }
     
     func apply(style: JMTimelineStyle) {
         let style = style.convert(to: JMTimelineCompositePhotoStyle.self)
+        self.style = style
         
         ratio = style.ratio
         contentMode = style.contentMode
@@ -159,10 +164,10 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
         super.willMove(toWindow: newWindow)
         
         if let _ = newWindow {
-            renderer.resume()
+            renderer?.resume()
         }
         else {
-            renderer.pause()
+            renderer?.pause()
         }
     }
     
@@ -173,12 +178,12 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
         
         let newElement = T.init()
         
-        renderer.removeFromSuperview()
+        renderer?.removeFromSuperview()
         renderer = newElement
-        addSubview(renderer)
+        renderer.flatMap(addSubview)
         
-        renderer.frame = bounds
-        renderer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        renderer?.frame = bounds
+        renderer?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         return newElement
     }
@@ -245,6 +250,10 @@ fileprivate final class NativeRenderer: UIImageView, Renderer {
         image = UIImage(data: data)
     }
     
+    func configure(image: UIImage) {
+        self.image = image
+    }
+    
     func pause() {
     }
     
@@ -291,8 +300,20 @@ fileprivate final class LottieRenderer: UIView, Renderer {
     }
 }
 
-fileprivate final class NothingRenderer: UIView, Renderer {
-    func configure() {
+fileprivate final class ErrorRenderer: UIView, Renderer {
+    private lazy var contentView = UIView()
+    private lazy var mainContainer = UIView()
+    private lazy var imageView = UIImageView()
+    private lazy var errorDescriptionLabel = UILabel()
+    
+    func configure(image: UIImage, errorDescription: String?, style: Style) {
+        imageView.image = image
+        errorDescriptionLabel.text = errorDescription
+        
+        backgroundColor = style.backgroundColor
+        errorDescriptionLabel.textColor = style.errorDescriptionColor
+        
+        setUpSubviews()
     }
     
     func pause() {
@@ -302,5 +323,82 @@ fileprivate final class NothingRenderer: UIView, Renderer {
     }
 
     func reset() {
+    }
+    
+    override func layoutSubviews() {
+        let layout = Layout(superView: self, contentView: contentView, imageView: imageView, errorDescriptionLabel: errorDescriptionLabel)
+        
+        contentView.frame = layout.contentViewFrame
+        mainContainer.frame = layout.mainContainerFrame
+        imageView.frame = layout.imageViewFrame
+        errorDescriptionLabel.frame = layout.errorDescriptionFrame
+    }
+    
+    private func setUpSubviews() {
+        errorDescriptionLabel.numberOfLines = 0
+        
+        contentView.backgroundColor = .clear
+        mainContainer.backgroundColor = .clear
+        
+        mainContainer.addSubview(imageView)
+        mainContainer.addSubview(errorDescriptionLabel)
+        contentView.addSubview(mainContainer)
+        addSubview(contentView)
+    }
+}
+
+extension ErrorRenderer {
+    struct Style {
+        let backgroundColor: UIColor
+        let errorDescriptionColor: UIColor
+    }
+    
+    struct Layout {
+        let superView: UIView
+        let contentView: UIView
+        let imageView: UIView
+        let errorDescriptionLabel: UIView
+        
+        var imageViewToErrorDescriptionLabelMargin: CGFloat {
+            return 15
+        }
+        
+        var errorDescriptionHMargin: CGFloat {
+            return 15
+        }
+        
+        var contentViewFrame: CGRect {
+            return superView.bounds
+        }
+        
+        var mainContainerFrame: CGRect {
+            let mainContainerWidth = max(imageViewFrame.size.width, errorDescriptionFrame.size.width)
+            let mainContainerHeight = imageViewFrame.size.height + imageViewToErrorDescriptionLabelMargin + errorDescriptionFrame.size.height
+            let mainContainerSize = CGSize(width: mainContainerWidth, height: mainContainerHeight)
+            
+            let mainContaineFrameOriginX = contentView.center.x - mainContainerWidth / 2
+            let mainContaineFrameOriginY = contentView.center.y - mainContainerHeight / 2
+            let mainContainerFrameOrigin = CGPoint(x: mainContaineFrameOriginX, y: mainContaineFrameOriginY)
+            
+            return CGRect(origin: mainContainerFrameOrigin, size: mainContainerSize)
+        }
+        
+        var imageViewFrame: CGRect {
+            let imageViewSize = imageView.intrinsicContentSize
+            let imageViewFrameOrigin = CGPoint(x: errorDescriptionSize.width / 2 - imageViewSize.width / 2, y: .zero)
+            return CGRect(origin: imageViewFrameOrigin, size: imageViewSize)
+        }
+        
+        var errorDescriptionSize: CGSize {
+            let errorDescriptionWidth = contentViewFrame.size.width - errorDescriptionHMargin * 2
+            return errorDescriptionLabel.size(for: errorDescriptionWidth)
+        }
+        
+        var errorDescriptionFrame: CGRect {
+            let imageViewFrameOriginTranslationY = imageViewFrame.height + imageViewToErrorDescriptionLabelMargin
+            let errorDescriptionFrameOrigin = CGPoint(x: .zero, y: imageViewFrameOriginTranslationY)
+            
+            return CGRect(origin: errorDescriptionFrameOrigin, size: errorDescriptionSize)
+        }
     }
 }
