@@ -102,7 +102,8 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
                 self.ensureRenderer(LottieRenderer.self).configure(animation: animation)
             case let .failure(errorDescription):
                 let style = ErrorRenderer.Style(backgroundColor: self.style.errorStubBackgroundColor, errorDescriptionColor: self.style.errorStubDescriptionColor)
-                self.ensureRenderer(ErrorRenderer.self).configure(image: UIImage(named: "unavailable_image_stub")!, errorDescription: errorDescription, style: style)
+                let image = UIImage(named: "unavailable_image_stub", in: Bundle.framework, compatibleWith: nil)
+                self.ensureRenderer(ErrorRenderer.self).configure(image: image, errorDescription: errorDescription, style: style)
             }
             
             self.waitingIndicator.stopAnimating()
@@ -306,7 +307,7 @@ fileprivate final class ErrorRenderer: UIView, Renderer {
     private lazy var imageView = UIImageView()
     private lazy var errorDescriptionLabel = UILabel()
     
-    func configure(image: UIImage, errorDescription: String?, style: Style) {
+    func configure(image: UIImage?, errorDescription: String?, style: Style) {
         imageView.image = image
         errorDescriptionLabel.text = errorDescription
         
