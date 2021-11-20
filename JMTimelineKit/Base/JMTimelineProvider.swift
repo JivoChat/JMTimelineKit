@@ -13,7 +13,7 @@ import Lottie
 public enum JMTimelineResource {
     case raw(Data)
     case lottie(Animation)
-    case nothing
+    case failure(errorDescription: String? = nil)
 }
 
 public enum JMTimelineMediaMetaResult {
