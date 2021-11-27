@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '1.4.0-beta.1'
+    spec.version      = '1.4.1'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
 
     spec.framework    = 'SystemConfiguration'
 
-    spec.dependency     'JMImageLoader', '~> 0.0.1-beta.5'
+    spec.dependency     'JMImageLoader', '0.0.3'
     spec.dependency     'SwiftyNSException'
     spec.dependency     'DTModelStorage', "~> 8.0.0"
     spec.dependency     'JFCollectionViewManager', "7.5.2"
