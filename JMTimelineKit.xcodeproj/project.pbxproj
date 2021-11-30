@@ -18,6 +18,7 @@
 		C8752D0F272AA7AD00AAE7CE /* JMTimelineAudioContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8752D0C272AA7AD00AAE7CE /* JMTimelineAudioContent.swift */; };
 		C8752D10272AA7AD00AAE7CE /* JMTimelineAudioItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8752D0D272AA7AD00AAE7CE /* JMTimelineAudioItem.swift */; };
 		C8752D12272B2AF800AAE7CE /* JMTimelineCompositeAudioBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8752D11272B2AF800AAE7CE /* JMTimelineCompositeAudioBlock.swift */; };
+		D49924962756BD2E00F62EF9 /* JMTimelineMultiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49924952756BD2E00F62EF9 /* JMTimelineMultiCell.swift */; };
 		EC4B680AB7DB3B28298AED77 /* Pods_JMTimelineKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50652DE5F7C59A16B2845018 /* Pods_JMTimelineKit.framework */; };
 		FA620B3026284C0A003CD741 /* JMTimelineSystemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620AB026284C09003CD741 /* JMTimelineSystemButton.swift */; };
 		FA620B3126284C0A003CD741 /* JMTimelineSystemItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620AB126284C09003CD741 /* JMTimelineSystemItem.swift */; };
@@ -109,7 +110,6 @@
 		FA620B8926284C0B003CD741 /* JMTimelineBotContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1B26284C0A003CD741 /* JMTimelineBotContent.swift */; };
 		FA620B8A26284C0B003CD741 /* JMTimelineBotItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1C26284C0A003CD741 /* JMTimelineBotItem.swift */; };
 		FA620B8B26284C0B003CD741 /* JMTimelineBotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1D26284C0A003CD741 /* JMTimelineBotCell.swift */; };
-		FA620B8D26284C0B003CD741 /* JMTimelineCompositeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B1F26284C0A003CD741 /* JMTimelineCompositeCell.swift */; };
 		FA620B8E26284C0B003CD741 /* JMTimelinePhotoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2126284C0A003CD741 /* JMTimelinePhotoItem.swift */; };
 		FA620B8F26284C0B003CD741 /* JMTimelinePhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2226284C0A003CD741 /* JMTimelinePhotoCell.swift */; };
 		FA620B9026284C0B003CD741 /* JMTimelinePhotoContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA620B2326284C0A003CD741 /* JMTimelinePhotoContent.swift */; };
@@ -143,6 +143,7 @@
 		C8752D0C272AA7AD00AAE7CE /* JMTimelineAudioContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineAudioContent.swift; sourceTree = "<group>"; };
 		C8752D0D272AA7AD00AAE7CE /* JMTimelineAudioItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineAudioItem.swift; sourceTree = "<group>"; };
 		C8752D11272B2AF800AAE7CE /* JMTimelineCompositeAudioBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineCompositeAudioBlock.swift; sourceTree = "<group>"; };
+		D49924952756BD2E00F62EF9 /* JMTimelineMultiCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineMultiCell.swift; sourceTree = "<group>"; };
 		FA620AA226284B67003CD741 /* JMTimelineKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JMTimelineKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA620AB026284C09003CD741 /* JMTimelineSystemButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineSystemButton.swift; sourceTree = "<group>"; };
 		FA620AB126284C09003CD741 /* JMTimelineSystemItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineSystemItem.swift; sourceTree = "<group>"; };
@@ -236,7 +237,6 @@
 		FA620B1C26284C0A003CD741 /* JMTimelineBotItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineBotItem.swift; sourceTree = "<group>"; };
 		FA620B1D26284C0A003CD741 /* JMTimelineBotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineBotCell.swift; sourceTree = "<group>"; };
 		FA620B1E26284C0A003CD741 /* ChatCompositeCellContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCompositeCellContentView.swift; sourceTree = "<group>"; };
-		FA620B1F26284C0A003CD741 /* JMTimelineCompositeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineCompositeCell.swift; sourceTree = "<group>"; };
 		FA620B2126284C0A003CD741 /* JMTimelinePhotoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelinePhotoItem.swift; sourceTree = "<group>"; };
 		FA620B2226284C0A003CD741 /* JMTimelinePhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelinePhotoCell.swift; sourceTree = "<group>"; };
 		FA620B2326284C0A003CD741 /* JMTimelinePhotoContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelinePhotoContent.swift; sourceTree = "<group>"; };
@@ -470,7 +470,7 @@
 				FA620B1626284C0A003CD741 /* Rich */,
 				FA620B1A26284C0A003CD741 /* Bot */,
 				FA620B1E26284C0A003CD741 /* ChatCompositeCellContentView.swift */,
-				FA620B1F26284C0A003CD741 /* JMTimelineCompositeCell.swift */,
+				D49924952756BD2E00F62EF9 /* JMTimelineMultiCell.swift */,
 				FA620B2026284C0A003CD741 /* Photo */,
 				FA620B2426284C0A003CD741 /* Email */,
 				FA620B2826284C0A003CD741 /* JMTimelineMessageItem.swift */,
@@ -764,6 +764,7 @@
 				FA620B3926284C0A003CD741 /* JMTimelineController.swift in Sources */,
 				FA620B8F26284C0B003CD741 /* JMTimelinePhotoCell.swift in Sources */,
 				FA620B6526284C0A003CD741 /* JMTimelineCompositeVideoBlock.swift in Sources */,
+				D49924962756BD2E00F62EF9 /* JMTimelineMultiCell.swift in Sources */,
 				FA620B6F26284C0A003CD741 /* JMTimelineOrderContent.swift in Sources */,
 				FA620B8026284C0A003CD741 /* JMTimelinePlayableCallItem.swift in Sources */,
 				FA620B4B26284C0A003CD741 /* JMTimelineDateHeaderView.swift in Sources */,
@@ -874,7 +875,6 @@
 				FA620B8926284C0B003CD741 /* JMTimelineBotContent.swift in Sources */,
 				FA620B5A26284C0A003CD741 /* JMTimelineContainerFooter.swift in Sources */,
 				FA620B5826284C0A003CD741 /* JMTimelineItemInteractiveID.swift in Sources */,
-				FA620B8D26284C0B003CD741 /* JMTimelineCompositeCell.swift in Sources */,
 				FA620B5F26284C0A003CD741 /* JMTimelineDataSource.swift in Sources */,
 				FA620B4126284C0A003CD741 /* UIImageExtensions.swift in Sources */,
 			);
