@@ -9,7 +9,7 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineAudioCell: JMTimelineCompositeCell, ModelTransfer {
+final class JMTimelineAudioCell: JMTimelineMultiCell, ModelTransfer {
     private let internalContent = JMTimelineAudioContent()
     
     override func obtainContent() -> JMTimelineContent {

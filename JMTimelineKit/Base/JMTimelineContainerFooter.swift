@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final class JMTimelineContainerFooter: UIView {
+public final class JMTimelineContainerFooter: UIView {
     var reactionHandler: ((Int) -> Void)?
     var actionHandler: ((Int) -> Void)?
     var presentReactionsHandler: (() -> Void)?
@@ -37,17 +37,17 @@ final class JMTimelineContainerFooter: UIView {
         allControls.forEach { addSubview($0) }
     }
     
-    func apply(style: JMTimelineReactionStyle) {
+    public func apply(style: JMTimelineReactionStyle) {
         self.style = style
         allControls.forEach { $0.apply(style: style) }
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let layout = getLayout(size: size)
         return layout.totalSize
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         let layout = getLayout(size: bounds.size)

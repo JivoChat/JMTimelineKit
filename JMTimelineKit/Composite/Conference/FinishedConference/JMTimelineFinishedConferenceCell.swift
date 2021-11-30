@@ -9,7 +9,7 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineFinishedConferenceCell: JMTimelineCompositeCell, ModelTransfer {
+final class JMTimelineFinishedConferenceCell: JMTimelineMultiCell, ModelTransfer {
     private let internalContent = JMTimelineFinishedConferenceContent()
     
     override func obtainContent() -> JMTimelineContent {

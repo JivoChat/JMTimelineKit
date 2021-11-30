@@ -9,7 +9,7 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineEmojiCell: JMTimelineCompositeCell, ModelTransfer {
+final class JMTimelineEmojiCell: JMTimelineMultiCell, ModelTransfer {
     private let internalContent = JMTimelineEmojiContent()
     
     override func obtainContent() -> JMTimelineContent {

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelinePlayableCallCell: JMTimelineCompositeCell, ModelTransfer {
+final class JMTimelinePlayableCallCell: JMTimelineMultiCell, ModelTransfer {
     private let internalContent = JMTimelinePlayableCallContent()
     
     override func obtainContent() -> JMTimelineContent {
