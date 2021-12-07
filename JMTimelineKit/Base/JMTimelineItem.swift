@@ -9,7 +9,7 @@ import UIKit
 public struct JMTimelineItemStyle: JMTimelineStyle {
     let margins: UIEdgeInsets
     let groupingCoef: CGFloat
-    let contentStyle: JMTimelineStyle
+    public let contentStyle: JMTimelineStyle
     
     public init(margins: UIEdgeInsets,
                 groupingCoef: CGFloat,
@@ -20,7 +20,7 @@ public struct JMTimelineItemStyle: JMTimelineStyle {
     }
 }
 
-public struct JMTimelineExtraOptions {
+public struct JMTimelineExtraActions {
     let reactions: [JMTimelineReactionMeta]
     let actions: [JMTimelineActionMeta]
     
@@ -98,15 +98,23 @@ public struct JMTimelineReactionStyle: JMTimelineStyle {
     }
 }
 
-public struct JMTimelineRenderOptions: OptionSet {
+public struct JMTimelineLogicOptions: OptionSet {
     public let rawValue: Int
     public init(rawValue: Int) { self.rawValue = rawValue }
     
-    public static let groupTopMargin = JMTimelineRenderOptions(rawValue: 1 << 0)
-    public static let groupFirstElement = JMTimelineRenderOptions(rawValue: 1 << 1)
-    public static let groupLastElement = JMTimelineRenderOptions(rawValue: 1 << 2)
-    public static let groupBottomMargin = JMTimelineRenderOptions(rawValue: 1 << 3)
-    public static let allOptions = JMTimelineRenderOptions(rawValue: ~0)
+    public static let isVirtual = JMTimelineLogicOptions(rawValue: 1 << 0)
+    public static let enableSizeCaching = JMTimelineLogicOptions(rawValue: 1 << 1)
+}
+
+public struct JMTimelineLayoutOptions: OptionSet {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+    
+    public static let groupTopMargin = JMTimelineLayoutOptions(rawValue: 1 << 0)
+    public static let groupFirstElement = JMTimelineLayoutOptions(rawValue: 1 << 1)
+    public static let groupLastElement = JMTimelineLayoutOptions(rawValue: 1 << 2)
+    public static let groupBottomMargin = JMTimelineLayoutOptions(rawValue: 1 << 3)
+    public static let allOptions = JMTimelineLayoutOptions(rawValue: ~0)
 }
 
 public class JMTimelineItemPayload {
@@ -125,35 +133,29 @@ public typealias JMTimelineItemZoneProvider = (JMTimelineItem) -> UIView
 public class JMTimelineItem: Equatable, Hashable {
     public let UUID: String
     public let date: Date
-    public let object: JMTimelineObject
+    public let object: JMTimelineObject!
     public let style: JMTimelineStyle
-    public let zones: [JMTimelineItemZoneProvider]
-    public let extra: JMTimelineExtraOptions
-    public let countable: Bool
-    public let cachable: Bool
-    private(set) var renderOptions: JMTimelineRenderOptions
+    public let config: JMTimelineUniConfig?
+    public let logicOptions: JMTimelineLogicOptions
+    private(set) var layoutOptions: JMTimelineLayoutOptions
     private(set) weak var provider: JMTimelineProvider!
     private(set) weak var interactor: JMTimelineInteractor!
 
     public init(UUID: String,
                 date: Date,
-                object: JMTimelineObject,
+                object: JMTimelineObject!,
                 style: JMTimelineStyle,
-                zones: [JMTimelineItemZoneProvider] = Array(),
-                extra: JMTimelineExtraOptions,
-                countable: Bool,
-                cachable: Bool,
+                config: JMTimelineUniConfig? = nil,
+                logicOptions: JMTimelineLogicOptions,
                 provider: JMTimelineProvider,
                 interactor: JMTimelineInteractor) {
         self.UUID = UUID
         self.date = date
         self.object = object
         self.style = style
-        self.zones = zones
-        self.extra = extra
-        self.countable = countable
-        self.cachable = cachable
-        self.renderOptions = .allOptions
+        self.config = config
+        self.logicOptions = logicOptions
+        self.layoutOptions = .allOptions
         self.provider = provider
         self.interactor = interactor
     }
@@ -174,16 +176,16 @@ public class JMTimelineItem: Equatable, Hashable {
         hasher.combine(UUID)
     }
 
-    final func addRenderOptions(_ options: JMTimelineRenderOptions) {
-        renderOptions.formUnion(options)
+    final func addLayoutOptions(_ options: JMTimelineLayoutOptions) {
+        layoutOptions.formUnion(options)
     }
     
-    public final func hasRenderOptions(_ options: JMTimelineRenderOptions) -> Bool {
-        return renderOptions.contains(options)
+    public final func hasLayoutOptions(_ options: JMTimelineLayoutOptions) -> Bool {
+        return layoutOptions.contains(options)
     }
     
-    final func removeRenderOptions(_ options: JMTimelineRenderOptions) {
-        renderOptions.subtract(options)
+    final func removeLayoutOptions(_ options: JMTimelineLayoutOptions) {
+        layoutOptions.subtract(options)
     }
     
     func equal(to another: JMTimelineItem) -> Bool {

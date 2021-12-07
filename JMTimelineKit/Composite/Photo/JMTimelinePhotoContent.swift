@@ -48,6 +48,26 @@ public final class JMTimelinePhotoContent: JMTimelineCompositeContent {
         imageBlock.configure(url: object.url, originalSize: meta.size, cropped: meta.cropped, allowFullscreen: object.allowFullscreen)
     }
     
+    public override func configure(object: JMTimelineObject, style: JMTimelineStyle, provider: JMTimelineProvider, interactor: JMTimelineInteractor) {
+        if let style = style as? JMTimelinePhotoStyle {
+            imageBlock.waitingIndicatorStyle = style.waitingIndicatorStyle
+            imageBlock.apply(
+                style: JMTimelineCompositePhotoStyle(
+                    ratio: style.ratio,
+                    contentMode: style.contentMode,
+                    errorStubBackgroundColor: style.errorStubStyle.backgroundColor,
+                    errorStubDescriptionColor: style.errorStubStyle.errorDescriptionColor
+                )
+            )
+        }
+        
+        if let object = object as? JMTimelinePhotoObject {
+            let meta = object.scaleMeta(minimum: 60, maximum: 220)
+            imageBlock.link(provider: provider, interactor: interactor)
+            imageBlock.configure(url: object.url, originalSize: meta.size, cropped: meta.cropped, allowFullscreen: object.allowFullscreen)
+        }
+    }
+    
     override func handleLongPressInteraction(gesture: UILongPressGestureRecognizer) -> JMTimelineContentInteractionResult {
         switch super.handleLongPressInteraction(gesture: gesture) {
         case .incorrect: return .incorrect

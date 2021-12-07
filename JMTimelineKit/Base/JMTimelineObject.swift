@@ -11,6 +11,11 @@ import Foundation
 public protocol JMTimelineObject {
 }
 
+public struct JMTimelineNoneObject: JMTimelineObject {
+    public init() {
+    }
+}
+
 extension JMTimelineObject {
     func convert<T>(to: T.Type) -> T {
         return self as! T

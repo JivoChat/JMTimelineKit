@@ -29,7 +29,7 @@ public struct JMTimelineCompositeStyle: JMTimelineStyle {
     let timeFont: UIFont
     let deliveryViewTintColor: UIColor
     let reactionStyle: JMTimelineReactionStyle
-    let contentStyle: JMTimelineStyle
+    public let contentStyle: JMTimelineStyle
     
     public init(senderBackground: UIColor,
                 senderColor: UIColor,
@@ -152,7 +152,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
         children.forEach { backgroundView.addSubview($0) }
     }
     
-    var children = [UIView & JMTimelineBlock]() {
+    public internal(set) var children = [UIView & JMTimelineBlock]() {
         willSet {
             children.forEach { $0.removeFromSuperview() }
         }
@@ -175,7 +175,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
         populateMeta(item: item)
         populateBlocks(item: item)
         
-        if item.hasRenderOptions(.groupLastElement) {
+        if item.hasLayoutOptions(.groupLastElement) {
             senderIcon.configure(item: item.sender.icon)
             senderIcon.isHidden = false
         }
@@ -183,15 +183,17 @@ public class JMTimelineCompositeContent: JMTimelineContent {
             senderIcon.isHidden = true
         }
         
-        footer.configure(reactions: item.extra.reactions, actions: item.extra.actions)
+        footer.configure(
+            reactions: item.extraActions.reactions,
+            actions: item.extraActions.actions)
         
         footer.reactionHandler = { index in
-            let reaction = item.extra.reactions[index]
+            let reaction = item.extraActions.reactions[index]
             item.interactor.toggleMessageReaction(uuid: item.UUID, emoji: reaction.emoji)
         }
         
         footer.actionHandler = { index in
-            let action = item.extra.actions[index]
+            let action = item.extraActions.actions[index]
             item.interactor.performMessageSubaction(uuid: item.UUID, actionID: action.ID)
         }
         
@@ -201,6 +203,10 @@ public class JMTimelineCompositeContent: JMTimelineContent {
     }
     
     func populateBlocks(item: JMTimelineItem) {
+        assertionFailure()
+    }
+    
+    open func configure(object: JMTimelineObject, style: JMTimelineStyle, provider: JMTimelineProvider, interactor: JMTimelineInteractor) {
         assertionFailure()
     }
     
@@ -287,7 +293,7 @@ public class JMTimelineCompositeContent: JMTimelineContent {
             childrenGap: childrenGap,
             footer: footer,
             renderMode: renderMode,
-            renderOptions: item?.renderOptions ?? [],
+            layoutOptions: item?.layoutOptions ?? [],
             options: options
         )
     }
@@ -295,14 +301,14 @@ public class JMTimelineCompositeContent: JMTimelineContent {
     private func populateMeta(item: JMTimelineItem) {
         let item = item.convert(to: JMTimelineMessageItem.self)
         
-        if item.hasRenderOptions(.groupFirstElement) {
+        if item.hasLayoutOptions(.groupFirstElement) {
             senderLabel.text = item.sender.name
         }
         else {
             senderLabel.text = nil
         }
         
-        if item.flags.contains(.needsMeta) {
+        if item.renderOptions.contains(.showStatusBar) {
             statusLabel.text = item.status
             timeLabel.text = item.provider.formattedDateForMessageEvent(item.date)
             deliveryView.configure(delivery: item.delivery)
@@ -356,7 +362,7 @@ fileprivate struct Layout {
     let childrenGap: CGFloat
     let footer: JMTimelineContainerFooter
     let renderMode: JMTimelineCompositeRenderMode
-    let renderOptions: JMTimelineRenderOptions
+    let layoutOptions: JMTimelineLayoutOptions
     let options: JMTimelineCompositeOptions
     
     private let sameGroupingGapCoef = CGFloat(0.2)
@@ -386,7 +392,7 @@ fileprivate struct Layout {
     }
     
     var senderIconFrame: CGRect {
-        if !renderOptions.contains(.groupLastElement) {
+        if !layoutOptions.contains(.groupLastElement) {
             return .zero
         }
         
@@ -404,7 +410,7 @@ fileprivate struct Layout {
         let containerWidth = s.bounds.width
         let size = s.senderLabel.size(for: containerWidth)
         
-        if !s.renderOptions.contains(.groupFirstElement) {
+        if !s.layoutOptions.contains(.groupFirstElement) {
             return .zero
         }
         
@@ -598,7 +604,7 @@ fileprivate struct Layout {
         }
         
         let minimalWidth: CGFloat?
-        if s.item?.flags.contains(.isExclusive) == true {
+        if s.item?.renderOptions.contains(.useEntireCanvas) == true {
             minimalWidth = s.minimalContainerWidth
         }
         else {
@@ -633,7 +639,7 @@ fileprivate struct Layout {
     
     private let _containerSize = JMLazyEvaluator<Layout, CGSize> { s in
         let timeHeight: CGFloat
-        if s.item?.flags.contains(.isExclusive) == true {
+        if s.item?.renderOptions.contains(.useEntireCanvas) == true {
             timeHeight = 0
         }
         else if let _ = s.timeLabel.text {

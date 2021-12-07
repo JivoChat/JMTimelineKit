@@ -13,7 +13,7 @@ public final class JMTimelineContainer: UIView {
     let content: JMTimelineContent
     
     private var style: JMTimelineItemStyle!
-    private var renderOptions: JMTimelineRenderOptions!
+    private var layoutOptions: JMTimelineLayoutOptions!
 
     public init(content: JMTimelineContent) {
         self.content = content
@@ -29,7 +29,7 @@ public final class JMTimelineContainer: UIView {
     
     public func configure(item: JMTimelineItem) {
         style = item.style.convert(to: JMTimelineItemStyle.self)
-        renderOptions = item.renderOptions
+        layoutOptions = item.layoutOptions
 
         content.configure(item: item)
         content.apply(style: style.contentStyle)
@@ -52,7 +52,7 @@ public final class JMTimelineContainer: UIView {
             bounds: CGRect(origin: .zero, size: size),
             content: content,
             style: style,
-            renderOptions: renderOptions
+            layoutOptions: layoutOptions
         )
     }
 }
@@ -61,7 +61,7 @@ fileprivate struct Layout {
     let bounds: CGRect
     let content: JMTimelineContent
     let style: JMTimelineItemStyle
-    let renderOptions: JMTimelineRenderOptions
+    let layoutOptions: JMTimelineLayoutOptions
 
     var contentFrame: CGRect {
         let width = bounds.reduceBy(insets: style.margins).width
@@ -75,12 +75,12 @@ fileprivate struct Layout {
     }
     
     private var calculatedTopMargin: CGFloat {
-        let multiplier = renderOptions.contains(.groupTopMargin) ? 1.0 : style.groupingCoef
+        let multiplier = layoutOptions.contains(.groupTopMargin) ? 1.0 : style.groupingCoef
         return style.margins.top * CGFloat(multiplier)
     }
     
     private var calculatedBottomMargin: CGFloat {
-        let multiplier = renderOptions.contains(.groupBottomMargin) ? 1.0 : style.groupingCoef
+        let multiplier = layoutOptions.contains(.groupBottomMargin) ? 1.0 : style.groupingCoef
         return style.margins.bottom * CGFloat(multiplier)
     }
 }

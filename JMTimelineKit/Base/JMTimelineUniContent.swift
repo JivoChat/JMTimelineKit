@@ -9,8 +9,60 @@
 import Foundation
 import DTModelStorage
 
+public struct JMTimelineUniConfig {
+    let configID: String
+    let generator: () -> [JMTimelineCompositeContent]
+    let populator: ([JMTimelineCompositeContent]) -> Void
+    
+    public init(
+        configID: String,
+        generator: @escaping () -> [JMTimelineCompositeContent],
+        populator: @escaping ([JMTimelineCompositeContent]) -> Void
+    ) {
+        self.configID = configID
+        self.generator = generator
+        self.populator = populator
+    }
+}
+
+public final class JMTimelineZone: UIView {
+    public init(blocks: [UIView & JMTimelineBlock]) {
+        super.init(frame: .zero)
+        
+        for block in blocks {
+            addSubview(block)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let height = subviews.reduce(CGFloat.zero) { result, subview in
+            result + subview.size(for: size.width).height
+        }
+        
+        return CGSize(width: size.width, height: height)
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        var rect = CGRect(x: 0, y: 0, width: bounds.width, height: 0)
+        subviews.forEach { subview in
+            rect.origin.y += rect.height
+            rect.size.height += subview.size(for: bounds.width).height
+            subview.frame = rect
+        }
+    }
+}
+
+fileprivate var cachedZones = [String: Array<[JMTimelineCompositeContent]>]()
+
 public final class JMTimelineUniContent: JMTimelineContent {
-    private var zones = [UIView]()
+    private var configID = String()
+    private var zones = [JMTimelineCompositeContent]()
     
     public init() {
         super.init(frame: .zero)
@@ -21,9 +73,33 @@ public final class JMTimelineUniContent: JMTimelineContent {
     }
     
     public override func configure(item: JMTimelineItem) {
-        zones.forEach { zone in zone.removeFromSuperview() }
-        zones = item.zones.map { provider in provider(item) }
-        zones.forEach { zone in addSubview(zone) }
+        guard let config = item.config else {
+            return
+        }
+        
+        if config.configID != configID {
+            if !zones.isEmpty {
+                let list = cachedZones[config.configID] ?? Array()
+                cachedZones[config.configID] = list + [zones]
+            }
+            
+            configID = config.configID
+            
+            zones.forEach { $0.removeFromSuperview() }
+            defer {
+                zones.forEach { addSubview($0) }
+            }
+            
+            if var list = cachedZones[configID], !list.isEmpty {
+                zones = list.removeFirst()
+                cachedZones[configID] = list
+            }
+            else {
+                zones = config.generator()
+            }
+        }
+        
+        config.populator(zones)
     }
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {

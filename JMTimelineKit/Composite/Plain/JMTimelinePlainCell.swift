@@ -20,5 +20,9 @@ final class JMTimelinePlainCell: JMTimelineMultiCell, ModelTransfer {
     func update(with model: JMTimelinePlainItem) {
         container.configure(item: model)
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
 }
 

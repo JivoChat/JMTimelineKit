@@ -70,7 +70,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         let _headerSizeProvider: (JMTimelineDateItem, IndexPath) -> CGSize = { [weak self] item, indexPath in
             guard let `self` = self else { return .zero }
             
-            if item.cachable, let size = self.cache.size(for: item.UUID) {
+            if item.logicOptions.contains(.enableSizeCaching), let size = self.cache.size(for: item.UUID) {
                 return size
             }
             else {
@@ -83,7 +83,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
                 
                 let size = CGSize(width: width, height: height)
                 
-                if item.cachable {
+                if item.logicOptions.contains(.enableSizeCaching) {
                     self.cache.cache(messageSize: size, for: item.UUID)
                 }
                 
@@ -94,7 +94,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         let _cellSizeProvider: (JMTimelineItem, IndexPath) -> CGSize = { [weak self] item, indexPath in
             guard let `self` = self else { return .zero }
             
-            if item.cachable, let size = self.cache.size(for: item.UUID) {
+            if item.logicOptions.contains(.enableSizeCaching), let size = self.cache.size(for: item.UUID) {
                 return size
             }
             else {
@@ -106,7 +106,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
                 let height = container.size(for: width).height
                 let size = CGSize(width: width, height: height)
                 
-                if item.cachable {
+                if item.logicOptions.contains(.enableSizeCaching) {
                     self.cache.cache(messageSize: size, for: item.UUID)
                 }
                 

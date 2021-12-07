@@ -308,8 +308,8 @@ public final class JMTimelineHistory {
                 guard let item = section.item(at: index) as? JMTimelineItem else { return }
                 guard UUID == item.UUID else { continue }
 
-                replacingItem.removeRenderOptions(.allOptions)
-                replacingItem.addRenderOptions(item.renderOptions)
+                replacingItem.removeLayoutOptions(.allOptions)
+                replacingItem.addLayoutOptions(item.layoutOptions)
                 try? manager.memoryStorage.replaceItem(item, with: replacingItem)
 
                 return
@@ -324,9 +324,9 @@ public final class JMTimelineHistory {
                 guard UUID == item.UUID else { continue }
 
                 let nextIndex = index - 1
-                if item.renderOptions.contains(.groupFirstElement), index > 0, let nextItem = section.item(at: nextIndex) as? JMTimelineItem, item.groupingID == nextItem.groupingID {
-                    nextItem.removeRenderOptions(nextItem.renderOptions)
-                    nextItem.addRenderOptions(item.renderOptions)
+                if item.layoutOptions.contains(.groupFirstElement), index > 0, let nextItem = section.item(at: nextIndex) as? JMTimelineItem, item.groupingID == nextItem.groupingID {
+                    nextItem.removeLayoutOptions(nextItem.layoutOptions)
+                    nextItem.addLayoutOptions(item.layoutOptions)
                     cache.resetSize(for: nextItem.UUID)
                     manager.memoryStorage.reloadItem(nextItem)
                 }
@@ -349,7 +349,7 @@ public final class JMTimelineHistory {
             }
         }
         else {
-            item.removeRenderOptions([.groupBottomMargin])
+            item.removeLayoutOptions([.groupBottomMargin])
             earliestItemsMap[groupIndex] = item
         }
 
@@ -362,8 +362,8 @@ public final class JMTimelineHistory {
             return
         }
 
-        newerItem.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-        olderItem.removeRenderOptions([.groupLastElement, .groupBottomMargin])
+        newerItem.removeLayoutOptions([.groupTopMargin, .groupFirstElement])
+        olderItem.removeLayoutOptions([.groupLastElement, .groupBottomMargin])
 
         if context.shouldResetCache {
             cache.resetSize(for: newerItem.UUID)
@@ -388,22 +388,22 @@ public final class JMTimelineHistory {
         let indexPath = IndexPath(item: 0, section: grouping.historyFrontIndex)
         defer { try? manager.memoryStorage.insertItem(newerItem, to: indexPath) }
 
-        newerItem.removeRenderOptions(.groupBottomMargin)
+        newerItem.removeLayoutOptions(.groupBottomMargin)
         guard let olderItem = manager.memoryStorage.item(at: indexPath) as? JMTimelineItem else { return }
 
         if let newerGroupingID = newerItem.groupingID, let olderGroupingID = olderItem.groupingID, newerGroupingID != olderGroupingID {
-            olderItem.addRenderOptions(.groupBottomMargin)
+            olderItem.addLayoutOptions(.groupBottomMargin)
             cache.resetSize(for: olderItem.UUID)
             manager.memoryStorage.reloadItem(olderItem)
 
-            newerItem.addRenderOptions(.groupTopMargin)
+            newerItem.addLayoutOptions(.groupTopMargin)
         }
         else {
-            olderItem.removeRenderOptions([.groupLastElement, .groupBottomMargin])
+            olderItem.removeLayoutOptions([.groupLastElement, .groupBottomMargin])
             cache.resetSize(for: olderItem.UUID)
             manager.memoryStorage.reloadItem(olderItem)
 
-            newerItem.removeRenderOptions([.groupFirstElement, .groupTopMargin])
+            newerItem.removeLayoutOptions([.groupFirstElement, .groupTopMargin])
             cache.resetSize(for: newerItem.UUID)
         }
     }
@@ -421,15 +421,15 @@ public final class JMTimelineHistory {
     private func configureMarginsFor(_ item: JMTimelineItem, placedAfter itemBefore: JMTimelineItem?) {
         if let itemBefore = itemBefore {
             if item.groupingID == itemBefore.groupingID {
-                item.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-                itemBefore.removeRenderOptions([.groupBottomMargin, .groupLastElement])
+                item.removeLayoutOptions([.groupTopMargin, .groupFirstElement])
+                itemBefore.removeLayoutOptions([.groupBottomMargin, .groupLastElement])
             } else {
-                item.addRenderOptions(.groupTopMargin)
-                itemBefore.addRenderOptions(.groupBottomMargin)
+                item.addLayoutOptions(.groupTopMargin)
+                itemBefore.addLayoutOptions(.groupBottomMargin)
             }
         } else {
-            item.removeRenderOptions(.groupTopMargin)
-            item.addRenderOptions(.groupFirstElement)
+            item.removeLayoutOptions(.groupTopMargin)
+            item.addLayoutOptions(.groupFirstElement)
             cache.resetSize(for: item.UUID)
         }
 

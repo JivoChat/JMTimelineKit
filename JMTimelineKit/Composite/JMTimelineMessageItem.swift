@@ -34,12 +34,12 @@ public struct JMTimelineItemSender {
     }
 }
 
-public struct JMTimelineItemFlags: OptionSet {
+public struct JMTimelineRenderOptions: OptionSet {
     public let rawValue: Int
     public init(rawValue: Int) { self.rawValue = rawValue }
-    public static let isExclusive = JMTimelineItemFlags(rawValue: 1 << 0)
-    public static let needsMeta = JMTimelineItemFlags(rawValue: 1 << 1)
-    public static let isQuote = JMTimelineItemFlags(rawValue: 1 << 2)
+    public static let useEntireCanvas = JMTimelineRenderOptions(rawValue: 1 << 0)
+    public static let showStatusBar = JMTimelineRenderOptions(rawValue: 1 << 1)
+    public static let showQuoteLine = JMTimelineRenderOptions(rawValue: 1 << 2)
 }
 
 public class JMTimelineMessageItem: JMTimelineItem {
@@ -47,38 +47,37 @@ public class JMTimelineMessageItem: JMTimelineItem {
     let delivery: JMTimelineItemDelivery
     let position: JMTimelineItemPosition
     let sender: JMTimelineItemSender
-    public let flags: JMTimelineItemFlags
+    public let renderOptions: JMTimelineRenderOptions
+    public let extraActions: JMTimelineExtraActions
     
     public init(UUID: String,
                 date: Date,
-                object: JMTimelineObject,
-                zones: [JMTimelineItemZoneProvider] = Array(),
+                object: JMTimelineObject!,
+                config: JMTimelineUniConfig? = nil,
                 status: String?,
                 delivery: JMTimelineItemDelivery,
                 position: JMTimelineItemPosition,
                 sender: JMTimelineItemSender,
                 style: JMTimelineStyle,
-                extra: JMTimelineExtraOptions,
-                countable: Bool,
-                cachable: Bool,
-                flags: JMTimelineItemFlags,
+                extraActions: JMTimelineExtraActions,
+                logicOptions: JMTimelineLogicOptions,
+                renderOptions: JMTimelineRenderOptions,
                 provider: JMTimelineProvider,
                 interactor: JMTimelineInteractor) {
         self.status = status
         self.delivery = delivery
         self.position = position
         self.sender = sender
-        self.flags = flags
-        
+        self.renderOptions = renderOptions
+        self.extraActions = extraActions
+
         super.init(
             UUID: UUID,
             date: date,
             object: object,
             style: style,
-            zones: zones,
-            extra: extra,
-            countable: countable,
-            cachable: cachable,
+            config: config,
+            logicOptions: logicOptions,
             provider: provider,
             interactor: interactor
         )

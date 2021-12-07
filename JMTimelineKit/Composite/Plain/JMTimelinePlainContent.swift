@@ -30,6 +30,18 @@ public final class JMTimelinePlainContent: JMTimelineCompositeContent {
         plainBlock.render()
     }
     
+    public override func configure(object: JMTimelineObject, style: JMTimelineStyle, provider: JMTimelineProvider, interactor: JMTimelineInteractor) {
+        if let style = style as? JMTimelinePlainStyle {
+            plainBlock.apply(style: style)
+        }
+        
+        if let object = object as? JMTimelinePlainObject {
+            plainBlock.link(provider: provider, interactor: interactor)
+            plainBlock.configure(content: object.text)
+            plainBlock.render()
+        }
+    }
+    
     public override func apply(style: JMTimelineStyle) {
         super.apply(style: style)
         
