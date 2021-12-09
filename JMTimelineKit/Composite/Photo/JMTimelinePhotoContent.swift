@@ -44,6 +44,7 @@ public final class JMTimelinePhotoContent: JMTimelineCompositeContent {
         let object = item.object.convert(to: JMTimelinePhotoObject.self)
         let meta = object.scaleMeta(minimum: 60, maximum: 220)
         
+        imageBlock.reset()
         imageBlock.link(provider: item.provider, interactor: item.interactor)
         imageBlock.configure(url: object.url, originalSize: meta.size, cropped: meta.cropped, allowFullscreen: object.allowFullscreen)
     }
