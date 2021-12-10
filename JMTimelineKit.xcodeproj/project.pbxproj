@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C826A791276245E800F6EDDB /* JMTimelineUniCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826A78E276245E800F6EDDB /* JMTimelineUniCell.swift */; };
+		C826A792276245E800F6EDDB /* JMTimelineUniContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826A78F276245E800F6EDDB /* JMTimelineUniContent.swift */; };
+		C826A793276245E800F6EDDB /* JMTimelineUniItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826A790276245E800F6EDDB /* JMTimelineUniItem.swift */; };
 		C835E5C82717639F002F99C3 /* JMTimelineJoinableConferenceContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835E5C02717639F002F99C3 /* JMTimelineJoinableConferenceContent.swift */; };
 		C835E5C92717639F002F99C3 /* JMTimelineJoinableConferenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835E5C12717639F002F99C3 /* JMTimelineJoinableConferenceItem.swift */; };
 		C835E5CA2717639F002F99C3 /* JMTimelineJoinableConferenceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835E5C22717639F002F99C3 /* JMTimelineJoinableConferenceCell.swift */; };
@@ -132,6 +135,9 @@
 		47B168CF491BBAF58366011C /* Pods-JMTimelineKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JMTimelineKit.release.xcconfig"; path = "Target Support Files/Pods-JMTimelineKit/Pods-JMTimelineKit.release.xcconfig"; sourceTree = "<group>"; };
 		50652DE5F7C59A16B2845018 /* Pods_JMTimelineKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JMTimelineKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		726C55D92A03789CD4215B27 /* Pods-JMTimelineKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JMTimelineKit.debug.xcconfig"; path = "Target Support Files/Pods-JMTimelineKit/Pods-JMTimelineKit.debug.xcconfig"; sourceTree = "<group>"; };
+		C826A78E276245E800F6EDDB /* JMTimelineUniCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineUniCell.swift; sourceTree = "<group>"; };
+		C826A78F276245E800F6EDDB /* JMTimelineUniContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineUniContent.swift; sourceTree = "<group>"; };
+		C826A790276245E800F6EDDB /* JMTimelineUniItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineUniItem.swift; sourceTree = "<group>"; };
 		C835E5C02717639F002F99C3 /* JMTimelineJoinableConferenceContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineJoinableConferenceContent.swift; sourceTree = "<group>"; };
 		C835E5C12717639F002F99C3 /* JMTimelineJoinableConferenceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineJoinableConferenceItem.swift; sourceTree = "<group>"; };
 		C835E5C22717639F002F99C3 /* JMTimelineJoinableConferenceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JMTimelineJoinableConferenceCell.swift; sourceTree = "<group>"; };
@@ -431,6 +437,9 @@
 		FA620AD526284C09003CD741 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				C826A78E276245E800F6EDDB /* JMTimelineUniCell.swift */,
+				C826A78F276245E800F6EDDB /* JMTimelineUniContent.swift */,
+				C826A790276245E800F6EDDB /* JMTimelineUniItem.swift */,
 				FA620AD626284C09003CD741 /* JMTimelineObject.swift */,
 				FA620AD726284C09003CD741 /* JMTimelineHeaderView.swift */,
 				FA620AD826284C09003CD741 /* JMTimelineDeliveryView.swift */,
@@ -805,6 +814,7 @@
 				FA620B5E26284C0A003CD741 /* JMTimelineInteractor.swift in Sources */,
 				FA620B6426284C0A003CD741 /* JMTimelineCompositeSpaceBlock.swift in Sources */,
 				FA620B6E26284C0A003CD741 /* JMTimelineOrderItem.swift in Sources */,
+				C826A792276245E800F6EDDB /* JMTimelineUniContent.swift in Sources */,
 				C835E5CB2717639F002F99C3 /* JMTimelineFinishedConferenceContent.swift in Sources */,
 				FA620B4626284C0A003CD741 /* JMTimelineFactory.swift in Sources */,
 				FA620B5626284C0A003CD741 /* JMTimelineContainer.swift in Sources */,
@@ -823,11 +833,13 @@
 				FA620B6926284C0A003CD741 /* JMTimelineCompositeRichBlock.swift in Sources */,
 				C835E5CD2717639F002F99C3 /* JMTimelineFinishedConferenceCell.swift in Sources */,
 				FA620B3A26284C0A003CD741 /* CGRectExtensions.swift in Sources */,
+				C826A793276245E800F6EDDB /* JMTimelineUniItem.swift in Sources */,
 				FA620B4E26284C0A003CD741 /* JMTimelineLoaderItem.swift in Sources */,
 				FA620B5926284C0A003CD741 /* JMTimelineItem.swift in Sources */,
 				FA620B3726284C0A003CD741 /* JMTimelineTimepointItem.swift in Sources */,
 				FA620B9726284C0B003CD741 /* JMTimelineMediaContent.swift in Sources */,
 				C8752D0E272AA7AD00AAE7CE /* JMTimelineAudioCell.swift in Sources */,
+				C826A791276245E800F6EDDB /* JMTimelineUniCell.swift in Sources */,
 				FA620B5426284C0A003CD741 /* JMTimelineContent.swift in Sources */,
 				FA620B7126284C0A003CD741 /* JMTimelineMediaPlayerItem.swift in Sources */,
 				FABFCE5D26ADDAAD002A3196 /* JMTimelineTaskContent.swift in Sources */,

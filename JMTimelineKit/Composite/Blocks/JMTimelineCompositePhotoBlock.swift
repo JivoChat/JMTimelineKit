@@ -88,11 +88,6 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
                 return
             }
             
-            guard let resource = resource else {
-                self.waitingIndicator.startAnimating()
-                self.renderer?.reset(); return
-            }
-            
             switch resource {
             case .raw(let data) where NSData.sd_imageFormat(forImageData: data) == .undefined:
                 self.ensureRenderer(NativeRenderer.self).configure(data: data)
@@ -114,6 +109,8 @@ final class JMTimelineCompositePhotoBlock: UIView, JMTimelineBlock {
         url = nil
         originalSize = nil
         renderer?.reset()
+        renderer?.removeFromSuperview()
+        renderer = nil
         waitingIndicator.stopAnimating()
     }
     
