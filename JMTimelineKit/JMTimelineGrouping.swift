@@ -29,7 +29,7 @@ struct JMTimelineGrouping {
         }
     }
     
-    mutating func group(for date: Date) -> Int? {
+    func group(for date: Date) -> Int? {
         if let index = groups.firstIndex(of: date) {
             return historyFrontIndex + index
         }
