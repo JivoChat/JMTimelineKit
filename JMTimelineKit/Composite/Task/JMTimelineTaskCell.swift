@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelineTaskCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineTaskContent()
+final class JMTimelineTaskCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineTaskCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineTaskItem) {
+    func update(with model: JMTimelineMessageTaskItem) {
         container.configure(item: model)
     }
 }

@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelineEmailCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineEmailContent()
+final class JMTimelineEmailCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineMessageEmailCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineEmailItem) {
+    func update(with model: JMTimelineMessageEmailItem) {
         container.configure(item: model)
     }
 }

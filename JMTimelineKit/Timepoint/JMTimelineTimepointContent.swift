@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final public class JMTimelineTimepointContent: JMTimelineContent {
+final public class JMTimelineTimepointContent: JMTimelineCanvas {
     private let captionLabel = JMTimelineTimepointLabel()
     private let leftLine = UIView()
     private let rightLine = UIView()
@@ -34,30 +34,29 @@ final public class JMTimelineTimepointContent: JMTimelineContent {
     public override func configure(item: JMTimelineItem) {
         super.configure(item: item)
         
-        let item = item.convert(to: JMTimelineTimepointItem.self)
-        let object = item.object.convert(to: JMTimelineTimepointObject.self)
-
-        captionLabel.text = object.caption
-        captionLabel.numberOfLines = 0
+        if let item = item as? JMTimelineTimepointItem {
+            captionLabel.text = item.payload.caption
+            captionLabel.numberOfLines = 0
+        }
     }
     
-    public override func apply(style: JMTimelineStyle) {
-        super.apply(style: style)
-        
-        let style = style.convert(to: JMTimelineTimepointStyle.self)
-        margins = style.margins
-        borderWidth = style.borderWidth
-        borderRadius = style.borderRadius
-        
-        captionLabel.font = style.font
-        captionLabel.textColor = style.textColor
-        captionLabel.textAlignment = style.alignment
-        captionLabel.padding = style.padding
-        
-        leftLine.backgroundColor = style.borderColor
-        
-        rightLine.backgroundColor = style.borderColor
-    }
+//    public override func apply(style: JMTimelineStyle) {
+//        super.apply(style: style)
+//
+//        let style = style.convert(to: JMTimelineTimepointStyle.self)
+//        margins = style.margins
+//        borderWidth = style.borderWidth
+//        borderRadius = style.borderRadius
+//
+//        captionLabel.font = style.font
+//        captionLabel.textColor = style.textColor
+//        captionLabel.textAlignment = style.alignment
+//        captionLabel.padding = style.padding
+//
+//        leftLine.backgroundColor = style.borderColor
+//
+//        rightLine.backgroundColor = style.borderColor
+//    }
     
     override public func sizeThatFits(_ size: CGSize) -> CGSize {
         let layout = getLayout(size: size)

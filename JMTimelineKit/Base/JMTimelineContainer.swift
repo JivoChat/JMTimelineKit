@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 public final class JMTimelineContainer: UIView {
-    let content: JMTimelineContent
+    let content: JMTimelineCanvas
     
-    private var style: JMTimelineItemStyle!
+    private var layoutValues: JMTimelineItemLayoutValues!
     private var layoutOptions: JMTimelineLayoutOptions!
 
-    public init(content: JMTimelineContent) {
+    public init(content: JMTimelineCanvas) {
         self.content = content
         
         super.init(frame: .zero)
@@ -28,11 +28,11 @@ public final class JMTimelineContainer: UIView {
     }
     
     public func configure(item: JMTimelineItem) {
-        style = item.style.convert(to: JMTimelineItemStyle.self)
+        layoutValues = item.layoutValues
         layoutOptions = item.layoutOptions
 
         content.configure(item: item)
-        content.apply(style: style.contentStyle)
+//        content.apply(style: style.contentStyle)
     }
     
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -51,7 +51,7 @@ public final class JMTimelineContainer: UIView {
         return Layout(
             bounds: CGRect(origin: .zero, size: size),
             content: content,
-            style: style,
+            layoutValues: layoutValues,
             layoutOptions: layoutOptions
         )
     }
@@ -59,14 +59,15 @@ public final class JMTimelineContainer: UIView {
 
 fileprivate struct Layout {
     let bounds: CGRect
-    let content: JMTimelineContent
-    let style: JMTimelineItemStyle
+    let content: JMTimelineCanvas
+    let layoutValues: JMTimelineItemLayoutValues
     let layoutOptions: JMTimelineLayoutOptions
 
     var contentFrame: CGRect {
-        let width = bounds.reduceBy(insets: style.margins).width
+        let width = bounds.reduceBy(insets: layoutValues.margins).width
         let height = content.size(for: width).height
-        return CGRect(x: style.margins.left, y: calculatedTopMargin, width: width, height: height)
+        let leftX = layoutValues.margins.left
+        return CGRect(x: leftX, y: calculatedTopMargin, width: width, height: height)
     }
     
     var totalSize: CGSize {
@@ -75,12 +76,12 @@ fileprivate struct Layout {
     }
     
     private var calculatedTopMargin: CGFloat {
-        let multiplier = layoutOptions.contains(.groupTopMargin) ? 1.0 : style.groupingCoef
-        return style.margins.top * CGFloat(multiplier)
+        let multiplier = layoutOptions.contains(.groupTopMargin) ? 1.0 : layoutValues.groupingCoef
+        return layoutValues.margins.top * CGFloat(multiplier)
     }
     
     private var calculatedBottomMargin: CGFloat {
-        let multiplier = layoutOptions.contains(.groupBottomMargin) ? 1.0 : style.groupingCoef
-        return style.margins.bottom * CGFloat(multiplier)
+        let multiplier = layoutOptions.contains(.groupBottomMargin) ? 1.0 : layoutValues.groupingCoef
+        return layoutValues.margins.bottom * CGFloat(multiplier)
     }
 }

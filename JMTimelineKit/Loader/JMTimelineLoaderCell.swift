@@ -11,10 +11,10 @@ import UIKit
 import DTModelStorage
 
 final class JMTimelineLoaderCell: JMTimelineEventCell, ModelTransfer {
-    private let internalContent = JMTimelineLoaderContent()
+    private let internalCanvas = JMTimelineLoaderContent()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineLoaderItem) {

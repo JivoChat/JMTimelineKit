@@ -22,7 +22,7 @@ class JMTimelineHeaderView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func obtainContent() -> JMTimelineContent {
+    func obtainContent() -> JMTimelineCanvas {
         abort()
     }
     

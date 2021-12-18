@@ -9,14 +9,14 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineAudioCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineAudioContent()
+final class JMTimelineAudioCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineMessageAudioCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineAudioItem) {
+    func update(with model: JMTimelineMessageAudioItem) {
         container.configure(item: model)
     }
 }

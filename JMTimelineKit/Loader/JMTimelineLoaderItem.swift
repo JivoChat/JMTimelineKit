@@ -14,10 +14,10 @@ public struct JMTimelineLoaderStyle: JMTimelineStyle {
     }
 }
 
-public struct JMTimelineLoaderObject: JMTimelineObject {
+public struct JMTimelineLoaderInfo: JMTimelineInfo {
     public init() {
     }
 }
 
-public final class JMTimelineLoaderItem: JMTimelineItem {
+public final class JMTimelineLoaderItem: JMTimelinePayloadItem<JMTimelineLoaderInfo> {
 }

@@ -186,7 +186,7 @@ public final class JMTimelineHistory {
         for section in manager.memoryStorage.sections {
             for index in 0 ..< section.numberOfItems {
                 guard let item = section.item(at: index) as? JMTimelineItem else { continue }
-                guard uuid == item.UUID else { continue }
+                guard uuid == item.uid else { continue }
                 return item
             }
         }
@@ -240,7 +240,7 @@ public final class JMTimelineHistory {
 
                 try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
 
-                registeredItemIDs.insert(item.UUID)
+                registeredItemIDs.insert(item.uid)
             }
         }
     }
@@ -266,7 +266,7 @@ public final class JMTimelineHistory {
                     self.insertAndAdjust(item: item)
                 }
 
-                self.registeredItemIDs.insert(item.UUID)
+                self.registeredItemIDs.insert(item.uid)
             }
         }
         manager.collectionViewUpdater?.storageNeedsReloading()
@@ -280,7 +280,7 @@ public final class JMTimelineHistory {
         let context = JMTimelineHistoryContext(shouldResetCache: resetCache)
         manager.memoryStorage.performUpdates {
             items.forEach { item in
-                if registeredItemIDs.contains(item.UUID) {
+                if registeredItemIDs.contains(item.uid) {
                     return
                 }
 
@@ -306,7 +306,7 @@ public final class JMTimelineHistory {
         for section in manager.memoryStorage.sections {
             for index in 0 ..< section.numberOfItems {
                 guard let item = section.item(at: index) as? JMTimelineItem else { return }
-                guard UUID == item.UUID else { continue }
+                guard UUID == item.uid else { continue }
 
                 replacingItem.removeLayoutOptions(.allOptions)
                 replacingItem.addLayoutOptions(item.layoutOptions)
@@ -321,13 +321,13 @@ public final class JMTimelineHistory {
         for section in manager.memoryStorage.sections {
             for index in 0 ..< section.numberOfItems {
                 guard let item = section.item(at: index) as? JMTimelineItem else { return }
-                guard UUID == item.UUID else { continue }
+                guard UUID == item.uid else { continue }
 
                 let nextIndex = index - 1
                 if item.layoutOptions.contains(.groupFirstElement), index > 0, let nextItem = section.item(at: nextIndex) as? JMTimelineItem, item.groupingID == nextItem.groupingID {
                     nextItem.removeLayoutOptions(nextItem.layoutOptions)
                     nextItem.addLayoutOptions(item.layoutOptions)
-                    cache.resetSize(for: nextItem.UUID)
+                    cache.resetSize(for: nextItem.uid)
                     manager.memoryStorage.reloadItem(nextItem)
                 }
 
@@ -354,7 +354,7 @@ public final class JMTimelineHistory {
         }
 
         manager.memoryStorage.addItem(item, toSection: groupIndex)
-        registeredItemIDs.insert(item.UUID)
+        registeredItemIDs.insert(item.uid)
     }
 
     private func adjustAfterPrepend(context: JMTimelineHistoryContext, olderItem: JMTimelineItem, newerItem: JMTimelineItem) {
@@ -366,8 +366,8 @@ public final class JMTimelineHistory {
         olderItem.removeLayoutOptions([.groupLastElement, .groupBottomMargin])
 
         if context.shouldResetCache {
-            cache.resetSize(for: newerItem.UUID)
-            cache.resetSize(for: olderItem.UUID)
+            cache.resetSize(for: newerItem.uid)
+            cache.resetSize(for: olderItem.uid)
             context.shouldResetCache = false
         }
     }
@@ -393,18 +393,18 @@ public final class JMTimelineHistory {
 
         if let newerGroupingID = newerItem.groupingID, let olderGroupingID = olderItem.groupingID, newerGroupingID != olderGroupingID {
             olderItem.addLayoutOptions(.groupBottomMargin)
-            cache.resetSize(for: olderItem.UUID)
+            cache.resetSize(for: olderItem.uid)
             manager.memoryStorage.reloadItem(olderItem)
 
             newerItem.addLayoutOptions(.groupTopMargin)
         }
         else {
             olderItem.removeLayoutOptions([.groupLastElement, .groupBottomMargin])
-            cache.resetSize(for: olderItem.UUID)
+            cache.resetSize(for: olderItem.uid)
             manager.memoryStorage.reloadItem(olderItem)
 
             newerItem.removeLayoutOptions([.groupFirstElement, .groupTopMargin])
-            cache.resetSize(for: newerItem.UUID)
+            cache.resetSize(for: newerItem.uid)
         }
     }
 
@@ -430,11 +430,11 @@ public final class JMTimelineHistory {
         } else {
             item.removeLayoutOptions(.groupTopMargin)
             item.addLayoutOptions(.groupFirstElement)
-            cache.resetSize(for: item.UUID)
+            cache.resetSize(for: item.uid)
         }
 
-        cache.resetSize(for: item.UUID)
-        cache.resetSize(for: itemBefore?.UUID ?? String())
+        cache.resetSize(for: item.uid)
+        cache.resetSize(for: itemBefore?.uid ?? String())
         manager.memoryStorage.reloadItem(itemBefore)
     }
 

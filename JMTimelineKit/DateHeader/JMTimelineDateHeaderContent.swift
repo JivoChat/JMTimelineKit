@@ -26,7 +26,7 @@ public struct JMTimelineDateHeaderStyle: JMTimelineStyle {
     }
 }
 
-public final class JMTimelineDateHeaderContent: JMTimelineContent {
+public final class JMTimelineDateHeaderContent: JMTimelineCanvas {
     private let shadowLayer = CAShapeLayer()
     private let dateLabel = UILabel()
     
@@ -51,23 +51,22 @@ public final class JMTimelineDateHeaderContent: JMTimelineContent {
     public override func configure(item: JMTimelineItem) {
         super.configure(item: item)
         
-        let item = item.convert(to: JMTimelineDateItem.self)
-        let object = item.object.convert(to: JMTimelineDateObject.self)
-
-        dateLabel.text = item.provider.formattedDateForGroupHeader(object.date)
+        if let info = (item as? JMTimelineDateItem)?.payload {
+            dateLabel.text = info.caption
+        }
     }
     
-    public override func apply(style: JMTimelineStyle) {
-        super.apply(style: style)
-        
-        let style = style.convert(to: JMTimelineDateHeaderStyle.self)
-        
-        shadowLayer.backgroundColor = style.backgroundColor.cgColor
-        shadowLayer.shadowColor = style.shadowColor.cgColor
-        dateLabel.backgroundColor = style.backgroundColor
-        dateLabel.textColor = style.foregroundColor
-        dateLabel.font = style.foregroundFont
-    }
+//    public override func apply(style: JMTimelineStyle) {
+//        super.apply(style: style)
+//
+//        let style = style.convert(to: JMTimelineDateHeaderStyle.self)
+//
+//        shadowLayer.backgroundColor = style.backgroundColor.cgColor
+//        shadowLayer.shadowColor = style.shadowColor.cgColor
+//        dateLabel.backgroundColor = style.backgroundColor
+//        dateLabel.textColor = style.foregroundColor
+//        dateLabel.font = style.foregroundFont
+//    }
     
     override public func sizeThatFits(_ size: CGSize) -> CGSize {
         let layout = getLayout(size: size)
@@ -84,13 +83,13 @@ public final class JMTimelineDateHeaderContent: JMTimelineContent {
         dateLabel.layer.cornerRadius = layout.dataLabelCornerRadius
     }
     
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        if let style = style {
-            apply(style: style)
-        }
-    }
+//    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+//        super.traitCollectionDidChange(previousTraitCollection)
+//
+//        if let style = style {
+//            apply(style: style)
+//        }
+//    }
     
     private func getLayout(size: CGSize) -> Layout {
         return Layout(

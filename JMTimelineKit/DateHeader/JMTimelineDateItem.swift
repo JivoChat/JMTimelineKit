@@ -8,13 +8,13 @@
 
 import Foundation
 
-public struct JMTimelineDateObject: JMTimelineObject {
-    let date: Date
+public struct JMTimelineDateInfo: JMTimelineInfo {
+    let caption: String
     
-    public init(date: Date) {
-        self.date = date
+    public init(caption: String) {
+        self.caption = caption
     }
 }
 
-public final class JMTimelineDateItem: JMTimelineItem {
+public final class JMTimelineDateItem: JMTimelinePayloadItem<JMTimelineDateInfo> {
 }

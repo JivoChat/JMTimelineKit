@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelineBotCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineBotContent()
+final class JMTimelineBotCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineBotCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineBotItem) {
+    func update(with model: JMTimelineMessageBotItem) {
         container.configure(item: model)
     }
 }

@@ -11,10 +11,10 @@ import UIKit
 import DTModelStorage
 
 final class JMTimelineDateHeaderView: JMTimelineHeaderView, ModelTransfer {
-    private let internalContent = JMTimelineDateHeaderContent()
+    private let internalCanvas = JMTimelineDateHeaderContent()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainContent() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineDateItem) {

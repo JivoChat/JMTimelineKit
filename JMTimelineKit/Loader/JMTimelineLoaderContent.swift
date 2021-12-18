@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final public class JMTimelineLoaderContent: JMTimelineContent {
+final public class JMTimelineLoaderContent: JMTimelineCanvas {
     private let waitingIndicator = UIActivityIndicatorView()
     
     public override init(frame: CGRect) {
@@ -24,13 +24,13 @@ final public class JMTimelineLoaderContent: JMTimelineContent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func apply(style: JMTimelineStyle) {
-        super.apply(style: style)
-        
-        let style = style.convert(to: JMTimelineLoaderStyle.self)
-        
-        waitingIndicator.style = style.waitingIndicatorStyle
-    }
+//    public override func apply(style: JMTimelineStyle) {
+//        super.apply(style: style)
+//
+//        let style = style.convert(to: JMTimelineLoaderStyle.self)
+//
+//        waitingIndicator.style = style.waitingIndicatorStyle
+//    }
     
     override public func sizeThatFits(_ size: CGSize) -> CGSize {
         return CGSize(width: size.width, height: 50)

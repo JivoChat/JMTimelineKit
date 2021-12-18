@@ -13,7 +13,10 @@ public extension Notification.Name {
     static let JMMediaPlayerState = Notification.Name("JMMediaPlayerState")
 }
 
-public struct JMTimelineVideoObject: JMTimelineObject {
+public protocol JMTimelineMediaInfo {
+}
+
+public struct JMTimelineMediaVideoInfo: JMTimelineMediaInfo {
     let URL: URL
     let title: String?
     let duration: TimeInterval?
@@ -27,7 +30,7 @@ public struct JMTimelineVideoObject: JMTimelineObject {
     }
 }
 
-public struct JMTimelineDocumentObject: JMTimelineObject {
+public struct JMTimelineMediaDocumentInfo: JMTimelineMediaInfo {
     public let URL: URL
     public let title: String?
     public let dataSize: Int64?
@@ -41,7 +44,7 @@ public struct JMTimelineDocumentObject: JMTimelineObject {
     }
 }
 
-public struct JMTimelineContactObject: JMTimelineObject {
+public struct JMTimelineMediaContactInfo: JMTimelineMediaInfo {
     let name: String
     let phone: String
     
@@ -54,5 +57,5 @@ public struct JMTimelineContactObject: JMTimelineObject {
 
 public typealias JMTimelineMediaStyle = JMTimelineCompositeMediaStyle
 
-public final class JMTimelineMediaItem: JMTimelineMessageItem {
+public final class JMTimelineMediaItem: JMTimelinePayloadItem<JMTimelineMediaInfo> {
 }

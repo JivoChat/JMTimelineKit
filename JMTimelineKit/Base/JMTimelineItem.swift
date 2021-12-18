@@ -6,17 +6,18 @@
 import Foundation
 import UIKit
 
-public struct JMTimelineItemStyle: JMTimelineStyle {
+public struct JMTimelineItemLayoutValues: JMTimelineStyle {
     let margins: UIEdgeInsets
     let groupingCoef: CGFloat
-    public let contentStyle: JMTimelineStyle
+//    public let contentStyle: JMTimelineStyle
     
     public init(margins: UIEdgeInsets,
-                groupingCoef: CGFloat,
-                contentStyle: JMTimelineStyle) {
+                groupingCoef: CGFloat
+//                contentStyle: JMTimelineStyle
+    ) {
         self.margins = margins
         self.groupingCoef = groupingCoef
-        self.contentStyle = contentStyle
+//        self.contentStyle = contentStyle
     }
 }
 
@@ -24,7 +25,7 @@ public struct JMTimelineExtraActions {
     let reactions: [JMTimelineReactionMeta]
     let actions: [JMTimelineActionMeta]
     
-    public init(reactions: [JMTimelineReactionMeta], actions: [JMTimelineActionMeta]) {
+    public init(reactions: [JMTimelineReactionMeta] = [], actions: [JMTimelineActionMeta] = []) {
         self.reactions = reactions
         self.actions = actions
     }
@@ -118,10 +119,10 @@ public struct JMTimelineLayoutOptions: OptionSet {
 }
 
 public class JMTimelineItemPayload {
-    public let object: JMTimelineObject
+    public let object: JMTimelineInfo
     public let style: JMTimelineStyle
     
-    public init(object: JMTimelineObject,
+    public init(object: JMTimelineInfo,
                 style: JMTimelineStyle) {
         self.object = object
         self.style = style
@@ -130,38 +131,33 @@ public class JMTimelineItemPayload {
 
 public typealias JMTimelineItemZoneProvider = (JMTimelineItem) -> UIView
 
-public class JMTimelineItem: Equatable, Hashable {
-    public let UUID: String
+open class JMTimelineItem: Equatable, Hashable {
+    public let uid: String
     public let date: Date
-    public let object: JMTimelineObject!
-    public let style: JMTimelineStyle
-    public let config: JMTimelineUniConfig?
+    public let layoutValues: JMTimelineItemLayoutValues
     public let logicOptions: JMTimelineLogicOptions
     private(set) var layoutOptions: JMTimelineLayoutOptions
-    private(set) weak var provider: JMTimelineProvider!
-    private(set) weak var interactor: JMTimelineInteractor!
+    let extraActions: JMTimelineExtraActions
+    let triggerHandler: (JMTimelineTrigger) -> Void
 
-    public init(UUID: String,
+    public init(uid: String,
                 date: Date,
-                object: JMTimelineObject!,
-                style: JMTimelineStyle,
-                config: JMTimelineUniConfig? = nil,
+                layoutValues: JMTimelineItemLayoutValues,
                 logicOptions: JMTimelineLogicOptions,
-                provider: JMTimelineProvider,
-                interactor: JMTimelineInteractor) {
-        self.UUID = UUID
+                extraActions: JMTimelineExtraActions,
+                triggerHandler: @escaping (JMTimelineTrigger) -> Void
+    ) {
+        self.uid = uid
         self.date = date
-        self.object = object
-        self.style = style
-        self.config = config
+        self.layoutValues = layoutValues
         self.logicOptions = logicOptions
         self.layoutOptions = .allOptions
-        self.provider = provider
-        self.interactor = interactor
+        self.extraActions = extraActions
+        self.triggerHandler = triggerHandler
     }
 
     var groupingID: String? {
-        return UUID
+        return uid
     }
     
     var interactiveID: String? {
@@ -169,11 +165,11 @@ public class JMTimelineItem: Equatable, Hashable {
     }
     
     public var hashValue: Int {
-        return UUID.hashValue
+        return uid.hashValue
     }
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(UUID)
+        hasher.combine(uid)
     }
 
     final func addLayoutOptions(_ options: JMTimelineLayoutOptions) {
@@ -189,7 +185,7 @@ public class JMTimelineItem: Equatable, Hashable {
     }
     
     func equal(to another: JMTimelineItem) -> Bool {
-        guard UUID == another.UUID else { return false }
+        guard uid == another.uid else { return false }
         return true
     }
     

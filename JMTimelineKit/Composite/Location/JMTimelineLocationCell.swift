@@ -9,14 +9,14 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineLocationCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineLocationContent()
+final class JMTimelineLocationCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineMessageLocationCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineLocationItem) {
+    func update(with model: JMTimelineMessageLocationItem) {
         container.configure(item: model)
     }
 }

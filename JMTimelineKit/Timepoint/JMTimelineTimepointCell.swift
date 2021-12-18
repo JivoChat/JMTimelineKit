@@ -12,10 +12,10 @@ import DTModelStorage
 import JMRepicKit
 
 final class JMTimelineTimepointCell: JMTimelineEventCell, ModelTransfer {
-    let internalContent = JMTimelineTimepointContent()
+    let internalCanvas = JMTimelineTimepointContent()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineTimepointItem) {

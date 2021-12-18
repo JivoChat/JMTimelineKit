@@ -9,11 +9,11 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineMediaCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineMediaContent()
+final class JMTimelineMediaCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineMediaCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineMediaItem) {

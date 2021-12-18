@@ -9,11 +9,11 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineFinishedConferenceCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineFinishedConferenceContent()
+final class JMTimelineFinishedConferenceCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineFinishedConferenceCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineFinishedConferenceItem) {

@@ -6,5 +6,5 @@
 //  Copyright © 2018 JivoSite. All rights reserved.
 //
 
-public final class JMTimelineRecordlessCallItem: JMTimelineCallItem {
+public final class JMTimelineRecordlessCallItem: JMTimelineMessageCallItem {
 }

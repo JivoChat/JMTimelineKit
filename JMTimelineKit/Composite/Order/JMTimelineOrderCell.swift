@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelineOrderCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineOrderContent()
+final class JMTimelineOrderCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineOrderCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineOrderItem) {
+    func update(with model: JMTimelineMessageOrderItem) {
         container.configure(item: model)
     }
 }

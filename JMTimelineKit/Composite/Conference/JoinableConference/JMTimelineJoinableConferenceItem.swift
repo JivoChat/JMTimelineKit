@@ -6,5 +6,5 @@
 //  Copyright © 2018 JivoSite. All rights reserved.
 //
 
-public final class JMTimelineJoinableConferenceItem: JMTimelineConferenceItem {
+public final class JMTimelineJoinableConferenceItem: JMTimelineMessageConferenceItem {
 }

@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelinePlayableCallCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelinePlayableCallContent()
+final class JMTimelinePlayableCallCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelinePlayableCallCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelinePlayableCallItem) {

@@ -18,7 +18,7 @@ public struct JMTimelineSystemButtonMeta: Equatable {
     }
 }
 
-public struct JMTimelineSystemObject: JMTimelineObject {
+public struct JMTimelineSystemInfo: JMTimelineInfo {
     let icon: JMRepicItem?
     let text: String
     let interactiveID: String?
@@ -73,8 +73,8 @@ public struct JMTimelineSystemStyle: JMTimelineStyle {
     }
 }
 
-public final class JMTimelineSystemItem: JMTimelineItem {
+public final class JMTimelineSystemItem: JMTimelinePayloadItem<JMTimelineSystemInfo> {
     public override var interactiveID: String? {
-        return object.convert(to: JMTimelineSystemObject.self).interactiveID
+        return payload.interactiveID
     }
 }

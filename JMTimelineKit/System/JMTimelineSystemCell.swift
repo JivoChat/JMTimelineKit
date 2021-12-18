@@ -12,10 +12,10 @@ import DTModelStorage
 import JMRepicKit
 
 final class JMTimelineSystemCell: JMTimelineEventCell, ModelTransfer {
-    let internalContent = JMTimelineSystemContent()
+    let internalCanvas = JMTimelineSystemCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineSystemItem) {

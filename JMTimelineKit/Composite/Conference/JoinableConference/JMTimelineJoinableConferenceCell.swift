@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-final class JMTimelineJoinableConferenceCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineJoinableConferenceContent()
+final class JMTimelineJoinableConferenceCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineJoinableConferenceCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineJoinableConferenceItem) {

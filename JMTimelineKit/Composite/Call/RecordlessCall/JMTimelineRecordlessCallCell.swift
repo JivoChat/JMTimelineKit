@@ -9,11 +9,11 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineRecordlessCallCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineRecordlessCallContent()
+final class JMTimelineRecordlessCallCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineRecordlessCallCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
     func update(with model: JMTimelineRecordlessCallItem) {

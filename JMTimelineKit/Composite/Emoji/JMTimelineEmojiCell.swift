@@ -9,14 +9,14 @@
 import Foundation
 import DTModelStorage
 
-final class JMTimelineEmojiCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelineEmojiContent()
+final class JMTimelineEmojiCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelineMessageEmojiCanvas()
     
-    override func obtainContent() -> JMTimelineContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelineEmojiItem) {
+    func update(with model: JMTimelineMessageEmojiItem) {
         container.configure(item: model)
     }
 }

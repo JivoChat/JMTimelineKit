@@ -42,48 +42,49 @@ public struct JMTimelineRenderOptions: OptionSet {
     public static let showQuoteLine = JMTimelineRenderOptions(rawValue: 1 << 2)
 }
 
-public class JMTimelineMessageItem: JMTimelineItem {
-    let status: String?
-    let delivery: JMTimelineItemDelivery
-    let position: JMTimelineItemPosition
+public struct JMTimelineMessagePayload {
+    let kindID: String
     let sender: JMTimelineItemSender
-    public let renderOptions: JMTimelineRenderOptions
-    public let extraActions: JMTimelineExtraActions
+    let renderOptions: JMTimelineMessageRenderOptions
+    let contentGenerator: () -> [JMTimelineMessageCanvasRegion]
+    let contentPopulator: ([JMTimelineMessageCanvasRegion]) -> Void
     
-    public init(UUID: String,
-                date: Date,
-                object: JMTimelineObject!,
-                config: JMTimelineUniConfig? = nil,
-                status: String?,
-                delivery: JMTimelineItemDelivery,
-                position: JMTimelineItemPosition,
-                sender: JMTimelineItemSender,
-                style: JMTimelineStyle,
-                extraActions: JMTimelineExtraActions,
-                logicOptions: JMTimelineLogicOptions,
-                renderOptions: JMTimelineRenderOptions,
-                provider: JMTimelineProvider,
-                interactor: JMTimelineInteractor) {
-        self.status = status
-        self.delivery = delivery
-        self.position = position
+    public init(
+            kindID: String,
+            sender: JMTimelineItemSender,
+            renderOptions: JMTimelineMessageRenderOptions,
+            regionsGenerator: @escaping () -> [JMTimelineMessageCanvasRegion],
+            regionsPopulator: @escaping ([JMTimelineMessageCanvasRegion]) -> Void
+    ) {
+        self.kindID = kindID
         self.sender = sender
         self.renderOptions = renderOptions
-        self.extraActions = extraActions
-
-        super.init(
-            UUID: UUID,
-            date: date,
-            object: object,
-            style: style,
-            config: config,
-            logicOptions: logicOptions,
-            provider: provider,
-            interactor: interactor
-        )
+        self.contentGenerator = regionsGenerator
+        self.contentPopulator = regionsPopulator
     }
+}
 
+public class JMTimelineMessageItem: JMTimelinePayloadItem<JMTimelineMessagePayload> {
     override var groupingID: String? {
-        return sender.ID
+        return payload.sender.ID
+    }
+}
+
+public struct JMTimelineMessageItemSub {
+    public let position: JMTimelineItemPosition
+    public let renderOptions: JMTimelineRenderOptions
+    public let delivery: JMTimelineItemDelivery
+    public let status: String?
+    
+    public init(
+        position: JMTimelineItemPosition,
+        renderOptions: JMTimelineRenderOptions,
+        delivery: JMTimelineItemDelivery,
+        status: String?
+    ) {
+        self.position = position
+        self.renderOptions = renderOptions
+        self.delivery = delivery
+        self.status = status
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import JMRepicKit
 
-public struct JMTimelineTimepointObject: JMTimelineObject {
+public struct JMTimelineTimepointInfo: JMTimelineInfo {
     let caption: String
     
     public init(caption: String) {
@@ -47,7 +47,7 @@ public struct JMTimelineTimepointStyle: JMTimelineStyle {
     }
 }
 
-public final class JMTimelineTimepointItem: JMTimelineItem {
+public final class JMTimelineTimepointItem: JMTimelinePayloadItem<JMTimelineTimepointInfo> {
     override var groupingID: String? {
         return nil
     }

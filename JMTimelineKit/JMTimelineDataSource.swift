@@ -70,7 +70,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         let _headerSizeProvider: (JMTimelineDateItem, IndexPath) -> CGSize = { [weak self] item, indexPath in
             guard let `self` = self else { return .zero }
             
-            if item.logicOptions.contains(.enableSizeCaching), let size = self.cache.size(for: item.UUID) {
+            if item.logicOptions.contains(.enableSizeCaching), let size = self.cache.size(for: item.uid) {
                 return size
             }
             else {
@@ -84,7 +84,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
                 let size = CGSize(width: width, height: height)
                 
                 if item.logicOptions.contains(.enableSizeCaching) {
-                    self.cache.cache(messageSize: size, for: item.UUID)
+                    self.cache.cache(messageSize: size, for: item.uid)
                 }
                 
                 return size
@@ -94,7 +94,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         let _cellSizeProvider: (JMTimelineItem, IndexPath) -> CGSize = { [weak self] item, indexPath in
             guard let `self` = self else { return .zero }
             
-            if item.logicOptions.contains(.enableSizeCaching), let size = self.cache.size(for: item.UUID) {
+            if item.logicOptions.contains(.enableSizeCaching), let size = self.cache.size(for: item.uid) {
                 return size
             }
             else {
@@ -107,7 +107,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
                 let size = CGSize(width: width, height: height)
                 
                 if item.logicOptions.contains(.enableSizeCaching) {
-                    self.cache.cache(messageSize: size, for: item.UUID)
+                    self.cache.cache(messageSize: size, for: item.uid)
                 }
                 
                 return size
@@ -148,22 +148,21 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         manager.sizeForCell(withItem: JMTimelineLoaderItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineSystemItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineTimepointItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelinePlainItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineBotItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineOrderItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineEmojiItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelinePhotoItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessagePlainItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageBotItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageOrderItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageEmojiItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessagePhotoItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineMediaItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineAudioItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineEmailItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineLocationItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageAudioItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageEmailItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageLocationItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelinePlayableCallItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineRecordlessCallItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineRichItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineTaskItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageRichItem.self, _cellSizeProvider)
+        manager.sizeForCell(withItem: JMTimelineMessageTaskItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineJoinableConferenceItem.self, _cellSizeProvider)
         manager.sizeForCell(withItem: JMTimelineFinishedConferenceItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineUniItem.self, _cellSizeProvider)
 
         manager.willDisplay(JMTimelineLoaderCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineSystemCell.self, _willDisplayCallback)
@@ -183,7 +182,6 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         manager.willDisplay(JMTimelineTaskCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineJoinableConferenceCell.self, _willDisplayCallback)
         manager.willDisplay(JMTimelineFinishedConferenceCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineUniCell.self, _willDisplayCallback)
 
         manager.didSelect(JMTimelineSystemCell.self, _didSelectCallback)
     }

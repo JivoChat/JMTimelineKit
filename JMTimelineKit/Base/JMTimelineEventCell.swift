@@ -30,7 +30,7 @@ class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func obtainContent() -> JMTimelineContent {
+    func obtainCanvas() -> JMTimelineCanvas {
         abort()
     }
     
@@ -45,7 +45,7 @@ class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     }
     
     fileprivate func obtainContainer() -> JMTimelineContainer {
-        return JMTimelineContainer(content: obtainContent())
+        return JMTimelineContainer(content: obtainCanvas())
     }
     
     @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {

@@ -33,14 +33,13 @@ open class JMTimelineFactory {
         manager.registerNibless(JMTimelineTaskCell.self)
         manager.registerNibless(JMTimelineJoinableConferenceCell.self)
         manager.registerNibless(JMTimelineFinishedConferenceCell.self)
-        manager.registerNibless(JMTimelineUniCell.self)
     }
     
     open func generateDateItem(date: Date) -> JMTimelineItem {
         abort()
     }
     
-    open func generateContent(for item: JMTimelineItem) -> JMTimelineContent {
+    open func generateContent(for item: JMTimelineItem) -> JMTimelineCanvas {
         abort()
     }
 }

@@ -8,14 +8,14 @@
 
 import DTModelStorage
 
-final class JMTimelinePhotoCell: JMTimelineMultiCell, ModelTransfer {
-    private let internalContent = JMTimelinePhotoContent()
+final class JMTimelinePhotoCell: JMTimelineEventCell, ModelTransfer {
+    private let internalCanvas = JMTimelinePhotoCanvas()
     
-    override func obtainContent() -> JMTimelinePhotoContent {
-        return internalContent
+    override func obtainCanvas() -> JMTimelineCanvas {
+        return internalCanvas
     }
     
-    func update(with model: JMTimelinePhotoItem) {
+    func update(with model: JMTimelineMessagePhotoItem) {
         container.configure(item: model)
     }
 }
