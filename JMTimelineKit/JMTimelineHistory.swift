@@ -228,7 +228,7 @@ public final class JMTimelineHistory {
 
                     let footerIndexPath = IndexPath(item: 0, section: newGroupIndex)
                     registeredHeaderModels[newGroupIndex] = itemDate
-                    registeredFooterModels[footerIndexPath] = factory.generateDateItem(date: itemDate)
+                    registeredFooterModels[footerIndexPath] = factory.generateItem(for: itemDate)
 
                     let model = SectionModel()
                     model.setItems([item])
@@ -256,7 +256,7 @@ public final class JMTimelineHistory {
                 if let groupIndex = self.grouping.grow(date: messageClearDate) {
                     let footerIndexPath = IndexPath(item: 0, section: groupIndex)
                     self.registeredHeaderModels[groupIndex] = messageClearDate
-                    self.registeredFooterModels[footerIndexPath] = self.factory.generateDateItem(date: messageClearDate)
+                    self.registeredFooterModels[footerIndexPath] = self.factory.generateItem(for: messageClearDate)
 
                     let model = SectionModel()
                     model.setItems([item])
@@ -292,7 +292,7 @@ public final class JMTimelineHistory {
                 else if let groupIndex = grouping.grow(date: messageClearDate) {
                     let footerIndexPath = IndexPath(item: 0, section: groupIndex)
                     registeredHeaderModels[groupIndex] = messageClearDate
-                    registeredFooterModels[footerIndexPath] = factory.generateDateItem(date: messageClearDate)
+                    registeredFooterModels[footerIndexPath] = factory.generateItem(for: messageClearDate)
 
                     let model = SectionModel()
                     manager.memoryStorage.insertSection(model, atIndex: groupIndex)

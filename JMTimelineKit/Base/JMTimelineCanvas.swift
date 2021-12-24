@@ -9,26 +9,26 @@
 import Foundation
 import UIKit
 
-@objc enum JMTimelineContentInteractionResult: Int {
+@objc public enum JMTimelineContentInteractionResult: Int {
     case incorrect
     case handled
     case unhandled
 }
 
 public struct JMTimelineTrigger: Equatable {
-    let uid: UUID
-    let payload: AnyHashable?
+    public let uid: UUID
+    public let payload: Any?
 
-    public init(uid: UUID = UUID(), payload: AnyHashable? = nil) {
+    public init(uid: UUID = UUID(), payload: Any? = nil) {
         self.uid = uid
         self.payload = payload
     }
     
-    func callAsFunction(_ payload: AnyHashable) -> JMTimelineTrigger {
+    public func callAsFunction(_ payload: Any) -> JMTimelineTrigger {
         return JMTimelineTrigger(uid: uid, payload: payload)
     }
     
-    func extract<T: Hashable>() -> T? {
+    public func extract<T>() -> T? {
         return payload as? T
     }
     
@@ -43,15 +43,31 @@ public extension JMTimelineTrigger {
     static let longPress = JMTimelineTrigger()
 }
 
-public class JMTimelineCanvas: UIView {
-    private(set) var item: JMTimelineItem?
-    
-    public func configure(item: JMTimelineItem) {
+open class JMTimelineCanvas: UIView {
+    public private(set) var item: JMTimelineItem?
+
+    open func configure(item: JMTimelineItem) {
         self.item = item
         setNeedsLayout()
     }
     
-    func handleLongPressInteraction(gesture: UILongPressGestureRecognizer) -> JMTimelineContentInteractionResult {
+    open func handleLongPressInteraction(gesture: UILongPressGestureRecognizer) -> JMTimelineContentInteractionResult {
         return .unhandled
+    }
+}
+
+open class JMTimelineLinkedCanvas<Provider, Interactor>: JMTimelineCanvas {
+    private let provider: Provider
+    private let interactor: Interactor
+    
+    public init(provider: Provider, interactor: Interactor) {
+        self.provider = provider
+        self.interactor = interactor
+        
+        super.init(frame: .zero)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

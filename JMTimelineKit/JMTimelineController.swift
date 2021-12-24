@@ -10,7 +10,7 @@ import Foundation
 import JFCollectionViewManager
 import SDWebImage
 
-public final class JMTimelineController: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
+public final class JMTimelineController<Provider, Interactor: JMTimelineInteractor>: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
     public var optionalCollectionView: UICollectionView?
     public var lastItemAppearHandler: (() -> Void)?
     
@@ -18,7 +18,7 @@ public final class JMTimelineController: NSObject, DTCollectionViewManageable, U
     public let history: JMTimelineHistory
     
     public let factory: JMTimelineFactory
-    private var dataSource: JMTimelineDataSource?
+    private var dataSource: JMTimelineDataSource<Provider, Interactor>?
     
     private let maxImageDiskCacheSize: UInt
     
@@ -34,9 +34,9 @@ public final class JMTimelineController: NSObject, DTCollectionViewManageable, U
         setUp()
     }
     
-    public func attach(timelineView: JMTimelineView,
-                       provider: JMTimelineProvider,
-                       interactor: JMTimelineInteractor,
+    public func attach(timelineView: JMTimelineView<Interactor>,
+                       provider: Provider,
+                       interactor: Interactor,
                        firstItemVisibleHandler: @escaping (Bool) -> Void,
                        exceptionHandler: @escaping () -> Void) {
         optionalCollectionView = timelineView
@@ -65,12 +65,12 @@ public final class JMTimelineController: NSObject, DTCollectionViewManageable, U
         dataSource?.exceptionHandler = exceptionHandler
     }
     
-    public func detach(timelineView: JMTimelineView) {
+    public func detach(timelineView: JMTimelineView<Interactor>) {
         dataSource?.unregister(from: timelineView)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        (scrollView as? JMTimelineView)?.dismissOwnMenu()
+        (scrollView as? JMTimelineView<Interactor>)?.dismissOwnMenu()
     }
     
     private func setUp() {

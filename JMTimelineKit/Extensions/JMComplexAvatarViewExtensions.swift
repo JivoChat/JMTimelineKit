@@ -9,7 +9,7 @@
 import Foundation
 import JMRepicKit
 
-extension JMRepicView {
+public extension JMRepicView {
     class func standard(height: CGFloat = 75) -> JMRepicView {
         return JMRepicView(
             config: JMRepicConfig(

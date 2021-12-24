@@ -19,12 +19,12 @@ struct JMTimelineSystemButtonStyle: JMTimelineStyle {
     let cornerRadius: CGFloat
 }
 
-final class JMTimelineSystemButton: UIButton, JMTimelineStylable {
+public final class JMTimelineSystemButton: UIButton, JMTimelineStylable {
     var tapHandler: (() -> Void)?
     
     private var style: JMTimelineSystemButtonStyle?
     
-    init() {
+    public init() {
         super.init(frame: .zero)
         
         addTarget(self, action: #selector(handleTap), for: .touchUpInside)
@@ -34,7 +34,7 @@ final class JMTimelineSystemButton: UIButton, JMTimelineStylable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override var frame: CGRect {
+    public override var frame: CGRect {
         didSet {
             guard let style = style else { return }
             if style.cornerRadius == .infinity {
@@ -46,13 +46,13 @@ final class JMTimelineSystemButton: UIButton, JMTimelineStylable {
         }
     }
     
-    var caption: String? {
+    public var caption: String? {
         didSet {
             update(title: caption)
         }
     }
     
-    func apply(style: JMTimelineStyle) {
+    public func apply(style: JMTimelineStyle) {
         let style = style.convert(to: JMTimelineSystemButtonStyle.self)
         self.style = style
 
@@ -86,17 +86,17 @@ final class JMTimelineSystemButton: UIButton, JMTimelineStylable {
         )
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let size = super.sizeThatFits(size)
         return calculateResultingSize(size)
     }
     
-    override var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
         return calculateResultingSize(size)
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
         if traitCollection.hasAnotherStyle(than: previousTraitCollection), let style = style {
@@ -105,7 +105,7 @@ final class JMTimelineSystemButton: UIButton, JMTimelineStylable {
         }
     }
     
-    override func setTitle(_ title: String?, for state: UIControl.State) {
+    public override func setTitle(_ title: String?, for state: UIControl.State) {
         preconditionFailure("Use .caption instead")
     }
     

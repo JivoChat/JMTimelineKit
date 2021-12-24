@@ -8,18 +8,18 @@
 import Foundation
 import UIKit
 
-public class JMTimelineSingleCanvas<Region: UIView>: JMTimelineCanvas {
+open class JMTimelineSingleCanvas<Provider, Interactor, Region: UIView>: JMTimelineLinkedCanvas<Provider, Interactor> {
     public let region: Region
 
-    public init(region: Region) {
+    public init(provider: Provider, interactor: Interactor, region: Region) {
         self.region = region
         
-        super.init(frame: .zero)
+        super.init(provider: provider, interactor: interactor)
         
         addSubview(region)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

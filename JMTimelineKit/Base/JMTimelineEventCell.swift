@@ -13,8 +13,8 @@ fileprivate var staticFocusedTimelineItemUUID: String?
 func JMTimelineStoreUUID(_ uuid: String) { staticFocusedTimelineItemUUID = uuid }
 func JMTimelineObtainUUID() -> String? { return staticFocusedTimelineItemUUID }
 
-class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegate {
-    private(set) lazy var container: JMTimelineContainer = { obtainContainer() }()
+open class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegate {
+    public private(set) lazy var container: JMTimelineContainer = { obtainContainer() }()
     private let longPressGesture = UILongPressGestureRecognizer()
     
     override init(frame: CGRect) {
@@ -26,34 +26,34 @@ class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegate {
         addGestureRecognizer(longPressGesture)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func obtainCanvas() -> JMTimelineCanvas {
+    open func obtainCanvas() -> JMTimelineCanvas {
         abort()
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
         return container.sizeThatFits(size)
     }
     
-    override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = bounds
         container.frame = contentView.bounds
     }
     
     fileprivate func obtainContainer() -> JMTimelineContainer {
-        return JMTimelineContainer(content: obtainCanvas())
+        return JMTimelineContainer(canvas: obtainCanvas())
     }
     
     @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
         guard gesture.state == .began else { return }
-        _ = container.content.handleLongPressInteraction(gesture: gesture)
+        _ = container.canvas.handleLongPressInteraction(gesture: gesture)
     }
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer === longPressGesture {
             return otherGestureRecognizer is UILongPressGestureRecognizer
         }

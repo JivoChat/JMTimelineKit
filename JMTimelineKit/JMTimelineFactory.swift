@@ -13,33 +13,14 @@ open class JMTimelineFactory {
     public init() {
     }
     
-    func register(manager: DTCollectionViewManager) {
-        manager.registerNiblessFooter(JMTimelineDateHeaderView.self)
-        manager.registerNibless(JMTimelineLoaderCell.self)
-        manager.registerNibless(JMTimelineSystemCell.self)
-        manager.registerNibless(JMTimelineTimepointCell.self)
-        manager.registerNibless(JMTimelinePlainCell.self)
-        manager.registerNibless(JMTimelineBotCell.self)
-        manager.registerNibless(JMTimelineOrderCell.self)
-        manager.registerNibless(JMTimelineEmojiCell.self)
-        manager.registerNibless(JMTimelinePhotoCell.self)
-        manager.registerNibless(JMTimelineMediaCell.self)
-        manager.registerNibless(JMTimelineAudioCell.self)
-        manager.registerNibless(JMTimelineEmailCell.self)
-        manager.registerNibless(JMTimelineLocationCell.self)
-        manager.registerNibless(JMTimelinePlayableCallCell.self)
-        manager.registerNibless(JMTimelineRecordlessCallCell.self)
-        manager.registerNibless(JMTimelineRichCell.self)
-        manager.registerNibless(JMTimelineTaskCell.self)
-        manager.registerNibless(JMTimelineJoinableConferenceCell.self)
-        manager.registerNibless(JMTimelineFinishedConferenceCell.self)
+    open func register(manager: DTCollectionViewManager, providers: JMTimelineDataSourceProviders) {
     }
     
-    open func generateDateItem(date: Date) -> JMTimelineItem {
+    open func generateItem(for date: Date) -> JMTimelineItem {
         abort()
     }
     
-    open func generateContent(for item: JMTimelineItem) -> JMTimelineCanvas {
+    open func generateCanvas(for item: JMTimelineItem) -> JMTimelineCanvas {
         abort()
     }
 }

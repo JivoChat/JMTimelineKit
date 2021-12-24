@@ -7,8 +7,8 @@ import Foundation
 import UIKit
 
 public struct JMTimelineItemLayoutValues: JMTimelineStyle {
-    let margins: UIEdgeInsets
-    let groupingCoef: CGFloat
+    public let margins: UIEdgeInsets
+    public let groupingCoef: CGFloat
 //    public let contentStyle: JMTimelineStyle
     
     public init(margins: UIEdgeInsets,
@@ -22,8 +22,8 @@ public struct JMTimelineItemLayoutValues: JMTimelineStyle {
 }
 
 public struct JMTimelineExtraActions {
-    let reactions: [JMTimelineReactionMeta]
-    let actions: [JMTimelineActionMeta]
+    public let reactions: [JMTimelineReactionMeta]
+    public let actions: [JMTimelineActionMeta]
     
     public init(reactions: [JMTimelineReactionMeta] = [], actions: [JMTimelineActionMeta] = []) {
         self.reactions = reactions
@@ -32,9 +32,9 @@ public struct JMTimelineExtraActions {
 }
 
 public struct JMTimelineReactionMeta {
-    let emoji: String
-    let number: Int
-    let participated: Bool
+    public let emoji: String
+    public let number: Int
+    public let participated: Bool
     
     public init(emoji: String, number: Int, participated: Bool) {
         self.emoji = emoji
@@ -44,8 +44,8 @@ public struct JMTimelineReactionMeta {
 }
 
 public struct JMTimelineActionMeta {
-    let ID: String
-    let icon: UIImage
+    public let ID: String
+    public let icon: UIImage
     
     public init(ID: String, icon: UIImage) {
         self.ID = ID
@@ -55,9 +55,9 @@ public struct JMTimelineActionMeta {
 
 public struct JMTimelineReactionStyle: JMTimelineStyle {
     public struct Element {
-        let paddingCoef: CGFloat
-        let fontReducer: CGFloat
-        let pullingCoef: CGFloat
+        public let paddingCoef: CGFloat
+        public let fontReducer: CGFloat
+        public let pullingCoef: CGFloat
         public init(paddingCoef: CGFloat, fontReducer: CGFloat, pullingCoef: CGFloat) {
             self.paddingCoef = paddingCoef
             self.fontReducer = fontReducer
@@ -65,16 +65,16 @@ public struct JMTimelineReactionStyle: JMTimelineStyle {
         }
     }
     
-    let height: CGFloat
-    let baseFont: UIFont
-    let regularBackgroundColor: UIColor
-    let regularNumberColor: UIColor
-    let selectedBackgroundColor: UIColor
-    let selectedNumberColor: UIColor
-    let sidePaddingCoef: CGFloat
-    let emojiElement: Element
-    let counterElement: Element
-    let actionElement: Element
+    public let height: CGFloat
+    public let baseFont: UIFont
+    public let regularBackgroundColor: UIColor
+    public let regularNumberColor: UIColor
+    public let selectedBackgroundColor: UIColor
+    public let selectedNumberColor: UIColor
+    public let sidePaddingCoef: CGFloat
+    public let emojiElement: Element
+    public let counterElement: Element
+    public let actionElement: Element
 
     public init(height: CGFloat,
                 baseFont: UIFont,
@@ -136,9 +136,9 @@ open class JMTimelineItem: Equatable, Hashable {
     public let date: Date
     public let layoutValues: JMTimelineItemLayoutValues
     public let logicOptions: JMTimelineLogicOptions
-    private(set) var layoutOptions: JMTimelineLayoutOptions
-    let extraActions: JMTimelineExtraActions
-    let triggerHandler: (JMTimelineTrigger) -> Void
+    public private(set) var layoutOptions: JMTimelineLayoutOptions
+    public let extraActions: JMTimelineExtraActions
+    public let triggerHandler: (JMTimelineTrigger) -> Void
 
     public init(uid: String,
                 date: Date,
@@ -156,11 +156,11 @@ open class JMTimelineItem: Equatable, Hashable {
         self.triggerHandler = triggerHandler
     }
 
-    var groupingID: String? {
+    open var groupingID: String? {
         return uid
     }
     
-    var interactiveID: String? {
+    open var interactiveID: String? {
         return nil
     }
     
@@ -194,7 +194,7 @@ open class JMTimelineItem: Equatable, Hashable {
     }
 }
 
-extension JMTimelineItem {
+public extension JMTimelineItem {
     func convert<T>(to: T.Type) -> T {
         return self as! T
     }

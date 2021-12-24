@@ -1,5 +1,5 @@
 //
-//  JMTimelineBlock.swift
+//  JMTimelineBlockCallable.swift
 //  JMTimeline
 //
 //  Created by Stan Potemkin on 04.06.2020.
@@ -9,6 +9,6 @@
 import Foundation
 import UIKit
 
-public protocol JMTimelineBlock: JMTimelineStylable, JMTimelineLinkable {
+public protocol JMTimelineBlockCallable: JMTimelineStylable {
     func handleLongPressGesture(recognizer: UILongPressGestureRecognizer) -> Bool
 }

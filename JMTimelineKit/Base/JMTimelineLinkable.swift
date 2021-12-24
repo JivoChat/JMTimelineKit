@@ -7,7 +7,3 @@
 //
 
 import Foundation
-
-public protocol JMTimelineLinkable: class {
-    func link(provider: JMTimelineProvider, interactor: JMTimelineInteractor)
-}

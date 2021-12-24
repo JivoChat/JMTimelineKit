@@ -9,22 +9,22 @@
 import Foundation
 import UIKit
 
-class JMTimelineObservableSlider: UISlider {
-    var beginHandler: ((Float) -> Bool)?
-    var adjustHandler: ((Float) -> Bool)?
-    var endHandler: (() -> Void)?
+open class JMTimelineObservableSlider: UISlider {
+    public var beginHandler: ((Float) -> Bool)?
+    public var adjustHandler: ((Float) -> Bool)?
+    public var endHandler: (() -> Void)?
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         
         addTarget(self, action: #selector(handleValueChange), for: .valueChanged)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
         if let point = touches.first?.location(in: self) {
@@ -35,7 +35,7 @@ class JMTimelineObservableSlider: UISlider {
         }
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         
         if let point = touches.first?.location(in: self) {
@@ -46,13 +46,13 @@ class JMTimelineObservableSlider: UISlider {
         }
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         
         endHandler?()
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
         
         endHandler?()

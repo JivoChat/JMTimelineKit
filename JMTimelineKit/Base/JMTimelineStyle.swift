@@ -9,7 +9,7 @@
 public protocol JMTimelineStyle {
 }
 
-extension JMTimelineStyle {
+public extension JMTimelineStyle {
     func convert<T>(to: T.Type) -> T {
         return self as! T
     }

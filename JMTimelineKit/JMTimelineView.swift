@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 import SwiftyNSException
 
-open class JMTimelineView: UICollectionView {
-    private let interactor: JMTimelineInteractor
+open class JMTimelineView<Interactor: JMTimelineInteractor>: UICollectionView {
+    private let interactor: Interactor
     
-    public init(interactor: JMTimelineInteractor) {
+    public init(interactor: Interactor) {
         self.interactor = interactor
         
         super.init(frame: .zero, collectionViewLayout: JMTimelineCollectionLayout())
