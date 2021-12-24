@@ -25,17 +25,22 @@ struct JMTimelineGrouping {
         }
         else {
             groups = (groups + [date]).sorted(by: >)
-            return group(for: date)
+            return section(for: date)
         }
     }
     
-    mutating func group(for date: Date) -> Int? {
+    func section(for date: Date) -> Int? {
         if let index = groups.firstIndex(of: date) {
             return historyFrontIndex + index
         }
         else {
             return nil
         }
+    }
+    
+    func group(forSection group: Int) -> Date? {
+        let internalIndex = group - historyFrontIndex
+        return groups.indices.contains(internalIndex) ? groups[internalIndex] : nil
     }
     
     mutating func reset() {
