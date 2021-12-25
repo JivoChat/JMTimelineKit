@@ -138,14 +138,12 @@ open class JMTimelineItem: Equatable, Hashable {
     public let logicOptions: JMTimelineLogicOptions
     public private(set) var layoutOptions: JMTimelineLayoutOptions
     public let extraActions: JMTimelineExtraActions
-    public let triggerHandler: (JMTimelineTrigger) -> Void
 
     public init(uid: String,
                 date: Date,
                 layoutValues: JMTimelineItemLayoutValues,
                 logicOptions: JMTimelineLogicOptions,
-                extraActions: JMTimelineExtraActions,
-                triggerHandler: @escaping (JMTimelineTrigger) -> Void
+                extraActions: JMTimelineExtraActions
     ) {
         self.uid = uid
         self.date = date
@@ -153,7 +151,6 @@ open class JMTimelineItem: Equatable, Hashable {
         self.logicOptions = logicOptions
         self.layoutOptions = .allOptions
         self.extraActions = extraActions
-        self.triggerHandler = triggerHandler
     }
 
     open var groupingID: String? {

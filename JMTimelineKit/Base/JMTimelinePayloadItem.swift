@@ -16,7 +16,6 @@ open class JMTimelinePayloadItem<Payload>: JMTimelineItem {
         layoutValues: JMTimelineItemLayoutValues,
         logicOptions: JMTimelineLogicOptions,
         extraActions: JMTimelineExtraActions,
-        triggerHandler: @escaping (JMTimelineTrigger) -> Void,
         payload: Payload
     ) {
         self.payload = payload
@@ -26,8 +25,7 @@ open class JMTimelinePayloadItem<Payload>: JMTimelineItem {
             date: date,
             layoutValues: layoutValues,
             logicOptions: logicOptions,
-            extraActions: extraActions,
-            triggerHandler: triggerHandler
+            extraActions: extraActions
         )
     }
 }

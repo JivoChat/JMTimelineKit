@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-open class JMTimelineSingleCanvas<Provider, Interactor, Region: UIView>: JMTimelineLinkedCanvas<Provider, Interactor> {
+open class JMTimelineSingleCanvas<Region: UIView>: JMTimelineCanvas {
     public let region: Region
 
-    public init(provider: Provider, interactor: Interactor, region: Region) {
+    public init(region: Region) {
         self.region = region
         
-        super.init(provider: provider, interactor: interactor)
+        super.init()
         
         addSubview(region)
     }
@@ -29,7 +29,6 @@ open class JMTimelineSingleCanvas<Provider, Interactor, Region: UIView>: JMTimel
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        
         region.frame = bounds
     }
 }

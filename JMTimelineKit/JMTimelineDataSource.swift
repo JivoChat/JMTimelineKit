@@ -19,34 +19,33 @@ public struct JMTimelineDataSourceProviders {
     public let didSelectHandler: (JMTimelineEventCell, JMTimelineItem, IndexPath) -> Void
 }
 
-final class JMTimelineDataSource<Provider, Interactor: JMTimelineInteractor>: NSObject, UICollectionViewDelegateFlowLayout {
-    var lastItemAppearHandler: (() -> Void)?
-    var firstItemVisibleHandler: ((Bool) -> Void)?
-    var mediaTapHandler: ((URL) -> Void)?
-    var exceptionHandler: (() -> Void)?
+public enum JMTimelineEvent {
+    case earliestPointOfHistory
+    case latestPointOfHistory(hasData: Bool)
+    case mediaTap(url: URL)
+    case exceptionHappened
+}
 
+final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
     private let manager: DTCollectionViewManager
     private let history: JMTimelineHistory
     private let cache: JMTimelineCache
     private let factory: JMTimelineFactory
-    private let provider: Provider
-    private let interactor: Interactor
-    
+    private let eventHandler: (JMTimelineEvent) -> Void
+
     private(set) var providers: JMTimelineDataSourceProviders
     weak var collectionView: UICollectionView?
-    
+
     init(manager: DTCollectionViewManager,
          history: JMTimelineHistory,
          cache: JMTimelineCache,
          cellFactory: JMTimelineFactory,
-         provider: Provider,
-         interactor: Interactor) {
+         eventHandler: @escaping (JMTimelineEvent) -> Void) {
         self.manager = manager
         self.history = history
         self.cache = cache
         self.factory = cellFactory
-        self.provider = provider
-        self.interactor = interactor
+        self.eventHandler = eventHandler
         
         providers = JMTimelineDataSourceProviders(
             headerSizeProvider: { item, indexPath in
@@ -92,7 +91,7 @@ final class JMTimelineDataSource<Provider, Interactor: JMTimelineInteractor>: NS
         factory.register(manager: manager, providers: providers)
         
         updater.exceptionHandler = { [weak self] in
-            self?.exceptionHandler?()
+            self?.eventHandler(.exceptionHappened)
         }
     }
     
@@ -149,24 +148,25 @@ final class JMTimelineDataSource<Provider, Interactor: JMTimelineInteractor>: NS
         
         if let latestIndexPath = history.latestIndexPath {
             if let visibleIndexPaths = collectionView?.indexPathsForVisibleItems {
-                firstItemVisibleHandler?(visibleIndexPaths.contains(latestIndexPath))
+                let hasData = visibleIndexPaths.contains(latestIndexPath)
+                eventHandler(.latestPointOfHistory(hasData: hasData))
             }
             else {
-                firstItemVisibleHandler?(false)
+                eventHandler(.latestPointOfHistory(hasData: false))
             }
         }
         else {
-            firstItemVisibleHandler?(false)
+            eventHandler(.latestPointOfHistory(hasData: false))
         }
         
         if indexPath == history.earliestIndexPath {
-            lastItemAppearHandler?()
+            eventHandler(.earliestPointOfHistory)
         }
     }
     
     private func handleDidSelect(cell: JMTimelineEventCell, item: JMTimelineItem, indexPath: IndexPath) -> Void {
-        if let interactiveID = item.interactiveID {
-            interactor.systemMessageTap(messageID: interactiveID)
-        }
+//        if let interactiveID = item.interactiveID {
+//            interactor.systemMessageTap(messageID: interactiveID)
+//        }
     }
 }

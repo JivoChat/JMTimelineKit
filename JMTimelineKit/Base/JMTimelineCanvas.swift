@@ -15,37 +15,17 @@ import UIKit
     case unhandled
 }
 
-public struct JMTimelineTrigger: Equatable {
-    public let uid: UUID
-    public let payload: Any?
-
-    public init(uid: UUID = UUID(), payload: Any? = nil) {
-        self.uid = uid
-        self.payload = payload
-    }
-    
-    public func callAsFunction(_ payload: Any) -> JMTimelineTrigger {
-        return JMTimelineTrigger(uid: uid, payload: payload)
-    }
-    
-    public func extract<T>() -> T? {
-        return payload as? T
-    }
-    
-    public static func == (lhs: JMTimelineTrigger, rhs: JMTimelineTrigger) -> Bool {
-        guard lhs.uid == rhs.uid else { return false }
-        return true
-    }
-}
-
-public extension JMTimelineTrigger {
-    static let prepareForMenu = JMTimelineTrigger()
-    static let longPress = JMTimelineTrigger()
-}
-
 open class JMTimelineCanvas: UIView {
     public private(set) var item: JMTimelineItem?
-
+    
+    public init() {
+        super.init(frame: .zero)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     open func configure(item: JMTimelineItem) {
         self.item = item
         setNeedsLayout()
@@ -53,21 +33,5 @@ open class JMTimelineCanvas: UIView {
     
     open func handleLongPressInteraction(gesture: UILongPressGestureRecognizer) -> JMTimelineContentInteractionResult {
         return .unhandled
-    }
-}
-
-open class JMTimelineLinkedCanvas<Provider, Interactor>: JMTimelineCanvas {
-    private let provider: Provider
-    private let interactor: Interactor
-    
-    public init(provider: Provider, interactor: Interactor) {
-        self.provider = provider
-        self.interactor = interactor
-        
-        super.init(frame: .zero)
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 import JFCollectionViewManager
 import SDWebImage
 
-public final class JMTimelineController<Provider, Interactor: JMTimelineInteractor>: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
+public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
     public var optionalCollectionView: UICollectionView?
     public var lastItemAppearHandler: (() -> Void)?
     
@@ -18,7 +18,7 @@ public final class JMTimelineController<Provider, Interactor: JMTimelineInteract
     public let history: JMTimelineHistory
     
     public let factory: JMTimelineFactory
-    private var dataSource: JMTimelineDataSource<Provider, Interactor>?
+    private var dataSource: JMTimelineDataSource?
     
     private let maxImageDiskCacheSize: UInt
     
@@ -35,10 +35,7 @@ public final class JMTimelineController<Provider, Interactor: JMTimelineInteract
     }
     
     public func attach(timelineView: JMTimelineView<Interactor>,
-                       provider: Provider,
-                       interactor: Interactor,
-                       firstItemVisibleHandler: @escaping (Bool) -> Void,
-                       exceptionHandler: @escaping () -> Void) {
+                       eventHandler: @escaping (JMTimelineEvent) -> Void) {
         optionalCollectionView = timelineView
         
         let oldStorage = manager.storage
@@ -54,15 +51,10 @@ public final class JMTimelineController<Provider, Interactor: JMTimelineInteract
             history: history,
             cache: cache,
             cellFactory: factory,
-            provider: provider,
-            interactor: interactor
+            eventHandler: eventHandler
         )
         
         dataSource?.register(in: timelineView)
-        
-        dataSource?.lastItemAppearHandler = lastItemAppearHandler
-        dataSource?.firstItemVisibleHandler = firstItemVisibleHandler
-        dataSource?.exceptionHandler = exceptionHandler
     }
     
     public func detach(timelineView: JMTimelineView<Interactor>) {
