@@ -17,7 +17,7 @@ open class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegat
     public private(set) lazy var container: JMTimelineContainer = { obtainContainer() }()
     private let longPressGesture = UILongPressGestureRecognizer()
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(container)
         

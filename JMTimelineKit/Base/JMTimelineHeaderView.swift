@@ -13,8 +13,9 @@ import DTModelStorage
 open class JMTimelineHeaderView: UICollectionReusableView {
     public private(set) lazy var container: JMTimelineContainer = { obtainContainer() }()
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        
         addSubview(container)
     }
     
