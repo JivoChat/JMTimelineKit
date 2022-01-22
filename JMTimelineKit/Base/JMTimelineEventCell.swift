@@ -19,6 +19,9 @@ open class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegat
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
+        
+        container.frame = contentView.bounds
+        container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         contentView.addSubview(container)
         
         longPressGesture.addTarget(self, action: #selector(handleLongPress))
@@ -41,7 +44,7 @@ open class JMTimelineEventCell: UICollectionViewCell, UIGestureRecognizerDelegat
     open override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = bounds
-        container.frame = contentView.bounds
+//        container.frame = contentView.bounds
     }
     
     fileprivate func obtainContainer() -> JMTimelineContainer {

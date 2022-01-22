@@ -111,7 +111,6 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
 
             let width = collectionView?.bounds.width ?? 0
             let height = container.size(for: width).height
-            
             let size = CGSize(width: width, height: height)
             
             if item.logicOptions.contains(.enableSizeCaching) {
