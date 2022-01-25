@@ -353,7 +353,7 @@ public final class JMTimelineHistory {
 
                 if let groupIndex = self.grouping.grow(date: messageClearDate) {
                     let footerIndex = groupIndex - grouping.historyFrontIndex
-                    self.registeredFooterModels[footerIndex] = self.factory.generateDateItem(date: messageClearDate)
+                    registeredFooterModels.insert(factory.generateDateItem(date: messageClearDate), at: footerIndex)
                     
                     let model = SectionModel()
                     model.setItems([item])
@@ -388,7 +388,7 @@ public final class JMTimelineHistory {
                 }
                 else if let groupIndex = grouping.grow(date: messageClearDate) {
                     let footerIndex = groupIndex - grouping.historyFrontIndex
-                    registeredFooterModels[footerIndex] = factory.generateDateItem(date: messageClearDate)
+                    registeredFooterModels.insert(factory.generateDateItem(date: messageClearDate), at: footerIndex)
                     
                     let model = SectionModel()
                     manager.memoryStorage.insertSection(model, atIndex: groupIndex)
