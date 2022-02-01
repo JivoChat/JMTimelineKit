@@ -53,14 +53,14 @@ SPEC REPOS:
     - libwebp
     - SDWebImage
     - SDWebImageWebPCoder
-  https://github.com/JivoChat/JMSpecsRepo.git:
+  https://github.com/jivochat/JMSpecsRepo:
     - JFCollectionViewManager
     - JFMarkdownKit
     - JMDesignKit
     - JMMarkdownKit
     - JMOnetimeCalculator
     - JMScalableView
-  https://github.com/JivoChat/JMSpecsRepoDevelop.git:
+  https://github.com/jivochat/JMSpecsRepoDevelop:
     - JMImageLoader
     - JMRepicKit
   trunk:
@@ -86,6 +86,6 @@ SPEC CHECKSUMS:
   SwiftyNSException: 14b2593b12fec2a29e8666a3f8db682161b3aa0a
   TypedTextAttributes: fc3a5a8c4a7a28304446f8c5e8af146d11c2163a
 
-PODFILE CHECKSUM: a59394c4bd12fd455761d2d5565b68024f1aedca
+PODFILE CHECKSUM: 0ad2b0c3f00255098c86cadb5a4033382c9f6c62
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
