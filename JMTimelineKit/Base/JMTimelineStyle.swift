@@ -16,5 +16,5 @@ public extension JMTimelineStyle {
 }
 
 public protocol JMTimelineStylable: class {
-    func apply(style: JMTimelineStyle)
+    func updateDesign()
 }

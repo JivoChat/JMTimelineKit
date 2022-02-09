@@ -15,11 +15,12 @@ import UIKit
     case unhandled
 }
 
-open class JMTimelineCanvas: UIView {
+open class JMTimelineCanvas: UIView, JMTimelineStylable {
     public private(set) var item: JMTimelineItem?
     
     public init() {
         super.init(frame: .zero)
+        updateDesign()
     }
     
     required public init?(coder: NSCoder) {
@@ -29,6 +30,14 @@ open class JMTimelineCanvas: UIView {
     open func configure(item: JMTimelineItem) {
         self.item = item
         setNeedsLayout()
+    }
+    
+    open func updateDesign() {
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateDesign()
     }
     
     open func handleLongPressInteraction(gesture: UILongPressGestureRecognizer) -> JMTimelineContentInteractionResult {
