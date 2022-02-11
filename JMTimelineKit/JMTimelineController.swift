@@ -10,7 +10,7 @@ import Foundation
 import JFCollectionViewManager
 import SDWebImage
 
-public final class JMTimelineController: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
+public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
     public var optionalCollectionView: UICollectionView?
     public var lastItemAppearHandler: (() -> Void)?
     
@@ -34,11 +34,8 @@ public final class JMTimelineController: NSObject, DTCollectionViewManageable, U
         setUp()
     }
     
-    public func attach(timelineView: JMTimelineView,
-                       provider: JMTimelineProvider,
-                       interactor: JMTimelineInteractor,
-                       firstItemVisibleHandler: @escaping (Bool) -> Void,
-                       exceptionHandler: @escaping () -> Void) {
+    public func attach(timelineView: JMTimelineView<Interactor>,
+                       eventHandler: @escaping (JMTimelineEvent) -> Void) {
         optionalCollectionView = timelineView
         
         let oldStorage = manager.storage
@@ -54,23 +51,18 @@ public final class JMTimelineController: NSObject, DTCollectionViewManageable, U
             history: history,
             cache: cache,
             cellFactory: factory,
-            provider: provider,
-            interactor: interactor
+            eventHandler: eventHandler
         )
         
         dataSource?.register(in: timelineView)
-        
-        dataSource?.lastItemAppearHandler = lastItemAppearHandler
-        dataSource?.firstItemVisibleHandler = firstItemVisibleHandler
-        dataSource?.exceptionHandler = exceptionHandler
     }
     
-    public func detach(timelineView: JMTimelineView) {
+    public func detach(timelineView: JMTimelineView<Interactor>) {
         dataSource?.unregister(from: timelineView)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        (scrollView as? JMTimelineView)?.dismissOwnMenu()
+        (scrollView as? JMTimelineView<Interactor>)?.dismissOwnMenu()
     }
     
     private func setUp() {

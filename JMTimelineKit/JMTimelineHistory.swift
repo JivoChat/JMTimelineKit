@@ -190,7 +190,7 @@ public final class JMTimelineHistory {
         for section in manager.memoryStorage.sections {
             for index in 0 ..< section.numberOfItems {
                 guard let item = section.item(at: index) as? JMTimelineItem else { continue }
-                guard uuid == item.UUID else { continue }
+                guard uuid == item.uid else { continue }
                 return item
             }
         }
@@ -243,6 +243,7 @@ public final class JMTimelineHistory {
                         print("\n\nMemoryStorage.insertItem(_:to:) instance method throwed an exception: \(error.localizedDescription)\n\n")
                     }
                 } else {
+//<<<<<<< HEAD
                     configureMargins(forItems: [item], usingOption: .itemsEndIsGroupEarlyBound)
                     let indexPathToAppendItem = IndexPath(item: groupItems.count, section: existingGroupIndex)
                     do {
@@ -255,14 +256,14 @@ public final class JMTimelineHistory {
                 guard let newGroupIndex = grouping.grow(date: item.date.withoutTime()) else { return print("\n\nThere is an internal bug occured while populating timeline with new items: JMTimelineGrouping.grow(for:) method didn't find any existing group for item date (\(item.date.withoutTime())), but JMTimelineGrouping.grow(date:) found.\n\n") }
                 configureMargins(forItems: [item], usingOption: .itemsBoundsIsGroupBounds)
                 
-                self.registeredFooterModels.insert(self.factory.generateDateItem(date: item.date.withoutTime()), at: newGroupIndex - self.grouping.historyFrontIndex)
+                self.registeredFooterModels.insert(self.factory.generateItem(for: item.date.withoutTime()), at: newGroupIndex - self.grouping.historyFrontIndex)
                 
                 let section = SectionModel()
                 section.setItems([item])
                 manager.memoryStorage.insertSection(section, atIndex: newGroupIndex)
             }
             
-            registeredItemIDs.insert(item.UUID)
+            registeredItemIDs.insert(item.uid)
         }
     }
     
@@ -301,14 +302,33 @@ public final class JMTimelineHistory {
             guard let laterItem = laterItem else { return item }
             
             if laterItem.groupingID == item.groupingID {
-                laterItem.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-                item.removeRenderOptions([.groupBottomMargin, .groupLastElement])
+                laterItem.removeLayoutOptions([.groupTopMargin, .groupFirstElement])
+                item.removeLayoutOptions([.groupBottomMargin, .groupLastElement])
             } else {
-                laterItem.addRenderOptions([.groupTopMargin, .groupFirstElement])
-                item.addRenderOptions([.groupBottomMargin, .groupLastElement])
+                laterItem.addLayoutOptions([.groupTopMargin, .groupFirstElement])
+                item.addLayoutOptions([.groupBottomMargin, .groupLastElement])
+//=======
+//                    guard let newGroupIndex = grouping.grow(date: itemDate) else { return }
+//
+//                    let footerIndexPath = IndexPath(item: 0, section: newGroupIndex)
+//                    registeredHeaderModels[newGroupIndex] = itemDate
+//                    registeredFooterModels[footerIndexPath] = factory.generateItem(for: itemDate)
+//
+//                    let model = SectionModel()
+//                    model.setItems([item])
+////                    recentItemsMap[newGroupIndex]?.append(item)
+//                    manager.memoryStorage.insertSection(model, atIndex: grouping.historyFrontIndex)
+//                }
+//
+//                let indexPathToInsert = manager.memoryStorage.indexPath(forItem: itemBeforeInsertion) ?? IndexPath(item: 0, section: grouping.historyFrontIndex)
+//
+//                try? manager.memoryStorage.insertItem(item, to: indexPathToInsert)
+//
+//                registeredItemIDs.insert(item.uid)
+//>>>>>>> dev/dynamic
             }
-            cache.resetSize(for: laterItem.UUID)
-            cache.resetSize(for: item.UUID)
+            cache.resetSize(for: laterItem.uid)
+            cache.resetSize(for: item.uid)
             manager.memoryStorage.reloadItem(laterItem)
             manager.memoryStorage.reloadItem(item)
             
@@ -318,25 +338,25 @@ public final class JMTimelineHistory {
         switch option {
         case .itemsStartIsGroupLateBound:
             guard let latestItem = items.first else { return }
-            latestItem.addRenderOptions([.groupBottomMargin, .groupLastElement])
-            cache.resetSize(for: latestItem.UUID)
+            latestItem.addLayoutOptions([.groupBottomMargin, .groupLastElement])
+            cache.resetSize(for: latestItem.uid)
             manager.memoryStorage.reloadItem(latestItem)
             
         case .itemsEndIsGroupEarlyBound:
             guard let earliestItem = items.last else { return }
-            earliestItem.addRenderOptions([.groupTopMargin, .groupFirstElement])
-            cache.resetSize(for: earliestItem.UUID)
+            earliestItem.addLayoutOptions([.groupTopMargin, .groupFirstElement])
+            cache.resetSize(for: earliestItem.uid)
             manager.memoryStorage.reloadItem(earliestItem)
             
         case .itemsBoundsIsGroupBounds:
             guard let earliestItem = items.last, let latestItem = items.first else { return }
             
-            earliestItem.addRenderOptions([.groupTopMargin, .groupFirstElement])
-            cache.resetSize(for: earliestItem.UUID)
+            earliestItem.addLayoutOptions([.groupTopMargin, .groupFirstElement])
+            cache.resetSize(for: earliestItem.uid)
             manager.memoryStorage.reloadItem(earliestItem)
             
-            latestItem.addRenderOptions([.groupBottomMargin, .groupLastElement])
-            cache.resetSize(for: latestItem.UUID)
+            latestItem.addLayoutOptions([.groupBottomMargin, .groupLastElement])
+            cache.resetSize(for: latestItem.uid)
             manager.memoryStorage.reloadItem(latestItem)
             
         case .itemsBoundsIsNotGroupBounds: break
@@ -352,9 +372,16 @@ public final class JMTimelineHistory {
                 let messageClearDate = item.date.withoutTime()
 
                 if let groupIndex = self.grouping.grow(date: messageClearDate) {
+//<<<<<<< HEAD
                     let footerIndex = groupIndex - grouping.historyFrontIndex
-                    registeredFooterModels.insert(factory.generateDateItem(date: messageClearDate), at: footerIndex)
+                    registeredFooterModels.insert(factory.generateItem(for: messageClearDate), at: footerIndex)
                     
+//=======
+//                    let footerIndexPath = IndexPath(item: 0, section: groupIndex)
+//                    self.registeredHeaderModels[groupIndex] = messageClearDate
+//                    self.registeredFooterModels[footerIndexPath] = self.factory.generateItem(for: messageClearDate)
+//
+//>>>>>>> dev/dynamic
                     let model = SectionModel()
                     model.setItems([item])
                     self.manager.memoryStorage.insertSection(model, atIndex: self.grouping.historyFrontIndex)
@@ -363,7 +390,7 @@ public final class JMTimelineHistory {
                     self.insertAndAdjust(item: item)
                 }
 
-                self.registeredItemIDs.insert(item.UUID)
+                self.registeredItemIDs.insert(item.uid)
             }
         }
         manager.collectionViewUpdater?.storageNeedsReloading()
@@ -377,7 +404,7 @@ public final class JMTimelineHistory {
         let context = JMTimelineHistoryContext(shouldResetCache: resetCache)
         manager.memoryStorage.performUpdates {
             items.forEach { item in
-                if registeredItemIDs.contains(item.UUID) {
+                if registeredItemIDs.contains(item.uid) {
                     return
                 }
 
@@ -387,9 +414,16 @@ public final class JMTimelineHistory {
                     prependAndAdjust(context: context, item: item, into: groupIndex)
                 }
                 else if let groupIndex = grouping.grow(date: messageClearDate) {
+//<<<<<<< HEAD
                     let footerIndex = groupIndex - grouping.historyFrontIndex
-                    registeredFooterModels.insert(factory.generateDateItem(date: messageClearDate), at: footerIndex)
+                    registeredFooterModels.insert(factory.generateItem(for: messageClearDate), at: footerIndex)
                     
+//=======
+//                    let footerIndexPath = IndexPath(item: 0, section: groupIndex)
+//                    registeredHeaderModels[groupIndex] = messageClearDate
+//                    registeredFooterModels[footerIndexPath] = factory.generateItem(for: messageClearDate)
+//
+//>>>>>>> dev/dynamic
                     let model = SectionModel()
                     manager.memoryStorage.insertSection(model, atIndex: groupIndex)
                     prependAndAdjust(context: context, item: item, into: groupIndex)
@@ -402,10 +436,10 @@ public final class JMTimelineHistory {
         for section in manager.memoryStorage.sections {
             for index in 0 ..< section.numberOfItems {
                 guard let item = section.item(at: index) as? JMTimelineItem else { return }
-                guard UUID == item.UUID else { continue }
+                guard UUID == item.uid else { continue }
 
-                replacingItem.removeRenderOptions(.allOptions)
-                replacingItem.addRenderOptions(item.renderOptions)
+                replacingItem.removeLayoutOptions(.allOptions)
+                replacingItem.addLayoutOptions(item.layoutOptions)
                 try? manager.memoryStorage.replaceItem(item, with: replacingItem)
 
                 return
@@ -417,13 +451,13 @@ public final class JMTimelineHistory {
         for section in manager.memoryStorage.sections {
             for index in 0 ..< section.numberOfItems {
                 guard let item = section.item(at: index) as? JMTimelineItem else { return }
-                guard UUID == item.UUID else { continue }
+                guard UUID == item.uid else { continue }
 
                 let nextIndex = index - 1
-                if item.renderOptions.contains(.groupFirstElement), index > 0, let nextItem = section.item(at: nextIndex) as? JMTimelineItem, item.groupingID == nextItem.groupingID {
-                    nextItem.removeRenderOptions(nextItem.renderOptions)
-                    nextItem.addRenderOptions(item.renderOptions)
-                    cache.resetSize(for: nextItem.UUID)
+                if item.layoutOptions.contains(.groupFirstElement), index > 0, let nextItem = section.item(at: nextIndex) as? JMTimelineItem, item.groupingID == nextItem.groupingID {
+                    nextItem.removeLayoutOptions(nextItem.layoutOptions)
+                    nextItem.addLayoutOptions(item.layoutOptions)
+                    cache.resetSize(for: nextItem.uid)
                     manager.memoryStorage.reloadItem(nextItem)
                 }
 
@@ -445,12 +479,12 @@ public final class JMTimelineHistory {
             }
         }
         else {
-            item.removeRenderOptions([.groupBottomMargin])
+            item.removeLayoutOptions([.groupBottomMargin])
             earliestItemsMap[groupIndex] = item
         }
 
         manager.memoryStorage.addItem(item, toSection: groupIndex)
-        registeredItemIDs.insert(item.UUID)
+        registeredItemIDs.insert(item.uid)
     }
 
     private func adjustAfterPrepend(context: JMTimelineHistoryContext, olderItem: JMTimelineItem, newerItem: JMTimelineItem) {
@@ -458,12 +492,12 @@ public final class JMTimelineHistory {
             return
         }
 
-        newerItem.removeRenderOptions([.groupTopMargin, .groupFirstElement])
-        olderItem.removeRenderOptions([.groupLastElement, .groupBottomMargin])
+        newerItem.removeLayoutOptions([.groupTopMargin, .groupFirstElement])
+        olderItem.removeLayoutOptions([.groupLastElement, .groupBottomMargin])
 
         if context.shouldResetCache {
-            cache.resetSize(for: newerItem.UUID)
-            cache.resetSize(for: olderItem.UUID)
+            cache.resetSize(for: newerItem.uid)
+            cache.resetSize(for: olderItem.uid)
             context.shouldResetCache = false
         }
     }
@@ -481,33 +515,64 @@ public final class JMTimelineHistory {
         let indexPath = IndexPath(item: 0, section: grouping.historyFrontIndex)
         defer { try? manager.memoryStorage.insertItem(newerItem, to: indexPath) }
 
-        newerItem.removeRenderOptions(.groupBottomMargin)
+        newerItem.removeLayoutOptions(.groupBottomMargin)
         guard let olderItem = manager.memoryStorage.item(at: indexPath) as? JMTimelineItem else { return }
 
         if let newerGroupingID = newerItem.groupingID, let olderGroupingID = olderItem.groupingID, newerGroupingID != olderGroupingID {
-            olderItem.addRenderOptions(.groupBottomMargin)
-            cache.resetSize(for: olderItem.UUID)
+            olderItem.addLayoutOptions(.groupBottomMargin)
+            cache.resetSize(for: olderItem.uid)
             manager.memoryStorage.reloadItem(olderItem)
 
-            newerItem.addRenderOptions(.groupTopMargin)
+            newerItem.addLayoutOptions(.groupTopMargin)
         }
         else {
-            olderItem.removeRenderOptions([.groupLastElement, .groupBottomMargin])
-            cache.resetSize(for: olderItem.UUID)
+            olderItem.removeLayoutOptions([.groupLastElement, .groupBottomMargin])
+            cache.resetSize(for: olderItem.uid)
             manager.memoryStorage.reloadItem(olderItem)
 
-            newerItem.removeRenderOptions([.groupFirstElement, .groupTopMargin])
-            cache.resetSize(for: newerItem.UUID)
+            newerItem.removeLayoutOptions([.groupFirstElement, .groupTopMargin])
+            cache.resetSize(for: newerItem.uid)
         }
     }
 }
 
+//<<<<<<< HEAD
 extension JMTimelineHistory {
     enum MarginsConfigurationOption {
         case itemsStartIsGroupLateBound
         case itemsEndIsGroupEarlyBound
         case itemsBoundsIsGroupBounds
         case itemsBoundsIsNotGroupBounds
+//=======
+//    private func configureMarginsFor(_ items: [JMTimelineItem], placedAfter itemBeforeCollection: JMTimelineItem? = nil) {
+//        let itemAfterCollection = itemBeforeCollection.flatMap { itemInSectionDistant(from: $0, at: -1) }
+//        let itemsWithNeighbours = ([itemBeforeCollection] + items + [itemAfterCollection]).compactMap { $0 }
+//
+//        _ = itemsWithNeighbours.reduce(items.first, { previousItem, item in
+//            configureMarginsFor(item, placedAfter: previousItem)
+//            return item
+//        })
+//    }
+//
+//    private func configureMarginsFor(_ item: JMTimelineItem, placedAfter itemBefore: JMTimelineItem?) {
+//        if let itemBefore = itemBefore {
+//            if item.groupingID == itemBefore.groupingID {
+//                item.removeLayoutOptions([.groupTopMargin, .groupFirstElement])
+//                itemBefore.removeLayoutOptions([.groupBottomMargin, .groupLastElement])
+//            } else {
+//                item.addLayoutOptions(.groupTopMargin)
+//                itemBefore.addLayoutOptions(.groupBottomMargin)
+//            }
+//        } else {
+//            item.removeLayoutOptions(.groupTopMargin)
+//            item.addLayoutOptions(.groupFirstElement)
+//            cache.resetSize(for: item.uid)
+//        }
+//
+//        cache.resetSize(for: item.uid)
+//        cache.resetSize(for: itemBefore?.uid ?? String())
+//        manager.memoryStorage.reloadItem(itemBefore)
+//>>>>>>> dev/dynamic
     }
     
     struct GroupItemPlacement {

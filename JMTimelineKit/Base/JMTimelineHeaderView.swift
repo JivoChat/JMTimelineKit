@@ -10,32 +10,33 @@ import Foundation
 import UIKit
 import DTModelStorage
 
-class JMTimelineHeaderView: UICollectionReusableView {
-    private(set) lazy var container: JMTimelineContainer = { obtainContainer() }()
+open class JMTimelineHeaderView: UICollectionReusableView {
+    public private(set) lazy var container: JMTimelineContainer = { obtainContainer() }()
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        
         addSubview(container)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func obtainContent() -> JMTimelineContent {
+    open func obtainCanvas() -> JMTimelineCanvas {
         abort()
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
         return container.sizeThatFits(size)
     }
     
-    override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         container.frame = bounds
     }
     
     fileprivate func obtainContainer() -> JMTimelineContainer {
-        return JMTimelineContainer(content: obtainContent())
+        return JMTimelineContainer(canvas: obtainCanvas())
     }
 }

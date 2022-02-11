@@ -1,5 +1,5 @@
 //
-//  JMTimelineObject.swift
+//  JMTimelineInfo.swift
 //  JMTimeline
 //
 //  Created by Stan Potemkin on 01/10/2018.
@@ -8,10 +8,15 @@
 
 import Foundation
 
-public protocol JMTimelineObject {
+public protocol JMTimelineInfo {
 }
 
-extension JMTimelineObject {
+public struct JMTimelineNoneInfo: JMTimelineInfo {
+    public init() {
+    }
+}
+
+extension JMTimelineInfo {
     func convert<T>(to: T.Type) -> T {
         return self as! T
     }

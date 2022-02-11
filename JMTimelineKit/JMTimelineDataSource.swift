@@ -12,35 +12,70 @@ import SwiftyNSException
 import JFCollectionViewManager
 import DTModelStorage
 
-final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
-    var lastItemAppearHandler: (() -> Void)?
-    var firstItemVisibleHandler: ((Bool) -> Void)?
-    var mediaTapHandler: ((URL) -> Void)?
-    var exceptionHandler: (() -> Void)?
+public struct JMTimelineDataSourceProviders {
+    public let headerSizeProvider: (JMTimelineItem, IndexPath) -> CGSize
+    public let cellSizeProvider: (JMTimelineItem, IndexPath) -> CGSize
+    public let willDisplayHandler: (JMTimelineEventCell, JMTimelineItem, IndexPath) -> Void
+    public let didSelectHandler: (JMTimelineEventCell, JMTimelineItem, IndexPath) -> Void
+}
 
+public enum JMTimelineEvent {
+    case earliestPointOfHistory
+    case latestPointOfHistory(hasData: Bool)
+    case mediaTap(url: URL)
+    case exceptionHappened
+}
+
+final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
     private let manager: DTCollectionViewManager
     private let history: JMTimelineHistory
     private let cache: JMTimelineCache
     private let factory: JMTimelineFactory
-    private let provider: JMTimelineProvider
-    private let interactor: JMTimelineInteractor
-    
+    private let eventHandler: (JMTimelineEvent) -> Void
+
+    private(set) var providers: JMTimelineDataSourceProviders
     weak var collectionView: UICollectionView?
-    
+
     init(manager: DTCollectionViewManager,
          history: JMTimelineHistory,
          cache: JMTimelineCache,
          cellFactory: JMTimelineFactory,
-         provider: JMTimelineProvider,
-         interactor: JMTimelineInteractor) {
+         eventHandler: @escaping (JMTimelineEvent) -> Void) {
         self.manager = manager
         self.history = history
         self.cache = cache
         self.factory = cellFactory
-        self.provider = provider
-        self.interactor = interactor
+        self.eventHandler = eventHandler
+        
+        providers = JMTimelineDataSourceProviders(
+            headerSizeProvider: { item, indexPath in
+                return .zero
+            },
+            cellSizeProvider: { item, indexPath in
+                return .zero
+            },
+            willDisplayHandler: { cell, item, indexPath in
+            },
+            didSelectHandler: { cell, item, indexPath in
+            }
+        )
         
         super.init()
+        
+        providers = JMTimelineDataSourceProviders(
+            headerSizeProvider: { [weak self] item, indexPath in
+                return self?.provideHeaderSize(item: item, indexPath: indexPath) ?? .zero
+            },
+            cellSizeProvider: { [weak self] item, indexPath in
+                return self?.provideCellSize(item: item, indexPath: indexPath) ?? .zero
+            },
+            willDisplayHandler: { [weak self] cell, item, indexPath in
+                self?.handleWillDisplay(cell: cell, item: item, indexPath: indexPath)
+            },
+            didSelectHandler: { [weak self] cell, item, indexPath in
+                self?.handleDidSelect(cell: cell, item: item, indexPath: indexPath)
+            }
+        )
     }
     
     func register(in collectionView: UICollectionView) {
@@ -53,11 +88,10 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         let updater = JMTimelineViewUpdater(collectionView: collectionView)
         manager.collectionViewUpdater = updater
         
-        factory.register(manager: manager)
-        attachProviders()
+        factory.register(manager: manager, providers: providers)
         
         updater.exceptionHandler = { [weak self] in
-            self?.exceptionHandler?()
+            self?.eventHandler(.exceptionHappened)
         }
     }
     
@@ -66,125 +100,72 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         collectionView.delegate = nil
     }
     
-    private func attachProviders() {
-        let _headerSizeProvider: (JMTimelineDateItem, IndexPath) -> CGSize = { [weak self] item, indexPath in
-            guard let `self` = self else { return .zero }
+    private func provideHeaderSize(item: JMTimelineItem, indexPath: IndexPath) -> CGSize {
+        if item.logicOptions.contains(.enableSizeCaching), let size = cache.size(for: item.uid) {
+            return size
+        }
+        else {
+            let canvas = factory.generateCanvas(for: item)
+            let container = JMTimelineContainer(canvas: canvas)
+            container.configure(item: item)
+
+            let width = collectionView?.bounds.width ?? 0
+            let height = container.size(for: width).height
+            let size = CGSize(width: width, height: height)
             
-            if item.cachable, let size = self.cache.size(for: item.UUID) {
-                return size
+            if item.logicOptions.contains(.enableSizeCaching) {
+                cache.cache(messageSize: size, for: item.uid)
+            }
+            
+            return size
+        }
+    }
+
+    private func provideCellSize(item: JMTimelineItem, indexPath: IndexPath) -> CGSize {
+        if item.logicOptions.contains(.enableSizeCaching), let size = cache.size(for: item.uid) {
+            return size
+        }
+        else {
+            let canvas = factory.generateCanvas(for: item)
+            let container = JMTimelineContainer(canvas: canvas)
+            container.configure(item: item)
+            
+            let width = collectionView?.bounds.width ?? 0
+            let height = container.size(for: width).height
+            let size = CGSize(width: width, height: height)
+            
+            if item.logicOptions.contains(.enableSizeCaching) {
+                cache.cache(messageSize: size, for: item.uid)
+            }
+            
+            return size
+        }
+    }
+    
+    private func handleWillDisplay(cell: JMTimelineEventCell, item: JMTimelineItem, indexPath: IndexPath) -> Void {
+        cell.container.setNeedsLayout()
+        
+        if let latestIndexPath = history.latestIndexPath {
+            if let visibleIndexPaths = collectionView?.indexPathsForVisibleItems {
+                let hasData = visibleIndexPaths.contains(latestIndexPath)
+                eventHandler(.latestPointOfHistory(hasData: hasData))
             }
             else {
-                let view = self.factory.generateContent(for: item)
-                let container = JMTimelineContainer(content: view)
-                container.configure(item: item)
-
-                let width = self.collectionView?.bounds.width ?? 0
-                let height = container.size(for: width).height
-                
-                let size = CGSize(width: width, height: height)
-                
-                if item.cachable {
-                    self.cache.cache(messageSize: size, for: item.UUID)
-                }
-                
-                return size
+                eventHandler(.latestPointOfHistory(hasData: false))
             }
+        }
+        else {
+            eventHandler(.latestPointOfHistory(hasData: false))
         }
         
-        let _cellSizeProvider: (JMTimelineItem, IndexPath) -> CGSize = { [weak self] item, indexPath in
-            guard let `self` = self else { return .zero }
-            
-            if item.cachable, let size = self.cache.size(for: item.UUID) {
-                return size
-            }
-            else {
-                let view = self.factory.generateContent(for: item)
-                let container = JMTimelineContainer(content: view)
-                container.configure(item: item)
-                
-                let width = self.collectionView?.bounds.width ?? 0
-                let height = container.size(for: width).height
-                let size = CGSize(width: width, height: height)
-                
-                if item.cachable {
-                    self.cache.cache(messageSize: size, for: item.UUID)
-                }
-                
-                return size
-            }
+        if indexPath == history.earliestIndexPath {
+            eventHandler(.earliestPointOfHistory)
         }
+    }
     
-        let _willDisplayCallback: (JMTimelineEventCell, JMTimelineItem, IndexPath) -> Void = { [weak self] cell, _, indexPath in
-            guard let `self` = self else { return }
-            
-            cell.container.setNeedsLayout()
-            
-            if let latestIndexPath = self.history.latestIndexPath {
-                if let visibleIndexPaths = self.collectionView?.indexPathsForVisibleItems {
-                    self.firstItemVisibleHandler?(visibleIndexPaths.contains(latestIndexPath))
-                }
-                else {
-                    self.firstItemVisibleHandler?(false)
-                }
-            }
-            else {
-                self.firstItemVisibleHandler?(false)
-            }
-            
-            if indexPath == self.history.earliestIndexPath {
-                self.lastItemAppearHandler?()
-            }
-        }
-    
-        let _didSelectCallback: (JMTimelineEventCell, JMTimelineItem, IndexPath) -> Void = { [weak self] _, item, _ in
-            guard let `self` = self else { return }
-            
-            if let interactiveID = item.interactiveID {
-                self.interactor.systemMessageTap(messageID: interactiveID)
-            }
-        }
-        
-        manager.referenceSizeForFooterView(withItem: JMTimelineDateItem.self, _headerSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineLoaderItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineSystemItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineTimepointItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelinePlainItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineBotItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineOrderItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineEmojiItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelinePhotoItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineMediaItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineAudioItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineEmailItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineLocationItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelinePlayableCallItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineRecordlessCallItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineRichItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineTaskItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineJoinableConferenceItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineFinishedConferenceItem.self, _cellSizeProvider)
-        manager.sizeForCell(withItem: JMTimelineUniItem.self, _cellSizeProvider)
-
-        manager.willDisplay(JMTimelineLoaderCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineSystemCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineTimepointCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelinePlainCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineBotCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineOrderCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineEmojiCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelinePhotoCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineMediaCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineAudioCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineEmailCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineLocationCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelinePlayableCallCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineRecordlessCallCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineRichCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineTaskCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineJoinableConferenceCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineFinishedConferenceCell.self, _willDisplayCallback)
-        manager.willDisplay(JMTimelineUniCell.self, _willDisplayCallback)
-
-        manager.didSelect(JMTimelineSystemCell.self, _didSelectCallback)
+    private func handleDidSelect(cell: JMTimelineEventCell, item: JMTimelineItem, indexPath: IndexPath) -> Void {
+//        if let interactiveID = item.interactiveID {
+//            interactor.systemMessageTap(messageID: interactiveID)
+//        }
     }
 }

@@ -11,8 +11,10 @@ import JMMarkdownKit
 import Lottie
 
 public enum JMTimelineResource {
-    case raw(Data)
+    case image(UIImage)
     case lottie(Animation)
+    case video(URL)
+    case raw(Data)
     case failure(errorDescription: String? = nil)
 }
 
@@ -29,6 +31,5 @@ public protocol JMTimelineProvider: AnyObject {
     func formattedTimeForPlayback(_ timestamp: TimeInterval) -> String
     func formattedPhoneNumber(_ phone: String) -> String
     func mentionProvider(origin: JMMarkdownMentionOrigin) -> JMMarkdownMentionMeta?
-    func retrieveResource(from url: URL, canvasWidth: CGFloat, completion: @escaping (JMTimelineResource) -> Void)
     func retrieveMeta(forFileWithURL fileURL: URL, completion: @escaping (JMTimelineMediaMetaResult) -> Void)
 }

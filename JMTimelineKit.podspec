@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '3.1.2'
+    spec.version      = '4.1.0-dev.1'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -23,7 +23,6 @@ Pod::Spec.new do |spec|
     spec.dependency     'SDWebImage'
     spec.dependency     'SDWebImageWebPCoder'
     spec.dependency     'lottie-ios'
-    spec.dependency     'JMRepicKit', '1.0.3'
     spec.dependency     'JMMarkdownKit'
     spec.dependency     'JMOnetimeCalculator'
     spec.dependency     'JMScalableView'
