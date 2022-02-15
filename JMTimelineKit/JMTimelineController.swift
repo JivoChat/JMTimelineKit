@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import JFCollectionViewManager
-import SDWebImage
+import DTCollectionViewManager
 
 public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
     public var optionalCollectionView: UICollectionView?
@@ -30,8 +29,6 @@ public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObj
         self.maxImageDiskCacheSize = maxImageDiskCacheSize
         
         super.init()
-        
-        setUp()
     }
     
     public func attach(timelineView: JMTimelineView<Interactor>,
@@ -41,7 +38,7 @@ public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObj
         let oldStorage = manager.storage
         manager = DTCollectionViewManager()
         manager.storage = oldStorage
-        manager.memoryStorage.defersDatasourceUpdates = true
+//        manager.memoryStorage.defersDatasourceUpdates = true
         
         history.configure(manager: manager)
         history.prepare()
@@ -63,9 +60,5 @@ public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObj
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         (scrollView as? JMTimelineView<Interactor>)?.dismissOwnMenu()
-    }
-    
-    private func setUp() {
-        SDImageCache.shared.config.maxDiskSize = maxImageDiskCacheSize
     }
 }

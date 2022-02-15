@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '4.1.0-dev.1'
+    spec.version      = '4.1.0-dev.2'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -15,22 +15,12 @@ Pod::Spec.new do |spec|
 
     spec.framework    = 'SystemConfiguration'
 
-    spec.dependency     'JMImageLoader', '0.0.3'
     spec.dependency     'SwiftyNSException'
-    spec.dependency     'DTModelStorage', "~> 8.0.0"
-    spec.dependency     'JFCollectionViewManager', "7.5.2"
-    spec.dependency     'TypedTextAttributes'
-    spec.dependency     'SDWebImage'
-    spec.dependency     'SDWebImageWebPCoder'
-    spec.dependency     'lottie-ios'
-    spec.dependency     'JMMarkdownKit'
+    spec.dependency     'DTModelStorage', '~> 10.0.0'
+    spec.dependency     'DTCollectionViewManager', '~> 10.0.0'
     spec.dependency     'JMOnetimeCalculator'
-    spec.dependency     'JMScalableView'
 
     spec.exclude_files = [
-      'JMTimelineKit/Info.plist',
-      'JMTimelineKit/Composite/ChatCompositeCellContentView.swift',
-      'JMTimelineKit/Composite/JMTimelinePlayableCallEvent/JMTimelinePlayableCallEventContent.swift',
-      'JMTimelineKit/Composite/JMTimelineRecordlessCallEvent/JMTimelineRecordlessCallEventContent.swift'
+      'JMTimelineKit/Info.plist'
     ]
   end

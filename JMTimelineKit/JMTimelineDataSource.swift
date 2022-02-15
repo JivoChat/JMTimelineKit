@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import SwiftyNSException
-import JFCollectionViewManager
+import DTCollectionViewManager
 import DTModelStorage
 
 public struct JMTimelineDataSourceProviders {

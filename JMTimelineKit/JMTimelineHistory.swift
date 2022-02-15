@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import JFCollectionViewManager
+import DTCollectionViewManager
 import DTModelStorage
 
 fileprivate class JMTimelineHistoryContext {
@@ -216,8 +216,8 @@ public final class JMTimelineHistory {
     }
 
     public func populate(withItems items: [JMTimelineItem]) {
-        manager.memoryStorage.defersDatasourceUpdates = false
-        defer { manager.memoryStorage.defersDatasourceUpdates = true }
+//        manager.memoryStorage.defersDatasourceUpdates = false
+//        defer { manager.memoryStorage.defersDatasourceUpdates = true }
         
         items.forEach { item in
             if let existingGroupIndex = grouping.section(for: item.date.withoutTime()),
@@ -364,8 +364,8 @@ public final class JMTimelineHistory {
     }
 
     public func append(items: [JMTimelineItem]) {
-        manager.memoryStorage.defersDatasourceUpdates = false
-        defer { manager.memoryStorage.defersDatasourceUpdates = true }
+//        manager.memoryStorage.defersDatasourceUpdates = false
+//        defer { manager.memoryStorage.defersDatasourceUpdates = true }
 
         manager.memoryStorage.performUpdates {
             items.forEach { item in

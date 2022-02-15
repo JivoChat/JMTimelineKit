@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import TypedTextAttributes
 
 extension String {
     func escape() -> String? {
