@@ -16,8 +16,8 @@ Pod::Spec.new do |spec|
     spec.framework    = 'SystemConfiguration'
 
     spec.dependency     'SwiftyNSException'
-    spec.dependency     'DTModelStorage', '~> 10.0.0'
-    spec.dependency     'DTCollectionViewManager', '~> 10.0.0'
+    spec.dependency     'DTModelStorage', '~> 10.0'
+    spec.dependency     'DTCollectionViewManager', '~> 10.0'
     spec.dependency     'JMOnetimeCalculator'
 
     spec.exclude_files = [
