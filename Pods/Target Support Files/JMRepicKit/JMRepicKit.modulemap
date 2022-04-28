@@ -1,6 +1,0 @@
-framework module JMRepicKit {
-  umbrella header "JMRepicKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

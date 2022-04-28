@@ -1,6 +1,0 @@
-framework module JMMarkdownKit {
-  umbrella header "JMMarkdownKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

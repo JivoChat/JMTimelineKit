@@ -26,37 +26,17 @@
 import Foundation
 
 /// Identifies index of section in storage
-public protocol SectionLocationIdentifyable : class {
+public protocol SectionLocationIdentifyable : AnyObject {
     /// Returns section index for section, or nil if section was not found.
     func sectionIndex(for: Section) -> Int?
 }
 
 /// Allows access to supplementaries for specific section
-public protocol SectionLocatable : class {
+public protocol SectionLocatable : AnyObject {
     
     /// Section index for current section
     var currentSectionIndex: Int? { get }
     
     /// delegate, that knows about current section index in storage.
     var sectionLocationDelegate: SectionLocationIdentifyable? { get set }
-}
-
-extension SectionLocatable {
-    
-    @available(*, unavailable, message: "Please use storage.supplementaryModelProvider closure to provide supplementaries.")
-    /// Supplementaries dictionary
-    var supplementaries: [String: [Int:Any]] { return [:] }
-    
-    @available(*, unavailable, message: "Please use storage.supplementaryModelProvider closure to provide supplementaries.")
-    /// Returns supplementary model of `kind` at `index` or nil, if it was not found
-    public func supplementaryModel(ofKind kind: String, atIndex index: Int) -> Any?
-    {
-        return nil
-    }
-    
-    @available(*, unavailable, message: "Please use storage.supplementaryModelProvider closure to provide supplementaries.")
-    /// Sets supplementary `model` for `kind` at `index`
-    public func setSupplementaryModel(_ model : Any?, forKind kind: String, atIndex index: Int)
-    {
-    }
 }

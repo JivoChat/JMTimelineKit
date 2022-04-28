@@ -1,91 +1,33 @@
 PODS:
-  - DTModelStorage (8.0.0):
-    - DTModelStorage/Core (= 8.0.0)
-  - DTModelStorage/Core (8.0.0)
-  - JFCollectionViewManager (7.5.2):
-    - DTModelStorage (= 8.0.0)
-  - JFMarkdownKit (1.2.2)
-  - JMDesignKit (1.0.0)
-  - JMImageLoader (0.0.1-beta.0)
-  - JMMarkdownKit (1.1.3):
-    - JFMarkdownKit
-    - JMDesignKit
-    - TypedTextAttributes
+  - DTCollectionViewManager (10.0.0):
+    - DTModelStorage (~> 10.0.0)
+  - DTModelStorage (10.0.0):
+    - DTModelStorage/Core (= 10.0.0)
+  - DTModelStorage/Core (10.0.0)
   - JMOnetimeCalculator (1.0.0)
-  - JMRepicKit (1.0.2-beta.0):
-    - JMImageLoader (~> 0.0.1-beta.0)
-  - JMScalableView (1.0.0):
-    - JMDesignKit
-  - libwebp (1.2.0):
-    - libwebp/demux (= 1.2.0)
-    - libwebp/mux (= 1.2.0)
-    - libwebp/webp (= 1.2.0)
-  - libwebp/demux (1.2.0):
-    - libwebp/webp
-  - libwebp/mux (1.2.0):
-    - libwebp/demux
-  - libwebp/webp (1.2.0)
-  - lottie-ios (3.1.8)
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.8.4):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.10)
   - SwiftyNSException (2.0.0)
-  - TypedTextAttributes (1.1.0)
 
 DEPENDENCIES:
-  - DTModelStorage (~> 8.0.0)
-  - JFCollectionViewManager (= 7.5.2)
-  - JMMarkdownKit
+  - DTCollectionViewManager (~> 10.0)
+  - DTModelStorage (~> 10.0)
   - JMOnetimeCalculator
-  - JMRepicKit (~> 1.0.2-beta.0)
-  - JMScalableView
-  - lottie-ios
-  - SDWebImage
-  - SDWebImageWebPCoder
   - SwiftyNSException
-  - TypedTextAttributes
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - libwebp
-    - SDWebImage
-    - SDWebImageWebPCoder
-  https://github.com/jivochat/JMSpecsRepo:
-    - JFCollectionViewManager
-    - JFMarkdownKit
-    - JMDesignKit
-    - JMMarkdownKit
-    - JMOnetimeCalculator
-    - JMScalableView
-  https://github.com/jivochat/JMSpecsRepoDevelop:
-    - JMImageLoader
-    - JMRepicKit
-  trunk:
+    - DTCollectionViewManager
     - DTModelStorage
-    - lottie-ios
+  https://github.com/jivochat/JMSpecsRepo:
+    - JMOnetimeCalculator
+  trunk:
     - SwiftyNSException
-    - TypedTextAttributes
 
 SPEC CHECKSUMS:
-  DTModelStorage: 3b86a1e37496532bbd74cadc5b9310238d5ba780
-  JFCollectionViewManager: b0fe7e93acfe335d72fae4dad88e9e036ba1c8ed
-  JFMarkdownKit: 9fbf4d7e07ddb4213f7044547497159a55ca3c73
-  JMDesignKit: a2504dd6c940691b4a479b871bc2a73a707c8a93
-  JMImageLoader: 08ffa82584a4dd0114e0c5c5422859780326d6e4
-  JMMarkdownKit: b47ad1429d0fa299d803560415dd264ceafcf43d
+  DTCollectionViewManager: 248d7fd4ad6ca370d60fab84e38a0fd81be1ce09
+  DTModelStorage: 79d100bac5bd2b600dd43991c72f39a09c63e78b
   JMOnetimeCalculator: 715be6053625fd4ecbeeccce97b68b376ce4acb3
-  JMRepicKit: 270e62e942f039da37d70c347d252fc23dc5aae9
-  JMScalableView: 5e46b19b98bdd4b132fd75fc3ffe14b5b18ca393
-  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
-  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   SwiftyNSException: 14b2593b12fec2a29e8666a3f8db682161b3aa0a
-  TypedTextAttributes: fc3a5a8c4a7a28304446f8c5e8af146d11c2163a
 
-PODFILE CHECKSUM: 0ad2b0c3f00255098c86cadb5a4033382c9f6c62
+PODFILE CHECKSUM: d526d5f8e20d65e2f16d23227cb55232437d6eb4
 
 COCOAPODS: 1.11.2

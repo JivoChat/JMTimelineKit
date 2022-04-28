@@ -10,15 +10,8 @@ target 'JMTimelineKit' do
   use_frameworks!
 
   pod 'SwiftyNSException'
-  pod 'DTModelStorage', "~> 8.0.0"
-  pod 'JFCollectionViewManager', "7.5.2"
-  pod 'TypedTextAttributes'
-  pod 'SDWebImage'
-  pod 'SDWebImageWebPCoder'
-  pod 'lottie-ios'
-  pod 'JMRepicKit', '~> 1.0.2-beta.0'
-  pod 'JMMarkdownKit'
+  pod 'DTModelStorage', '~> 10.0'
+  pod 'DTCollectionViewManager', '~> 10.0'
   pod 'JMOnetimeCalculator'
-  pod 'JMScalableView'
 
 end

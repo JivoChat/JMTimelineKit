@@ -106,7 +106,7 @@ open class MemoryStorageAnomalyHandler : AnomalyHandler {
 public enum MemoryStorageError: LocalizedError
 {
     /// Errors that can happen when inserting items into memory storage - `insertItem(_:to:)` method
-    public enum InsertionReason
+    public enum InsertionReason: Equatable
     {
         case indexPathTooBig(IndexPath)
     }
@@ -145,12 +145,6 @@ public enum MemoryStorageError: LocalizedError
 /// - SeeAlso: `SectionModel`
 open class MemoryStorage: BaseUpdateDeliveringStorage, Storage, SectionLocationIdentifyable
 {
-    /// When enabled, datasource updates are not applied immediately and saved inside `StorageUpdate` `enqueuedDatasourceUpdates` property.
-    /// Call `StorageUpdate.applyDeferredDatasourceUpdates` method to apply all deferred changes.
-    /// Defaults to `true`.
-    /// - SeeAlso: https://github.com/DenTelezhkin/DTCollectionViewManager/issues/27
-    open var defersDatasourceUpdates: Bool = true
-
     /// Anomaly handler, that handles reported by `MemoryStorage` anomalies.
     open var anomalyHandler : MemoryStorageAnomalyHandler = .init()
 
@@ -176,13 +170,7 @@ open class MemoryStorage: BaseUpdateDeliveringStorage, Storage, SectionLocationI
     }
     
     func performDatasourceUpdate(_ block: @escaping (StorageUpdate) throws -> Void) {
-        if defersDatasourceUpdates {
-            currentUpdate?.enqueueDatasourceUpdate(block)
-        } else {
-            if let update = currentUpdate {
-                try? block(update)
-            }
-        }
+        currentUpdate?.enqueueDatasourceUpdate(block)
     }
     
     /// Returns index of `section` or nil, if section is now found
@@ -317,41 +305,52 @@ open class MemoryStorage: BaseUpdateDeliveringStorage, Storage, SectionLocationI
         finishUpdate()
     }
     
+    /// Inserts contents of `items` at `indexPath`.
+    ///
+    /// This method creates all sections prior to indexPath.section, unless they are already created.
+    /// - Throws: if indexPath is too big, will throw MemoryStorageErrors.Insertion.IndexPathTooBig
+    open func insertItems<T>(_ items: [T], at indexPath: IndexPath) throws {
+        startUpdate()
+        performDatasourceUpdate { [weak self] update in
+            guard let section = self?.getValidSection(indexPath.section, collectChangesIn: update) else {
+                return
+            }
+            guard section.items.count >= indexPath.item else {
+                self?.anomalyHandler.reportAnomaly(MemoryStorageAnomaly.insertionIndexPathTooBig(indexPath: indexPath, countOfElementsInSection: section.items.count))
+                throw MemoryStorageError.insertionFailed(reason: .indexPathTooBig(indexPath))
+            }
+            
+            section.items.insert(contentsOf: items, at: indexPath.item)
+            update.objectChanges.append(contentsOf:
+                                            (indexPath.item..<indexPath.item + items.count)
+                                            .map { (.insert, [IndexPath(item: $0, section: indexPath.section)]) }
+            )
+        }
+        finishUpdate()
+    }
+    
     /// Inserts `items` to `indexPaths`
     ///
     /// This method creates sections prior to maximum indexPath.section in `indexPaths`, unless they are already created.
-    /// - Throws: if items.count is different from indexPaths.count, will throw MemoryStorageErrors.BatchInsertion.ItemsCountMismatch
-    open func insertItems<T>(_ items: [T], to indexPaths: [IndexPath]) throws
+    open func insertItems<T>(_ items: [T], to indexPaths: [IndexPath])
     {
         if items.count != indexPaths.count {
             anomalyHandler.reportAnomaly(.batchInsertionItemCountMismatch(itemsCount: items.count, indexPathsCount: indexPaths.count))
             return
         }
-        if defersDatasourceUpdates {
-            performDatasourceUpdate { [weak self] update in
-                indexPaths.enumerated().forEach { (arg) in
-                    let (itemIndex, indexPath) = arg
-                    let section = self?.getValidSection(indexPath.section, collectChangesIn: update)
-                    guard (section?.items.count ?? 0) >= indexPath.item else {
-                        return
-                    }
-                    section?.items.insert(items[itemIndex], at: indexPath.item)
-                    update.objectChanges.append((.insert, [indexPath]))
+        startUpdate()
+        performDatasourceUpdate { [weak self] update in
+            indexPaths.enumerated().forEach { (arg) in
+                let (itemIndex, indexPath) = arg
+                let section = self?.getValidSection(indexPath.section, collectChangesIn: update)
+                guard (section?.items.count ?? 0) >= indexPath.item else {
+                    return
                 }
-            }
-        } else {
-            performUpdates {
-                indexPaths.enumerated().forEach { (arg) in
-                    let (itemIndex, indexPath) = arg
-                    let section = getValidSection(indexPath.section, collectChangesIn: currentUpdate)
-                    guard section.items.count >= indexPath.item else {
-                        return
-                    }
-                    section.items.insert(items[itemIndex], at: indexPath.item)
-                    currentUpdate?.objectChanges.append((.insert, [indexPath]))
-                }
+                section?.items.insert(items[itemIndex], at: indexPath.item)
+                update.objectChanges.append((.insert, [indexPath]))
             }
         }
+        finishUpdate()
     }
     
     /// Reloads `item`.
@@ -617,7 +616,7 @@ open class MemoryStorage: BaseUpdateDeliveringStorage, Storage, SectionLocationI
     {
         if sectionIndex < self.sections.count
         {
-            //swiftlint:disable:next force_cast
+            // swiftlint:disable:next force_cast
             return sections[sectionIndex] as! SectionModel
         } else {
             for i in sections.count...sectionIndex {
@@ -625,7 +624,7 @@ open class MemoryStorage: BaseUpdateDeliveringStorage, Storage, SectionLocationI
                 update?.sectionChanges.append((.insert, [i]))
             }
         }
-        //swiftlint:disable:next force_cast
+        // swiftlint:disable:next force_cast
         return sections.last as! SectionModel
     }
     

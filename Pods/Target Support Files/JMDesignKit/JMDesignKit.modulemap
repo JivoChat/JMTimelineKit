@@ -1,6 +1,0 @@
-framework module JMDesignKit {
-  umbrella header "JMDesignKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

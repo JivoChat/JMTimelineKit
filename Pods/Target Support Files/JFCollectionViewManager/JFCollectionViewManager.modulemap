@@ -1,6 +1,0 @@
-framework module JFCollectionViewManager {
-  umbrella header "JFCollectionViewManager-umbrella.h"
-
-  export *
-  module * { export * }
-}

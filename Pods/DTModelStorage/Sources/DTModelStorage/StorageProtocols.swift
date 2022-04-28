@@ -27,7 +27,7 @@ import Foundation
 import UIKit
 
 /// `Storage` protocol is used to define common interface for storage classes.
-public protocol Storage : class
+public protocol Storage : AnyObject
 {
     /// Returns number of sections in storage.
     func numberOfSections() -> Int
@@ -40,7 +40,7 @@ public protocol Storage : class
 }
 
 /// `SupplementaryStorage` is used to handle header/footer and supplementary models in storage.
-public protocol SupplementaryStorage : class
+public protocol SupplementaryStorage : AnyObject
 {
     /// Returns a header model for specified section index or nil.
     var headerModelProvider: ((_ sectionIndex: Int) -> Any?)? { get set }
@@ -69,8 +69,8 @@ extension SupplementaryStorage {
     /// Configures storage for using with UICollectionViewFlowLayout
     public func configureForCollectionViewFlowLayoutUsage()
     {
-        supplementaryHeaderKind = DTCollectionViewElementSectionHeader
-        supplementaryFooterKind = DTCollectionViewElementSectionFooter
+        supplementaryHeaderKind = UICollectionView.elementKindSectionHeader
+        supplementaryFooterKind = UICollectionView.elementKindSectionFooter
     }
     
 /// Returns header model from section with section `index` or nil, if it was not set.
@@ -92,12 +92,6 @@ extension SupplementaryStorage {
 }
 
 extension SupplementaryStorage {
-    @available(*, unavailable, message: "Please use storage.supplementaryModel closure instead.")
-    /// Sets supplementaries `models`, using `kind`.
-    public func setSupplementaries(_ models: [[Int: Any]], forKind kind: String)
-    {
-    }
-    
     /// Sets section header `models`, using `supplementaryHeaderKind`.
     public func setSectionHeaderModels<T>(_ models: [T])
     {
@@ -114,25 +108,5 @@ extension SupplementaryStorage {
             guard index < models.count else { return nil }
             return models[index]
         }
-    }
-    
-    @available(*, unavailable, message: "Please use storage.headerModelProvider closure instead.")
-    /// Sets section header `model` for section at `sectionIndex`
-    ///
-    /// This method calls delegate?.storageNeedsReloading() method at the end, causing UI to be updated.
-    /// - SeeAlso: `configureForTableViewUsage`
-    /// - SeeAlso: `configureForCollectionViewUsage`
-    public func setSectionHeaderModel<T>(_ model: T?, forSection sectionIndex: Int)
-    {
-    }
-    
-    @available(*, unavailable, message: "Please use storage.footerModelProvider closure instead.")
-    /// Sets section footer `model` for section at `sectionIndex`
-    ///
-    /// This method calls delegate?.storageNeedsReloading() method at the end, causing UI to be updated.
-    /// - SeeAlso: `configureForTableViewUsage`
-    /// - SeeAlso: `configureForCollectionViewUsage`
-    public func setSectionFooterModel<T>(_ model: T?, forSection sectionIndex: Int)
-    {
     }
 }
