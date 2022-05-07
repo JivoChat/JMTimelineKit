@@ -22,6 +22,7 @@ public struct JMTimelineDataSourceProviders {
 public enum JMTimelineEvent {
     case earliestPointOfHistory
     case latestPointOfHistory(hasData: Bool)
+    case middlePointOfHistory(item: JMTimelineItem)
     case mediaTap(url: URL)
     case exceptionHappened
 }
@@ -144,6 +145,8 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
     
     private func handleWillDisplay(cell: JMTimelineEventCell, item: JMTimelineItem, indexPath: IndexPath) -> Void {
         cell.container.setNeedsLayout()
+        
+        eventHandler(.middlePointOfHistory(item: item))
         
         if let latestIndexPath = history.latestIndexPath {
             if let visibleIndexPaths = collectionView?.indexPathsForVisibleItems {
