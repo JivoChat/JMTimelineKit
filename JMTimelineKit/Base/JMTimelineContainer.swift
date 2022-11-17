@@ -71,8 +71,15 @@ fileprivate struct Layout {
     }
     
     var totalSize: CGSize {
-        let height = canvasFrame.maxY + calculatedBottomMargin
-        return CGSize(width: bounds.width, height: height)
+        let frame = canvasFrame
+        
+        if frame.isEmpty {
+            return CGSize(width: bounds.width, height: 0)
+        }
+        else {
+            let height = frame.maxY + calculatedBottomMargin
+            return CGSize(width: bounds.width, height: height)
+        }
     }
     
     private var calculatedTopMargin: CGFloat {
