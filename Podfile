@@ -10,8 +10,7 @@ target 'JMTimelineKit' do
   use_frameworks!
 
   pod 'SwiftyNSException'
-  pod 'DTModelStorage', '~> 10.0'
-  pod 'DTCollectionViewManager', '~> 10.0'
+  pod 'DTCollectionViewManager', '~> 11.0'
   pod 'JMOnetimeCalculator'
 
 end
