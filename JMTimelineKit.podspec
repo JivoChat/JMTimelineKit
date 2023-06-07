@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '4.2.3'
+    spec.version      = '4.2.4'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -16,8 +16,7 @@ Pod::Spec.new do |spec|
     spec.framework    = 'SystemConfiguration'
 
     spec.dependency     'SwiftyNSException'
-    spec.dependency     'DTModelStorage', '~> 10.0'
-    spec.dependency     'DTCollectionViewManager', '~> 10.0'
+    spec.dependency     'DTCollectionViewManager', '~> 11.0'
     spec.dependency     'JMOnetimeCalculator'
 
     spec.exclude_files = [
