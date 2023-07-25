@@ -19,7 +19,7 @@ final class JMTimelineViewUpdater: CollectionViewUpdater {
             try handle { super.storageDidPerformUpdate(update) }
         }
         catch let exc {
-            print("timeline-exception: \(exc)")
+            print("JMTimelineView: exception thrown: \(exc)")
             exceptionHandler?()
         }
     }

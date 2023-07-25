@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'JMTimelineKit'
-    spec.version      = '4.2.4'
+    spec.version      = '4.3.0'
     spec.license      = { :type => 'MIT' }
     spec.homepage     = 'https://github.com/bronenos'
     spec.authors      = { 'Stan Potemkin' => 'potemkin@jivosite.com' }
@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
 
     spec.ios.deployment_target  = '11.0'
 
-    spec.source       = { :git => 'https://github.com/JivoChat/JMTimelineKit.git', :tag => spec.version }
+    spec.source       = { :git => 'https://github.com/JivoChat/JMTimelineKit.git', :tag => "v#{spec.version}" }
     spec.source_files = 'JMTimelineKit/**/*.*'
     spec.resource = 'Assets.xcassets'
     spec.swift_version = '5.0'

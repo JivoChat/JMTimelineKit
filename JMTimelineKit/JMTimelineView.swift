@@ -57,25 +57,9 @@ open class JMTimelineView<Interactor: JMTimelineInteractor>: UICollectionView {
         dismissOwnMenu()
     }
     
-    open override func reloadData() {
-        UIView.performWithoutAnimation {
-            super.reloadData()
-        }
-    }
-    
-    open override func performBatchUpdates(_ updates: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
-        super.performBatchUpdates(updates, completion: completion)
-    }
-    
-    open override func reloadItems(at indexPaths: [IndexPath]) {
-        super.reloadItems(at: indexPaths)
-    }
-    
-    open override func insertItems(at indexPaths: [IndexPath]) {
-        super.insertItems(at: indexPaths)
-    }
-    
-    open override func deleteItems(at indexPaths: [IndexPath]) {
-        super.deleteItems(at: indexPaths)
-    }
+//    open override func reloadData() {
+//        UIView.performWithoutAnimation {
+//            super.reloadData()
+//        }
+//    }
 }

@@ -21,7 +21,7 @@ public struct JMTimelineDataSourceProviders {
 
 public enum JMTimelineEvent {
     case earliestPointOfHistory
-    case latestPointOfHistory(hasData: Bool)
+    case latestPointOfHistory(isEdgePosition: Bool, isCellVisible: Bool)
     case middlePointOfHistory(item: JMTimelineItem)
     case mediaTap(url: URL)
     case exceptionHappened
@@ -148,17 +148,14 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
         
         eventHandler(.middlePointOfHistory(item: item))
         
-        if let latestIndexPath = history.latestIndexPath {
-            if let visibleIndexPaths = collectionView?.indexPathsForVisibleItems {
-                let hasData = visibleIndexPaths.contains(latestIndexPath)
-                eventHandler(.latestPointOfHistory(hasData: hasData))
-            }
-            else {
-                eventHandler(.latestPointOfHistory(hasData: false))
-            }
+        let visibleIndexPaths = collectionView?.indexPathsForVisibleItems ?? Array()
+        if let latestIndexPath = history.latestIndexPath, !visibleIndexPaths.isEmpty {
+            let activeIndexPaths = visibleIndexPaths + indexPath.jv_surroundedBy(delta: 1)
+            let isVisible = activeIndexPaths.contains(latestIndexPath)
+            eventHandler(.latestPointOfHistory(isEdgePosition: isVisible, isCellVisible: isVisible))
         }
         else {
-            eventHandler(.latestPointOfHistory(hasData: false))
+            eventHandler(.latestPointOfHistory(isEdgePosition: true, isCellVisible: false))
         }
         
         if indexPath == history.earliestIndexPath {
@@ -170,5 +167,11 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
 //        if let interactiveID = item.interactiveID {
 //            interactor.systemMessageTap(messageID: interactiveID)
 //        }
+    }
+}
+
+fileprivate extension IndexPath {
+    func jv_surroundedBy(delta: Int) -> [IndexPath] {
+        return (-delta...delta).map { IndexPath(item: item + $0, section: section) }
     }
 }

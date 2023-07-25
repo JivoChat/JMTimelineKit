@@ -103,8 +103,12 @@ public struct JMTimelineLogicOptions: OptionSet {
     public let rawValue: Int
     public init(rawValue: Int) { self.rawValue = rawValue }
     
-    public static let isVirtual = JMTimelineLogicOptions(rawValue: 1 << 0)
-    public static let enableSizeCaching = JMTimelineLogicOptions(rawValue: 1 << 1)
+    public static let isVirtual = Self.init(rawValue: 1 << 0)
+    public static let enableSizeCaching = Self.init(rawValue: 1 << 1)
+    public static let missingHistoryPast = Self.init(rawValue: 1 << 2)
+    public static let missingHistoryFuture = Self.init(rawValue: 1 << 3)
+    public static let loadingHistoryPast = Self.init(rawValue: 1 << 4)
+    public static let loadingHistoryFuture = Self.init(rawValue: 1 << 5)
 }
 
 public struct JMTimelineLayoutOptions: OptionSet {
