@@ -225,6 +225,7 @@ public final class JMTimelineHistory {
                     
                     defer {
                         for item in existingItems {
+                            cache.resetSize(for: item.uid)
                             try manager.memoryStorage.reloadItem(item)
                         }
                         
@@ -389,21 +390,21 @@ public final class JMTimelineHistory {
         let items = Set(surroundingItems + newItems).sorted { $0.isLater(then: $1) }
         var itemsToReload = Set<JMTimelineItem>()
         
-        _ = items.reduce(nil) { laterItem, item -> JMTimelineItem in
+        _ = items.reduce(nil) { laterItem, earlierItem -> JMTimelineItem in
             guard let laterItem = laterItem
             else {
-                return item
+                return earlierItem
             }
             
-            if laterItem.groupingID == item.groupingID {
+            if earlierItem.groupingID == laterItem.groupingID {
                 if !laterItem.layoutOptions.intersection(leadingLayoutOptions).isEmpty {
                     laterItem.removeLayoutOptions(leadingLayoutOptions)
                     itemsToReload.insert(laterItem)
                 }
                 
-                if !item.layoutOptions.intersection(trailingLayoutOptions).isEmpty {
-                    item.removeLayoutOptions(trailingLayoutOptions)
-                    itemsToReload.insert(item)
+                if !earlierItem.layoutOptions.intersection(trailingLayoutOptions).isEmpty {
+                    earlierItem.removeLayoutOptions(trailingLayoutOptions)
+                    itemsToReload.insert(earlierItem)
                 }
             }
             else {
@@ -412,13 +413,13 @@ public final class JMTimelineHistory {
                     itemsToReload.insert(laterItem)
                 }
                 
-                if !item.layoutOptions.isSuperset(of: trailingLayoutOptions) {
-                    item.addLayoutOptions(trailingLayoutOptions)
-                    itemsToReload.insert(item)
+                if !earlierItem.layoutOptions.isSuperset(of: trailingLayoutOptions) {
+                    earlierItem.addLayoutOptions(trailingLayoutOptions)
+                    itemsToReload.insert(earlierItem)
                 }
             }
             
-            return item
+            return earlierItem
         }
         
         if grouping.contains(.openAtTop), let earliestItem = items.last {
@@ -508,6 +509,7 @@ public final class JMTimelineHistory {
         manager.memoryStorage.performUpdates {
             items.forEach { item in
                 if registeredItemIDs.contains(item.uid) {
+                    cache.resetSize(for: item.uid)
                     manager.memoryStorage.reloadItem(item)
                     return
                 }
@@ -581,9 +583,8 @@ public final class JMTimelineHistory {
                     newItems: [replacingItem],
                     grouping: .keep)
                 
-                try? manager.memoryStorage.replaceItem(
-                    item,
-                    with: replacingItem)
+                cache.resetSize(for: UUID)
+                try? manager.memoryStorage.replaceItem(item, with: replacingItem)
 
                 return
             }
