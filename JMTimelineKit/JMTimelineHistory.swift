@@ -345,8 +345,8 @@ public final class JMTimelineHistory {
                     newItems: [item],
                     grouping: [.openAtTop, .closeAtBottom])
                 
-                let item = factory.generateItem(for: item.groupingDay)
-                registeredFooterModels.insert(item, at: newGroupIndex - grouping.historyFrontIndex)
+                let groupingItem = factory.generateItem(for: item.groupingDay)
+                registeredFooterModels.insert(groupingItem, at: newGroupIndex - grouping.historyFrontIndex)
                 
                 let section = SectionModel()
                 section.setItems([item])
