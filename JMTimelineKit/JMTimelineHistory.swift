@@ -303,14 +303,21 @@ public final class JMTimelineHistory {
     }
 
     public func populate(withItems items: [JMTimelineItem]) {
+        let groups = Dictionary(grouping: items, by: \.groupingDay)
+        var itemsToReload = Set<JMTimelineItem>()
+
         items.forEach { item in
+            let neighbourItems = groups[item.groupingDay] ?? Array()
+            
             if let existingGroupIndex = grouping.section(for: item.groupingDay),
                let groupItems = manager.memoryStorage.items(inSection: existingGroupIndex)?.compactMap({ $0 as? JMTimelineItem }) {
                 if let place = findPlaceToInsert(item, withinGroup: groupItems) {
-                    configureMargins(
-                        surroundingItems: [place.later?.item, place.earlier.item].compactMap{$0},
-                        newItems: [item],
-                        grouping: (place.later == nil ? .closeAtBottom : .keep))
+                    itemsToReload.formUnion(
+                        configureMargins(
+                            surroundingItems: neighbourItems + [place.later?.item, place.earlier.item].compactMap{$0},
+                            newItems: [item],
+                            grouping: (place.later == nil ? .closeAtBottom : .keep))
+                    )
                     
                     do {
                         let location = IndexPath(item: place.earlier.index, section: existingGroupIndex)
@@ -319,11 +326,14 @@ public final class JMTimelineHistory {
                     catch {
                         print("\n\nMemoryStorage.insertItem(_:to:) instance method throwed an exception: \(error.localizedDescription)\n\n")
                     }
-                } else {
-                    configureMargins(
-                        surroundingItems: Array(),
-                        newItems: [item],
-                        grouping: .openAtTop)
+                }
+                else {
+                    itemsToReload.formUnion(
+                        configureMargins(
+                            surroundingItems: Array(),
+                            newItems: [item],
+                            grouping: .openAtTop)
+                    )
                     
                     do {
                         let location = IndexPath(item: groupItems.count, section: existingGroupIndex)
@@ -340,10 +350,12 @@ public final class JMTimelineHistory {
                     return print("\n\nThere is an internal bug occured while populating timeline with new items: JMTimelineGrouping.section(for:) method didn't find any existing group for item date (\(item.groupingDay)), but JMTimelineGrouping.grow(date:) found.\n\n")
                 }
                 
-                configureMargins(
-                    surroundingItems: Array(),
-                    newItems: [item],
-                    grouping: [.openAtTop, .closeAtBottom])
+                itemsToReload.formUnion(
+                    configureMargins(
+                        surroundingItems: Array(),
+                        newItems: [item],
+                        grouping: [.openAtTop, .closeAtBottom])
+                )
                 
                 let groupingItem = factory.generateItem(for: item.groupingDay)
                 registeredFooterModels.insert(groupingItem, at: newGroupIndex - grouping.historyFrontIndex)
@@ -354,6 +366,11 @@ public final class JMTimelineHistory {
             }
             
             registeredItemIDs.insert(item.uid)
+        }
+        
+        itemsToReload.subtracting(items).forEach {
+            cache.resetSize(for: $0.uid)
+            manager.memoryStorage.reloadItem($0)
         }
     }
     
@@ -383,13 +400,14 @@ public final class JMTimelineHistory {
     ///  - items: Array of JMTimelineItem objects to which the rendering options changes is applied. Must be passed in the same order as they arranged in its own CollectionView section.
     ///  - option: an option specifying the rendering options applying to bound items way.
 
-    private func configureMargins(surroundingItems: [JMTimelineItem], newItems: [JMTimelineItem], grouping: MarginsGrouping) {
+    @discardableResult
+    private func configureMargins(surroundingItems: [JMTimelineItem], newItems: [JMTimelineItem], grouping: MarginsGrouping) -> Set<JMTimelineItem> {
+        var itemsToReload = Set<JMTimelineItem>()
+        
         let leadingLayoutOptions = JMTimelineLayoutOptions([.groupTopMargin, .groupFirstElement])
         let trailingLayoutOptions = JMTimelineLayoutOptions([.groupBottomMargin, .groupLastElement])
 
         let items = Set(surroundingItems + newItems).sorted { $0.isLater(then: $1) }
-        var itemsToReload = Set<JMTimelineItem>()
-        
         _ = items.reduce(nil) { laterItem, earlierItem -> JMTimelineItem in
             guard let laterItem = laterItem
             else {
@@ -432,10 +450,7 @@ public final class JMTimelineHistory {
             itemsToReload.insert(latestItem)
         }
         
-        itemsToReload.subtracting(newItems).forEach {
-            cache.resetSize(for: $0.uid)
-            manager.memoryStorage.reloadItem($0)
-        }
+        return itemsToReload
     }
 
     public func append(items: [JMTimelineItem]) {
