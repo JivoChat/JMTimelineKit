@@ -257,7 +257,7 @@ public final class JMTimelineHistory {
                     
                     let currentItems = (manager.memoryStorage.items(inSection: section) as? [JMTimelineItem]) ?? Array()
 
-                    if let latestItem = currentItems.first, let endItem = newItems.last, endItem.isLater(then: latestItem) {
+                    if let latestItem = currentItems.first, let endItem = newItems.last, endItem.isLater(than: latestItem) {
                         configureMargins(
                             surroundingItems: currentItems,
                             newItems: newItems,
@@ -265,7 +265,7 @@ public final class JMTimelineHistory {
                         
                         try manager.memoryStorage.insertItems(newItems, at: IndexPath(item: 0, section: section))
                     }
-                    else if let earliestItem = currentItems.last, let beginItem = newItems.first, beginItem.isEarlier(then: earliestItem) {
+                    else if let earliestItem = currentItems.last, let beginItem = newItems.first, beginItem.isEarlier(than: earliestItem) {
                         configureMargins(
                             surroundingItems: currentItems,
                             newItems: newItems,
@@ -282,13 +282,13 @@ public final class JMTimelineHistory {
                         switch direction {
                         case .past:
                             let insertionDate = newItems.map(\.date).max() ?? Date()
-                            if let location = currentItems.enumerated().reversed().first(where: { _, element in element.isLater(then: insertionDate) }) {
+                            if let location = currentItems.enumerated().reversed().first(where: { _, element in element.isLater(than: insertionDate) }) {
                                 try manager.memoryStorage.insertItems(newItems, at: IndexPath(item: location.offset + 1, section: section))
                             }
                             
                         case .future:
                             let insertionDate = newItems.map(\.date).min() ?? Date()
-                            if let location = currentItems.enumerated().first(where: { _, element in element.isEarlier(then: insertionDate) }) {
+                            if let location = currentItems.enumerated().first(where: { _, element in element.isEarlier(than: insertionDate) }) {
                                 let indexPath = IndexPath(item: location.offset, section: section)
                                 try manager.memoryStorage.insertItems(newItems, at: indexPath)
                             }
@@ -380,7 +380,7 @@ public final class JMTimelineHistory {
     private func findPlaceToInsert(_ item: JMTimelineItem, withinGroup groupItems: [JMTimelineItem]) -> (earlier: GroupItemPlacement, later: GroupItemPlacement?)? {
         guard let pair = groupItems
             .enumerated()
-            .first(where: {item.isLater(then: $1)})
+            .first(where: {!item.isEarlier(than: $1)})
         else {
             return nil
         }
@@ -407,7 +407,7 @@ public final class JMTimelineHistory {
         let leadingLayoutOptions = JMTimelineLayoutOptions([.groupTopMargin, .groupFirstElement])
         let trailingLayoutOptions = JMTimelineLayoutOptions([.groupBottomMargin, .groupLastElement])
 
-        let items = Set(surroundingItems + newItems).sorted { $0.isLater(then: $1) }
+        let items = Set(surroundingItems + newItems).sorted { $0.isLater(than: $1) }
         _ = items.reduce(nil) { laterItem, earlierItem -> JMTimelineItem in
             guard let laterItem = laterItem
             else {
@@ -548,7 +548,7 @@ public final class JMTimelineHistory {
 
     private func prepend_configureAndStore(context: JMTimelineHistoryContext, item: JMTimelineItem, into groupIndex: Int) {
         if let newerItem = earliestItemsMap[groupIndex] {
-            if item.isLater(then: newerItem) {
+            if item.isLater(than: newerItem) {
                 prepare_uniteGroupMates(context: context, olderItem: newerItem, newerItem: item)
             }
             else {
@@ -665,19 +665,19 @@ fileprivate extension JMTimelineItem {
         return date.withoutTime()
     }
     
-    func isLater(then anotherItem: JMTimelineItem) -> Bool {
+    func isLater(than anotherItem: JMTimelineItem) -> Bool {
         return (date > anotherItem.date)
     }
     
-    func isLater(then anotherDate: Date) -> Bool {
+    func isLater(than anotherDate: Date) -> Bool {
         return (date > anotherDate)
     }
     
-    func isEarlier(then anotherItem: JMTimelineItem) -> Bool {
+    func isEarlier(than anotherItem: JMTimelineItem) -> Bool {
         return (date < anotherItem.date)
     }
     
-    func isEarlier(then anotherDate: Date) -> Bool {
+    func isEarlier(than anotherDate: Date) -> Bool {
         return (date < anotherDate)
     }
 }
