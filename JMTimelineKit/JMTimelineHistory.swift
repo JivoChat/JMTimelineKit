@@ -120,6 +120,7 @@ public final class JMTimelineHistory {
             let items = Array(repeating: [], count: grouping.topIndex - grouping.bottomIndex)
             manager.memoryStorage.setItemsForAllSections(items)
         }
+        manager?.collectionViewUpdater?.storageNeedsReloading()
     }
 
     public func setTopItem(_ item: JMTimelineItem?) -> Bool {
