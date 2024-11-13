@@ -8,17 +8,43 @@
 
 import Foundation
 
-struct JMTimelineGrouping {
+struct JMTimelineGrouping<
+    Front: RawRepresentable & CaseIterable,
+    Back: RawRepresentable & CaseIterable
+> {
     private var groups = [Date]()
     
-    var bottomIndex: Int { return 0 }
-    var typingIndex: Int { return bottomIndex + 1 }
-    var historyFrontIndex: Int { return typingIndex + 1 }
-    var historyBackIndex: Int { return historyFrontIndex + groups.count }
-    var historyLastIndex: Int { return historyBackIndex - 1 }
-    var historyIndices: IndexSet { return IndexSet(integersIn: historyFrontIndex ..< historyBackIndex) }
-    var topIndex: Int { return historyBackIndex + 1 }
+    var historyFrontIndex: Int {
+        return Front.allCases.count
+    }
     
+    var historyBackIndex: Int {
+        return historyFrontIndex + groups.count
+    }
+    
+    var historyLastIndex: Int {
+        return historyBackIndex - 1
+    }
+    
+    var historyIndices: IndexSet {
+        return IndexSet(integersIn: historyFrontIndex ..< historyBackIndex)
+    }
+    
+    func frontIndex(target: Front) -> Int where Front.RawValue == Int {
+        return target.rawValue
+    }
+    
+    func backIndex(target: Back) -> Int where Back.RawValue == Int {
+        return historyBackIndex + 1 + target.rawValue
+    }
+    
+    var allIndices: ClosedRange<Int> {
+        let upperIndex = historyLastIndex + Back.allCases.count
+        return (0 ... upperIndex)
+    }
+}
+
+extension JMTimelineGrouping {
     mutating func grow(date: Date) -> Int? {
         if groups.contains(date) {
             return nil

@@ -11,6 +11,11 @@ import UIKit
 import DTCollectionViewManager
 import DTModelStorage
 
+public protocol JMTimelineHistoryConfig {
+    associatedtype GroupingFront: RawRepresentable & CaseIterable
+    associatedtype GroupingBack: RawRepresentable & CaseIterable
+}
+
 fileprivate class JMTimelineHistoryContext {
     var shouldResetCache: Bool
 
@@ -24,19 +29,19 @@ public enum JMTimelineHistoryInsertionDirection {
     case future
 }
 
-public final class JMTimelineHistory {
+public final class JMTimelineHistory<
+    Config: JMTimelineHistoryConfig
+> {
     private let factory: JMTimelineFactory
     public let cache: JMTimelineCache
 
     var manager: DTCollectionViewManager!
 
-    private var grouping = JMTimelineGrouping()
+    private var grouping = JMTimelineGrouping<Config.GroupingFront, Config.GroupingBack>()
     private var earliestItemsMap = [Int: JMTimelineItem]()
     private var registeredFooterModels = [JMTimelineItem]()
     private var registeredItemIDs = Set<String>()
     
-    private var isTyping = false
-
     public init(factory: JMTimelineFactory, cache: JMTimelineCache) {
         self.factory = factory
         self.cache = cache
@@ -117,21 +122,29 @@ public final class JMTimelineHistory {
     public func prepare() {
         grouping.reset()
         manager.memoryStorage.updateWithoutAnimations {
-            let items = Array(repeating: [], count: grouping.topIndex - grouping.bottomIndex)
+            let items = Array(repeating: [], count: grouping.allIndices.count)
             manager.memoryStorage.setItemsForAllSections(items)
         }
         manager?.collectionViewUpdater?.storageNeedsReloading()
     }
 
-    public func setTopItem(_ item: JMTimelineItem?) -> Bool {
-        let section = grouping.topIndex
-
+    public func placeStandalone(item: JMTimelineItem?, target: Config.GroupingFront, animated: Bool) -> Bool where Config.GroupingFront.RawValue == Int {
+        let section = grouping.frontIndex(target: target)
+        return placeStandalone(item: item, section: section, animated: animated)
+    }
+    
+    public func placeStandalone(item: JMTimelineItem?, target: Config.GroupingBack, animated: Bool) -> Bool where Config.GroupingBack.RawValue == Int {
+        let section = grouping.backIndex(target: target)
+        return placeStandalone(item: item, section: section, animated: animated)
+    }
+    
+    private func placeStandalone(item: JMTimelineItem?, section: Int, animated: Bool) -> Bool {
         if let item = item {
             if let oldIndexPath = manager.memoryStorage.indexPath(forItem: item) {
-                manager.memoryStorage.updateWithoutAnimations {
-                    manager.memoryStorage.deleteSections([oldIndexPath.section])
-                    manager.memoryStorage.setItems([item], forSection: section)
-                }
+                manager.memoryStorage.setItems([item], forSection: section)
+            }
+            else if animated {
+                manager.memoryStorage.addItem(item, toSection: section)
             }
             else {
                 manager.memoryStorage.setItems([item], forSection: section)
@@ -140,48 +153,20 @@ public final class JMTimelineHistory {
             return true
         }
         else if manager.memoryStorage.numberOfItems(inSection: section) > 0 {
-            manager.memoryStorage.setItems([], forSection: section)
-            return true
-        }
-        else {
-            manager.memoryStorage.setItems([], forSection: section)
-            return false
-        }
-    }
-
-    public func setBottomItem(_ item: JMTimelineItem?) -> Bool {
-        let section = grouping.bottomIndex
-
-        if let item = item {
-            manager.memoryStorage.setItems([item], forSection: section)
-            return true
-        }
-        else if manager.memoryStorage.numberOfItems(inSection: section) > 0 {
-            manager.memoryStorage.setItems([], forSection: section)
-            return true
-        }
-        else {
-            manager.memoryStorage.setItems([], forSection: section)
-            return false
-        }
-    }
-
-    public func setTyping(item: JMTimelineItem?) {
-        let section = grouping.typingIndex
-
-        switch (item, isTyping) {
-        case (nil, false):
-            break
-        case (nil, true):
-            isTyping = false
-            if let existingItem = manager.memoryStorage.items(inSection: section)?.first as? JMTimelineItem {
-                try? manager.memoryStorage.removeItem(existingItem)
+            if animated {
+                let existingItem = manager.memoryStorage.items(inSection: section)?.first as? JMTimelineItem
+                if let existingItem {
+                    try? manager.memoryStorage.removeItem(existingItem)
+                }
             }
-        case (let payload, false):
-            isTyping = true
-            manager.memoryStorage.addItem(payload, toSection: section)
-        case (let payload, true):
-            manager.memoryStorage.setItems([payload], forSection: section)
+            else {
+                manager.memoryStorage.setItems([], forSection: section)
+            }
+            
+            return true
+        }
+        else {
+            return false
         }
     }
 
@@ -647,18 +632,16 @@ public final class JMTimelineHistory {
     }
 }
 
-extension JMTimelineHistory {
-    struct MarginsGrouping: OptionSet {
-        let rawValue: Int
-        static let keep = Self(rawValue: 0 << 0)
-        static let openAtTop = Self(rawValue: 1 << 0)
-        static let closeAtBottom = Self(rawValue: 1 << 1)
-    }
-    
-    struct GroupItemPlacement {
-        let index: Int
-        let item: JMTimelineItem
-    }
+fileprivate struct MarginsGrouping: OptionSet {
+    let rawValue: Int
+    static let keep = Self(rawValue: 0 << 0)
+    static let openAtTop = Self(rawValue: 1 << 0)
+    static let closeAtBottom = Self(rawValue: 1 << 1)
+}
+
+fileprivate struct GroupItemPlacement {
+    let index: Int
+    let item: JMTimelineItem
 }
 
 fileprivate extension JMTimelineItem {

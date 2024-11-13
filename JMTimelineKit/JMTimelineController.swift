@@ -9,15 +9,21 @@
 import Foundation
 import DTCollectionViewManager
 
-public final class JMTimelineController<Interactor: JMTimelineInteractor>: NSObject, DTCollectionViewManageable, UIScrollViewDelegate {
+public final class JMTimelineController<
+    Config: JMTimelineHistoryConfig,
+    Interactor: JMTimelineInteractor
+>
+: NSObject
+, DTCollectionViewManageable
+, UIScrollViewDelegate {
     public var optionalCollectionView: UICollectionView?
     public var lastItemAppearHandler: (() -> Void)?
     
     public let cache: JMTimelineCache
-    public let history: JMTimelineHistory
+    public let history: JMTimelineHistory<Config>
     
     public let factory: JMTimelineFactory
-    private var dataSource: JMTimelineDataSource?
+    private var dataSource: JMTimelineDataSource<Config>?
     
     private let maxImageDiskCacheSize: UInt
     

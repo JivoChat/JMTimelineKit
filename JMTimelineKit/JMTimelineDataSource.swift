@@ -27,9 +27,13 @@ public enum JMTimelineEvent {
     case exceptionHappened
 }
 
-final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
+final class JMTimelineDataSource<
+    Config: JMTimelineHistoryConfig
+>
+: NSObject
+, UICollectionViewDelegateFlowLayout {
     private let manager: DTCollectionViewManager
-    private let history: JMTimelineHistory
+    private let history: JMTimelineHistory<Config>
     private let cache: JMTimelineCache
     private let factory: JMTimelineFactory
     private let eventHandler: (JMTimelineEvent) -> Void
@@ -38,7 +42,7 @@ final class JMTimelineDataSource: NSObject, UICollectionViewDelegateFlowLayout {
     weak var collectionView: UICollectionView?
 
     init(manager: DTCollectionViewManager,
-         history: JMTimelineHistory,
+         history: JMTimelineHistory<Config>,
          cache: JMTimelineCache,
          cellFactory: JMTimelineFactory,
          eventHandler: @escaping (JMTimelineEvent) -> Void) {
