@@ -9,93 +9,13 @@ import UIKit
 public struct JMTimelineItemLayoutValues: JMTimelineStyle {
     public let margins: UIEdgeInsets
     public let groupingCoef: CGFloat
-//    public let contentStyle: JMTimelineStyle
     
-    public init(margins: UIEdgeInsets,
-                groupingCoef: CGFloat
-//                contentStyle: JMTimelineStyle
+    public init(
+        margins: UIEdgeInsets,
+        groupingCoef: CGFloat
     ) {
         self.margins = margins
         self.groupingCoef = groupingCoef
-//        self.contentStyle = contentStyle
-    }
-}
-
-public struct JMTimelineExtraActions {
-    public let reactions: [JMTimelineReactionMeta]
-    public let actions: [JMTimelineActionMeta]
-    
-    public init(reactions: [JMTimelineReactionMeta] = [], actions: [JMTimelineActionMeta] = []) {
-        self.reactions = reactions
-        self.actions = actions
-    }
-}
-
-public struct JMTimelineReactionMeta {
-    public let emoji: String
-    public let number: Int
-    public let participated: Bool
-    
-    public init(emoji: String, number: Int, participated: Bool) {
-        self.emoji = emoji
-        self.number = number
-        self.participated = participated
-    }
-}
-
-public struct JMTimelineActionMeta {
-    public let ID: String
-    public let icon: UIImage
-    
-    public init(ID: String, icon: UIImage) {
-        self.ID = ID
-        self.icon = icon
-    }
-}
-
-public struct JMTimelineReactionStyle: JMTimelineStyle {
-    public struct Element {
-        public let paddingCoef: CGFloat
-        public let fontReducer: CGFloat
-        public let pullingCoef: CGFloat
-        public init(paddingCoef: CGFloat, fontReducer: CGFloat, pullingCoef: CGFloat) {
-            self.paddingCoef = paddingCoef
-            self.fontReducer = fontReducer
-            self.pullingCoef = pullingCoef
-        }
-    }
-    
-    public let height: CGFloat
-    public let baseFont: UIFont
-    public let regularBackgroundColor: UIColor
-    public let regularNumberColor: UIColor
-    public let selectedBackgroundColor: UIColor
-    public let selectedNumberColor: UIColor
-    public let sidePaddingCoef: CGFloat
-    public let emojiElement: Element
-    public let counterElement: Element
-    public let actionElement: Element
-
-    public init(height: CGFloat,
-                baseFont: UIFont,
-                regularBackgroundColor: UIColor,
-                regularNumberColor: UIColor,
-                selectedBackgroundColor: UIColor,
-                selectedNumberColor: UIColor,
-                sidePaddingCoef: CGFloat,
-                emojiElement: Element,
-                counterElement: Element,
-                actionElement: Element) {
-        self.height = height
-        self.baseFont = baseFont
-        self.regularBackgroundColor = regularBackgroundColor
-        self.regularNumberColor = regularNumberColor
-        self.selectedBackgroundColor = selectedBackgroundColor
-        self.selectedNumberColor = selectedNumberColor
-        self.sidePaddingCoef = sidePaddingCoef
-        self.emojiElement = emojiElement
-        self.counterElement = counterElement
-        self.actionElement = actionElement
     }
 }
 
@@ -141,20 +61,18 @@ open class JMTimelineItem: Equatable, Hashable {
     public let layoutValues: JMTimelineItemLayoutValues
     public let logicOptions: JMTimelineLogicOptions
     public private(set) var layoutOptions: JMTimelineLayoutOptions
-    public let extraActions: JMTimelineExtraActions
 
-    public init(uid: String,
-                date: Date,
-                layoutValues: JMTimelineItemLayoutValues,
-                logicOptions: JMTimelineLogicOptions,
-                extraActions: JMTimelineExtraActions
+    public init(
+        uid: String,
+        date: Date,
+        layoutValues: JMTimelineItemLayoutValues,
+        logicOptions: JMTimelineLogicOptions
     ) {
         self.uid = uid
         self.date = date
         self.layoutValues = layoutValues
         self.logicOptions = logicOptions
         self.layoutOptions = .allOptions
-        self.extraActions = extraActions
     }
 
     open var groupingID: String? {

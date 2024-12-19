@@ -15,7 +15,6 @@ open class JMTimelinePayloadItem<Payload>: JMTimelineItem {
         date: Date,
         layoutValues: JMTimelineItemLayoutValues,
         logicOptions: JMTimelineLogicOptions,
-        extraActions: JMTimelineExtraActions,
         payload: Payload
     ) {
         self.payload = payload
@@ -24,8 +23,7 @@ open class JMTimelinePayloadItem<Payload>: JMTimelineItem {
             uid: uid,
             date: date,
             layoutValues: layoutValues,
-            logicOptions: logicOptions,
-            extraActions: extraActions
+            logicOptions: logicOptions
         )
     }
 }
