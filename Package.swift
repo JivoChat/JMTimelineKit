@@ -24,7 +24,7 @@ let package = Package(
                 .product(name: "JMOnetimeCalculator", package: "JMOnetimeCalculator"),
                 .product(name: "SwiftyNSException", package: "SwiftyNSException"),
             ],
-            path: "."
+            path: "JMTimelineKit"
         )
     ]
 )
