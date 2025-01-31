@@ -13,8 +13,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/DenTelezhkin/DTCollectionViewManager.git", from: "11.0.0"),
-        .package(url: "https://github.com/JivoChat/JMOnetimeCalculator.git", .branch("master")),
-        .package(url: "https://github.com/JivoChat/SwiftyNSException.git", .branch("main")),
+        .package(url: "https://github.com/JivoChat/JMOnetimeCalculator.git", exact: "2.0.0"),
+        .package(url: "https://github.com/JivoChat/SwiftyNSException.git", exact: "2.0.0"),
     ],
     targets: [
         .target(
